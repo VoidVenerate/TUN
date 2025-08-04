@@ -1,0 +1,81 @@
+.LetsTalk-container {
+    margin-left: 2vw;
+    margin-top: 2vw;
+    background-color: #252525a3;
+    width: 96%;
+    border-radius: 20px;
+}
+.LetsTalk{
+    margin-left: 1vw;
+}
+.LetsTalk-header{
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+.LetsTalk-form {
+    color: #fff;
+}
+.form-field {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;    /* row-gap column-gap */
+}
+
+.LetsTalk-form .field {
+  display: flex;
+  flex-direction: column;
+}
+
+.LetsTalk-form label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.form-field input {
+    width: 634px;
+    height: 58px;
+    opacity: 1;
+    gap: 4px;
+    border-radius: 8px;
+    padding-top: 20px;
+    padding-right: 24px;
+    padding-bottom: 20px;
+    padding-left: 24px;
+    background-color: #5b5b5ba4;
+    border: 0px;
+    color: #fff;
+}
+.field-message {
+    width: 1361px;
+    height: 300px;
+    opacity: 1;
+    gap: 4px;
+    border-radius: 8px;
+    padding-top: 20px;
+    padding-right: 24px;
+    padding-bottom: 20px;
+    padding-left: 24px;
+    background-color: #5b5b5ba4;
+    border: 0px;
+    resize: none;
+}
+.field-checkbox {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2vw;
+}
+.checkbox-text {
+    display: flex;
+}
+.field-checkbox button{
+    margin-right: 23px;
+    border-radius: 10px;
+    border: 0;
+    background: #5423D2;
+    color: #fff;
+    padding: 10px 20px;
+    transition: 0.3s;
+}
+.field-checkbox button:hover{
+    background-color: #3b149d;
+}

@@ -1,0 +1,259 @@
+/* FeatureEventForm.css */
+.feature-event-container {
+  background: #1a1a1a;
+  min-height: 100vh;
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 24px;
+  max-width: 93%;
+  margin: 0 auto;
+  margin-top: 3vw;
+  border-radius: 20px;
+}
+
+.feature-section {
+  margin-bottom: 40px;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: white;
+}
+
+.feature-description {
+  color: #b3b3b3;
+  font-size: 14px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.feature-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.feature-btn {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #888;
+  border: 1px solid #444;
+  transition: all 0.2s ease;
+}
+
+
+/* .feature-btn:hover {
+  background: #2a2a2a;
+  color: #aaa;
+} */
+
+button.active {
+  background: #7c3aed;
+  color: white;
+}
+
+button.active {
+  background: #6d28d9;
+}
+
+.contact-section {
+  margin-bottom: 40px;
+}
+
+.contact-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contact-description {
+  color: #b3b3b3;
+  font-size: 14px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.contact-form {
+  width: 100%;
+}
+
+.contact-row {
+  display: flex;
+  gap: 16px;
+}
+
+.contact-group {
+  flex: 1;
+}
+
+.contact-select,
+.contact-input {
+  width: 100%;
+  background: #262626;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.contact-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23888' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+  appearance: none;
+}
+
+.contact-input::placeholder {
+  color: #888;
+}
+
+.contact-select:focus,
+.contact-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+.additional-info-section {
+  margin-bottom: 40px;
+}
+
+.additional-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: white;
+}
+
+.additional-description {
+  color: #b3b3b3;
+  font-size: 14px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.additional-input-group {
+  width: 100%;
+}
+
+.additional-input {
+  width: 100%;
+  background: #262626;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.additional-input::placeholder {
+  color: #888;
+}
+
+.additional-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 24px;
+  border-top: 1px solid #333;
+}
+
+.create-event-btn {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.create-event-btn:hover {
+  background: #6d28d9;
+}
+
+.error-message {
+  color: #ff4d4d;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.success-message {
+  color: #4ade80;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.create-event-btn:disabled {
+  background: #4c1d95;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px; /* space between buttons */
+  padding-top: 24px;
+  border-top: 1px solid #333;
+}
+
+.back-event-btn {
+  background: transparent;
+  color: #bbb;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.back-event-btn:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .feature-event-container {
+    padding: 16px;
+  }
+  
+  .feature-buttons {
+    flex-direction: column;
+  }
+  
+  .contact-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .form-footer {
+    justify-content: stretch;
+  }
+  
+  .create-event-btn {
+    width: 100%;
+  }
+}

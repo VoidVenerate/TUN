@@ -1,0 +1,15 @@
+body{
+    background-color: #000000;
+}
+p {
+    font-family: 'DM Sans', sans-serif;
+}
+h2 {
+    font-family: 'DM Sans', sans-serif;
+}
+@font-face{
+    font-family: 'Rushon Ground';
+    src: url('../../assets/fonts/rushon-ground.ttf') format('truetype');
+    font-weight: normal;
+    font-size: normal;
+}

@@ -1,0 +1,81 @@
+.club-container {
+  padding: 2rem;
+  background-color: #0a0a0a;
+  color: white;
+  min-height: 100vh;
+}
+
+.club-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.club-header h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.lag-clubs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.club-card {
+  display: flex;
+  justify-content: center;
+}
+
+.clubs {
+  background-color: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 437px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers image */
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.clubs:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.clubs img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* Text container aligned left */
+.club-text, 
+.clubs p:last-child {
+  text-align: left; /* Align text left */
+  width: 100%; /* Take full card width */
+}
+
+.club-text h3 {
+  font-size: 1.2rem;
+  margin: 0.3rem 0;
+  font-weight: bold;
+  color: white;
+}
+
+.club-text p {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #ccc;
+}
+
+.clubs p:last-child {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  color: #aaa;
+}

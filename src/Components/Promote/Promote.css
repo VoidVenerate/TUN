@@ -1,0 +1,107 @@
+.promote-container {
+    width: 95%;
+    height: 500px;
+    background: rgba(84, 35, 210, 0.25); /* Transparent purple */
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    margin-top: 2vw;
+    margin-left: 2vw;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(84, 35, 210, 0.4);
+}
+
+/* Glowing animated border */
+.promote-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        rgba(255,255,255,0.3),
+        rgba(84,35,210,0.6)
+    );
+    animation: rotateGlow 6s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotateGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.promote {
+   width: 729px; 
+   display: flex;
+   flex-direction: column;
+   background: rgba(84, 35, 210, 0.15);
+   height: 80%;
+   margin-top: 2vw;
+   color: #fff;
+   border-radius: 20px;
+   backdrop-filter: blur(12px);
+   box-shadow: inset 0 0 30px rgba(255,255,255,0.05), 
+               0 4px 30px rgba(0,0,0,0.2);
+   border: 1px solid rgba(255, 255, 255, 0.25);
+   animation: floatCard 5s ease-in-out infinite;
+   position: relative;
+   z-index: 1;
+}
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.promote-text {
+    margin-top: 1vw;
+    margin-left: -6vw;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.promote-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.promote-field button {
+    width: 661px;
+    margin-top: 1vw;
+    height: 58px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    text-align: left;
+    padding-left: 2vw;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Button hover glass effect */
+.promote-field button:hover {
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+.promote-field button::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-25deg);
+    transition: all 0.5s ease;
+}
+.promote-field button:hover::after {
+    left: 100%;
+}
+
+.promote-field a {
+    color: #fff;
+    text-decoration: none;
+}

@@ -1,0 +1,146 @@
+.ft-events {
+  width: 90%;
+  padding: 2rem;
+  background-color: #111318;
+  color: #fff;
+  overflow: hidden;
+  margin-top: 3vw;
+  margin-left: 2.5vw;
+  border-radius: 15px;
+}
+
+.ft-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.ft-header p {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.ft-btn button {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.ft-btn button:hover {
+  background: #444;
+}
+
+.slider {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+}
+.slider ul {
+  display: flex;
+  gap: 1.5rem;
+  transition: transform 0.5s ease;
+  justify-content: space-around;
+  /* animation: scroll 20s linear infinite; */
+}
+/* .slider ul:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scroll {
+    to {
+        transform: translateX(-100%);
+    }
+} */
+
+.slider li {
+  width: 400px;
+  background-color: #000000;
+  border-radius: 10px;
+  padding: 1rem;
+  list-style: none;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  position: relative;
+  left: -46px;
+  height: 600px;
+}
+.slider-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.event-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.event-img {
+  width: 400px;
+  height: 450px;
+  /* object-fit: cover; */
+  border-radius: 10px;
+}
+
+.event-info div p:first-child {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.event-info div p:last-child {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.slider-btn {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.slider-btn button {
+  flex: 1;
+  margin: 0 0.25rem;
+  padding: 0.6rem 0;
+  border: none;
+  border-radius: 15px;
+  background-color: #33333371;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.slider-btn button:hover {
+  background-color: #555;
+  transform: scale(1.05);
+}
+
+.slider-btn .active {
+  background-color: #03e9f4;
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 10px #03e9f4;
+}
+.buy-tickets-btn {
+  background-color: #33333371 !important;  /* duller background */
+  color: #999 !important;             /* lighter text */
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  opacity: 0.6 !important;
+  transform: none !important;         /* disable scale */
+  box-shadow: none !important;
+}
+
+/* Prevent hover effect on disabled */
+.buy-tickets-btn:hover {
+  background-color: #3333338a !important;
+  transform: none !important;
+}

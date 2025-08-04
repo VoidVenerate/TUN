@@ -1,0 +1,235 @@
+/* ===== Desktop Navbar ===== */
+.navbar {
+  background-color: transparent;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.navbar-logo img {
+  height: 40px;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
+  color: #242424;
+}
+
+.navbar-link {
+  color: #555;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+.navbar .navbar-link {
+    margin-left: 44px;
+}
+.navbar-link.active,
+.navbar-link:hover {
+  color: #fff;
+}
+
+.navbar-button button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  position: relative;
+  color: #03e9f4;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  overflow: hidden;
+  background-color: #000;
+  transition: background 0.3s ease;
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+.navbar-button button:hover {
+  background: #03e9f4;
+  color: #050801;
+  box-shadow:
+    0 0 5px #03e9f4,
+    0 0 25px #03e9f4,
+    0 0 50px #03e9f4,
+    0 0 75px #03e9f4,
+    0 0 200px #03e9f4;
+}
+
+.navbar-button button span {
+  position: absolute;
+  display: block;
+}
+.navbar-button button span:nth-child(1) {
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #03e9f4);
+  animation: animate1 1s linear infinite;
+}
+@keyframes animate1 {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+.navbar-button button span:nth-child(2) {
+  top: 100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #03e9f4);
+  animation: animate2 1s linear infinite;
+  animation-delay: 0.25s;
+}
+@keyframes animate2 {
+  0% { top: -100%; }
+  50%, 100% { top: 100%; }
+}
+.navbar-button button span:nth-child(3) {
+  bottom: 0;
+  right: 100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, transparent, #03e9f4);
+  animation: animate3 1s linear infinite;
+  animation-delay: 0.5s;
+}
+@keyframes animate3 {
+  0% { right: -100%; }
+  50%, 100% { right: 100%; }
+}
+.navbar-button button span:nth-child(4) {
+  bottom: 100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #03e9f4);
+  animation: animate4 1s linear infinite;
+  animation-delay: 0.75s;
+}
+@keyframes animate4 {
+  0% { bottom: -100%; }
+  50%, 100% { bottom: 100%; }
+}
+
+/* ===== Hamburger Icon (hidden on desktop) ===== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  width: 25px;
+  height: 20px;
+  position: relative;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  background: #03e9f4;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Animate hamburger to X when open */
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg);
+  top: 8px;
+  position: absolute;
+  width: 25px;
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg);
+  top: 8px;
+  position: absolute;
+  width: 25px;
+}
+
+/* ===== Mobile Styles ===== */
+@media (max-width: 480px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar-links {
+    max-height: 0;
+    overflow: hidden;
+    flex-direction: column;
+    width: 100%;
+    background: #000;
+    padding: 0 10px;
+    border-radius: 8px;
+    transition: max-height 0.3s ease;
+  }
+
+  .navbar-links.open {
+    max-height: 500px; /* enough to show all links */
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .navbar-link {
+    padding: 10px 0;
+    color: #03e9f4;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .navbar-button {
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .navbar-button button {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  /* Prevent body scroll when menu is open */
+  body.menu-open {
+    overflow: hidden;
+  }
+}
+
+/* ===== Tablet tweaks ===== */
+@media (min-width: 481px) and (max-width: 768px) {
+  .navbar {
+    padding: 0.8rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .navbar-links {
+    gap: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .navbar-button button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}

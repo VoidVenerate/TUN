@@ -1,0 +1,30 @@
+.PlacesInLagos-container{
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: center; */
+    background: #25252584;
+    width: 96%;
+    height: 900px;
+    margin-top: 2vw;
+    border-radius: 20px;
+    text-align: center;
+    margin-left: 30px;
+
+}
+.PlacesInLagos-txt {
+    color: #fff;
+    text-align: start;
+    padding-top: 30px;
+    margin-left: 30px;
+}
+.PlacesInLagos button {
+    margin-top: 1vw;
+    background: none;
+    border: none;
+    margin-left: 10px;
+}
+.PlacesInLagos img{
+    width: 700px;
+    height: 400px;
+    /* border-radius: 10px; */
+}

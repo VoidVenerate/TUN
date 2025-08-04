@@ -1,0 +1,23 @@
+.FeatureAnEvent-header {
+    display: flex;
+    text-align: center;
+}
+.FeatureAnEvent-header button {
+    border: none;
+}
+.FeatureAnEvent-header button:hover {
+    background: none;
+}
+.FeatureAnEvent-header h1 {
+    color: #fff;
+    margin-top: 13px;
+    margin-left: -32px;
+}
+
+/* Text Styling */
+.FeatureAnEvent-title p {
+    width: 300px;
+}
+.FeatureAnEvent-container .promo-card p {
+    width: 300px;
+}

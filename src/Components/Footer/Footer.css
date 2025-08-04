@@ -1,0 +1,167 @@
+.footer {
+    background-color: #fff;
+    margin-top: 3vw;
+    width: 100%;
+    height: 350px;
+    padding-top: 4vw;
+    padding-left: 0vw;
+    border-radius: 20px;
+    margin-left: 0px;
+}
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2vw;
+}
+.footer-pt1 {
+    width: 400px;
+}
+.footer-pt3 {
+    width: 400px;
+}
+.footer-input{
+    border: 1px solid #404040;
+    width: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    border-radius: 10px;
+    height: 50px;
+}
+.email-ftinput {
+    border: none;
+    padding-left: 10px;
+}
+.footer-input button {
+    padding: 17px 20px;
+    border-radius: 10px;
+    border: 0px;
+    background-color: #5423D2;
+    color: #fff;
+    margin-left: 48px;
+}
+.footer-input button:hover {
+    background-color: #5319e5;
+}
+.footer-input button.active {
+  background-color: #35179f; /* darker purple on active */
+  transform: scale(0.98);   /* press effect */
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.footer-links {
+    margin-top: 0vw;
+}
+.footer-links li {
+    list-style: none;
+    padding-top: 20px;
+}
+.footer-links a {
+    color: #2f2f2fe4;
+}
+.footer hr {
+    width: 75%;
+    margin-top: 2vw;
+    opacity: 0.8;
+}
+.footer-logo {
+    display: flex;
+    justify-content: center;
+}
+.footer-logo img {
+    margin-left: 3vw;
+}
+.footer-copyright {
+    display: flex;
+    justify-content: center;
+}
+
+/* ========================= */
+/* 📱 Mobile (max-width: 480px) */
+/* ========================= */
+@media (max-width: 480px) {
+  .footer {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    padding: 20px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-pt1,
+  .footer-pt3 {
+    width: 100%;
+  }
+
+  .footer-input {
+    width: 100%;
+    margin: 10px auto;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .footer-input button {
+    margin-left: 0;
+    width: 100%;
+    border-radius: 0 0 10px 10px;
+    padding: 12px;
+  }
+
+  .email-ftinput {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .footer-links {
+    padding: 0;
+  }
+  .footer-links li {
+    padding-top: 10px;
+  }
+
+  .footer-logo {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+}
+
+/* ========================= */
+/* 📲 Tablets (481px–768px) */
+/* ========================= */
+@media (min-width: 481px) and (max-width: 768px) {
+  .footer {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    padding: 30px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-pt1,
+  .footer-pt3 {
+    width: 80%;
+    margin-bottom: 20px;
+  }
+
+  .footer-input {
+    width: 80%;
+  }
+
+  .footer-logo {
+    gap: 20px;
+  }
+}

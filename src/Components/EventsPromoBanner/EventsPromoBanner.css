@@ -1,0 +1,39 @@
+.promo-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3vw;
+}
+.gradient-banner {
+  background: linear-gradient(90deg, 
+    #8A2BE2,   
+    #FF1493,   
+    #FF8C00,   
+    #FF4500  
+  );
+  border-radius: 20px;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  width: 88%;
+  margin-left: 1.5vw;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.promo-btn {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  border-radius: 25px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.promo-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
