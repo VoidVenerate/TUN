@@ -1,5 +1,5 @@
 import React from 'react'
-import './promote.css'
+import './Promote.css'
 import { NavLink } from 'react-router-dom'
 
 const Promote = () => {
