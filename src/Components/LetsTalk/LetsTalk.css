@@ -32,7 +32,8 @@
   font-weight: 500;
 }
 .form-field input {
-    width: 634px;
+    width: 100%;
+    max-width: 634px;
     height: 58px;
     opacity: 1;
     gap: 4px;
@@ -46,7 +47,8 @@
     color: #fff;
 }
 .field-message {
-    width: 1361px;
+    width: 100%;
+    max-width: 1361px;
     height: 300px;
     opacity: 1;
     gap: 4px;
@@ -78,4 +80,104 @@
 }
 .field-checkbox button:hover{
     background-color: #3b149d;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .form-field {
+    grid-template-columns: 1fr; /* stack fields vertically */
+    gap: 1rem 0; /* reduce horizontal gap */
+  }
+
+  .form-field input,
+  .field-message {
+    width: 100%;  /* full width on mobile */
+    height: auto; /* let height adjust naturally */
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 1rem;
+  }
+
+  .field-message {
+    height: 180px; /* smaller textarea on mobile */
+  }
+
+  .field-checkbox {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .field-checkbox button {
+    width: 100%; /* full width submit button */
+    margin-right: 0;
+    padding: 14px 0;
+    font-size: 1.1rem;
+  }
+
+  .checkbox-text {
+    font-size: 0.9rem;
+  }
+
+  .LetsTalk-container {
+    margin-left: -2vw;
+    margin-top: 1vw;
+    width: 95%;
+    padding: 1rem;
+    overflow-x: hidden;
+  }
+
+  .LetsTalk {
+    margin-left: 0;
+  }
+}
+/* For small tablets and larger phones */
+@media (max-width: 480px) {
+  .field-message {
+    height: 140px; /* reduce textarea height a bit */
+  }
+
+  .form-field input,
+  .field-message {
+    font-size: 0.95rem;
+    padding: 10px 0px;
+  }
+
+  .field-checkbox button {
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+
+  .checkbox-text {
+    font-size: 0.85rem;
+  }
+}
+
+/* For small phones (like older iPhones or very narrow devices) */
+@media (max-width: 364px) {
+  .LetsTalk-container {
+    width: 98%;
+    /* margin-left: 1vw;
+    margin-top: 1vw; */
+    padding: 0.5rem;
+  }
+
+  .form-field input,
+  .field-message {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .field-message {
+    height: 120px;
+  }
+
+  .field-checkbox button {
+    font-size: 0.9rem;
+    padding: 10px 0;
+  }
+
+  .checkbox-text {
+    font-size: 0.8rem;
+  }
 }

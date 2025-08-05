@@ -28,3 +28,111 @@
     height: 400px;
     /* border-radius: 10px; */
 }
+
+/* === Mobile Styling for PlacesInLagos === */
+
+/* General mobile & tablets (≤768px) */
+@media screen and (max-width: 768px) {
+  .PlacesInLagos-container {
+    width: 90%;
+    height: auto;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .PlacesInLagos-txt {
+    margin-left: 0;
+    text-align: center;
+    padding-top: 15px;
+  }
+
+  /* Horizontal scroll for mobile */
+  .PlacesInLagos {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .PlacesInLagos button {
+    flex: 0 0 auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+  }
+
+  /* Images with fade effect */
+  .PlacesInLagos img {
+    width: 80vw;
+    height: auto;
+    border-radius: 10px;
+    scroll-snap-align: center;
+    opacity: 0;                /* Start faded */
+    transform: translateY(10px);
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  /* Hide scrollbar for clean look */
+  .PlacesInLagos::-webkit-scrollbar {
+    display: none;
+  }
+  .PlacesInLagos {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Regular smartphones (≤480px) */
+@media screen and (max-width: 480px) {
+  .PlacesInLagos img {
+    width: 85vw;
+  }
+
+  .PlacesInLagos {
+    gap: 10px;
+    padding: 8px;
+  }
+
+  .PlacesInLagos-txt h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Small phones (≤360px) */
+@media screen and (max-width: 360px) {
+  .PlacesInLagos-container {
+    width: 95%;
+    padding: 5px;
+    margin: 10px auto;
+    border-radius: 8px;
+  }
+
+  .PlacesInLagos-txt h2 {
+    font-size: 1.1rem;
+  }
+
+  .PlacesInLagos {
+    gap: 8px;
+    padding: 6px;
+  }
+
+  .PlacesInLagos img {
+    width: 85vw;
+    max-width: 280px;
+    height: auto;
+    border-radius: 8px;
+  }
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

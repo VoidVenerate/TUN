@@ -55,6 +55,30 @@
   height: 335px;
   margin-top: 2vw;
 }
+  /* Container for upload area */
+.upload-area {
+  width: 100%;           /* full width of parent */
+  max-width: 400px;      /* max width to keep it neat */
+  height: 220px;         /* fixed height to contain the image */
+  overflow: hidden;      /* hide overflow */
+  border: 2px dashed #bbb;
+  border-radius: 8px;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image preview styling */
+.flyer-preview {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
 
 .upload-area:hover {
   border-color: #444444;
@@ -254,7 +278,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .upload-section {
   border: 1.5px dashed #888; /* dashed for drop zone effect */
   border-radius: 12px;
-  padding: 20px;
+  padding: 0px;
   margin-bottom: 20px;
   background: rgba(255,255,255,0.02);
   transition: border-color 0.3s ease;
@@ -294,6 +318,104 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   
   .create-event-btn {
     width: 100%;
+  }
+}
+/* Additional Mobile Responsiveness for EventForm */
+
+/* Tablets and below (max-width 768px) */
+@media (max-width: 768px) {
+  .form-content {
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .upload-section {
+    width: 100% !important; /* Make upload full width */
+    margin-bottom: 24px;
+  }
+
+  .upload-area {
+    width: 90% !important;
+    height: auto !important;
+    padding: 10px 0px;
+    margin-left: 17px;
+  }
+
+  .flyer-preview {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  .form {
+    width: 100% !important;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 93% !important;
+  }
+
+  .date-input-wrapper,
+  .time-input-wrapper {
+    width: 100% !important;
+  }
+
+  .form-footer {
+    padding: 24px 0 0 0;
+    text-align: center;
+  }
+
+  .create-event-btn {
+    width: 100%;
+  }
+}
+
+/* Small phones (max-width 480px) */
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 18px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .create-event-btn {
+    font-size: 14px;
+    padding: 14px 20px;
+  }
+
+  .upload-area {
+    width: 90%;
+    padding: 10px 0px;
+  }
+
+  .upload-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Extra small phones (max-width 360px) */
+@media (max-width: 360px) {
+  .header-title {
+    font-size: 16px;
+  }
+
+  .form-label {
+    font-size: 12px;
+  }
+
+  .create-event-btn {
+    font-size: 13px;
+    padding: 12px 16px;
   }
 }
 

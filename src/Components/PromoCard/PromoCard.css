@@ -85,3 +85,78 @@
   gap: 1rem;
   flex-wrap: wrap;
 }
+/* === Responsive Mobile Styling for PromoCard === */
+
+/* Tablets & general mobile (≤768px) */
+@media screen and (max-width: 768px) {
+  .promo-card {
+    width: 90%;
+    height: auto; /* Let it grow naturally with content */
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .promo-card p {
+    width: auto;
+    padding: 6px 14px;
+    font-size: 13px;
+    height: auto;
+  }
+
+  .promo-card h2 {
+    font-size: 22px;
+    margin-top: 10px;
+  }
+
+  .promo-card-children {
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+  }
+}
+
+/* Regular smartphones (≤480px) */
+@media screen and (max-width: 480px) {
+  .promo-card {
+    width: 92%;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .promo-card p {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+
+  .promo-card h2 {
+    font-size: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .promo-card-children {
+    gap: 0.6rem;
+    flex-direction: column; /* Stack children vertically on smaller phones */
+  }
+}
+
+/* Small phones (≤360px) */
+@media screen and (max-width: 360px) {
+  .promo-card {
+    width: 95%;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .promo-card p {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .promo-card h2 {
+    font-size: 18px;
+  }
+
+  .promo-card-children {
+    gap: 0.5rem;
+  }
+}

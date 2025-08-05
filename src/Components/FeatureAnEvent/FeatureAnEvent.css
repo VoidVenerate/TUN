@@ -1,23 +1,47 @@
 .FeatureAnEvent-header {
-    display: flex;
-    text-align: center;
-}
-.FeatureAnEvent-header button {
-    border: none;
-}
-.FeatureAnEvent-header button:hover {
-    background: none;
-}
-.FeatureAnEvent-header h1 {
-    color: #fff;
-    margin-top: 13px;
-    margin-left: -32px;
+  display: flex;
+  align-items: center; /* vertically center items */
+  gap: 12px;           /* space between button and title */
+  padding: 10px 0;
 }
 
-/* Text Styling */
-.FeatureAnEvent-title p {
-    width: 300px;
+.back-event-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
 }
+
+.back-event-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+}
+
+.header-title {
+  color: #fff;
+  font-size: 1.6rem;
+  margin: 0;       /* remove default margin */
+  flex-grow: 1;    /* take remaining space */
+}
+
+/* PromoCard p width control */
 .FeatureAnEvent-container .promo-card p {
-    width: 300px;
+  max-width: 90vw; /* responsive max width */
+  margin: 1rem auto 0 auto;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Mobile tweaks */
+@media screen and (max-width: 480px) {
+  .FeatureAnEvent-header {
+    gap: 8px;
+    padding: 6px 0;
+  }
+  .header-title {
+    font-size: 1.3rem;
+    margin-left: 0;
+  }
 }

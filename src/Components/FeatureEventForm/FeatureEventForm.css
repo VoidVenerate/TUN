@@ -257,3 +257,130 @@ button.active {
     width: 100%;
   }
 }
+/* === Mobile Responsiveness for FeatureEventForm === */
+
+/* Tablets & general mobile (≤768px) */
+@media (max-width: 768px) {
+  .feature-event-container {
+    padding: 16px 12px;
+    max-width: 95%;
+    margin-top: 2vw;
+  }
+
+  .feature-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .feature-btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+
+  .contact-section, 
+  .additional-info-section {
+    margin-bottom: 30px;
+  }
+
+  .contact-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .contact-select,
+  .contact-input,
+  .additional-input {
+    font-size: 15px;
+    padding: 14px 16px;
+  }
+
+  .form-footer {
+    justify-content: stretch;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 20px;
+  }
+
+  .create-event-btn,
+  .back-event-btn {
+    width: 100%;
+    padding: 14px 0;
+    font-size: 16px;
+  }
+}
+
+/* Smartphones (≤480px) */
+@media (max-width: 480px) {
+  .feature-event-container {
+    padding: 14px 10px;
+    max-width: 98%;
+  }
+
+  .feature-title {
+    font-size: 17px;
+  }
+
+  .feature-description,
+  .contact-description,
+  .additional-description {
+    font-size: 13px;
+  }
+
+  .feature-btn {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+
+  .contact-select,
+  .contact-input,
+  .additional-input {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .form-footer {
+    padding-top: 16px;
+  }
+
+  .create-event-btn,
+  .back-event-btn {
+    font-size: 14px;
+    padding: 12px 0;
+  }
+}
+
+/* Small phones (≤360px) */
+@media (max-width: 360px) {
+  .feature-event-container {
+    padding: 12px 8px;
+  }
+
+  .feature-title {
+    font-size: 16px;
+  }
+
+  .feature-description,
+  .contact-description,
+  .additional-description {
+    font-size: 12px;
+  }
+
+  .feature-btn {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+
+  .contact-select,
+  .contact-input,
+  .additional-input {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .create-event-btn,
+  .back-event-btn {
+    font-size: 13px;
+    padding: 10px 0;
+  }
+}

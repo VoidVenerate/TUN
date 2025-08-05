@@ -105,3 +105,99 @@
     color: #fff;
     text-decoration: none;
 }
+/* === Responsive Mobile Styling for Promote === */
+
+/* Tablets & general mobile (≤768px) */
+@media screen and (max-width: 768px) {
+  .promote-container {
+    width: 90%;
+    height: auto; /* Let height adjust with content */
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .promote {
+    width: 100%;
+    height: auto;
+    margin-top: 15px;
+    border-radius: 16px;
+    padding: 15px;
+  }
+
+  .promote-text {
+    margin-left: 0;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+
+  .promote-text h2 {
+    font-size: 22px;
+  }
+
+  .promote-text p {
+    font-size: 14px;
+  }
+
+  .promote-field button {
+    width: 100%;
+    padding-left: 15px;
+    font-size: 14px;
+  }
+}
+
+/* Regular smartphones (≤480px) */
+@media screen and (max-width: 480px) {
+  .promote-container {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .promote {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .promote-text h2 {
+    font-size: 20px;
+  }
+
+  .promote-text p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .promote-field button {
+    font-size: 13px;
+    height: 50px;
+    padding-left: 12px;
+  }
+}
+
+/* Small phones (≤360px) */
+@media screen and (max-width: 360px) {
+  .promote-container {
+    width: 95%;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .promote {
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .promote-text h2 {
+    font-size: 18px;
+  }
+
+  .promote-text p {
+    font-size: 12px;
+  }
+
+  .promote-field button {
+    font-size: 12px;
+    height: 45px;
+    padding-left: 10px;
+  }
+}
