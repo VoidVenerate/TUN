@@ -35,7 +35,7 @@ const UserNavbar = () => {
       <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
         <li>
           <NavLink
-            to="/"
+            to="/home"
             exact="true"
             className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
             onClick={() => setMenuOpen(false)}

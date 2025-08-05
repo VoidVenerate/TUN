@@ -15,6 +15,7 @@ import { EventProvider } from './Components/EventContext/EventContext'
 import { BannerProvider } from './Components/BannerContext/BannerContext'
 import Review from './Pages/Review/Review'
 import Banner from './Pages/Banner/Banner'
+import IntroAnimation from './Pages/IntroAnimation/IntroAnimation'
 
 function App() {
 
@@ -27,7 +28,8 @@ function App() {
         <EventProvider>
           <BannerProvider>
             <Routes>
-              <Route path='/' element = {<Home/>} />
+              <Route path='/' element = {<IntroAnimation/>} />
+              <Route path='/home' element = {<Home/>} />
               <Route path='/explore' element = {<ExploreLagos/>} />
               <Route path='/beyond' element = {<BeyondLagos/>} />
               <Route path='/contact' element = {<ContactUs/>} />
