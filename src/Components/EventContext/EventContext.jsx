@@ -36,3 +36,4 @@ export const EventProvider = ({ children }) => {
 // 4️⃣ Custom Hook: useEvent()
 // Easy access to eventData & setEventData in any component
 export const useEvent = () => useContext(EventContext)
+

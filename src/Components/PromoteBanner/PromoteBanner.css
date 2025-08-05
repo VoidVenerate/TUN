@@ -1,0 +1,326 @@
+.promote-banner-container {
+    margin-left: 2vw;
+}
+.promote-banner-header {
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+.promote-banner-header span {
+    font-size: 35px;
+}
+.promote-banner-header h2 {
+    color: #fff;
+    margin-left: 10px;
+}
+.promote-banner-body {
+    background-color: #7e7e7e;
+}
+/* styles/PromoteBanner.css */
+
+.banner-form-container {
+  background-color: #0a0a0a;
+  color: #ffffff;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.banner-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.banner-back-arrow {
+  width: 20px;
+  height: 20px;
+  margin-right: 16px;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+.banner-header-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.banner-form-content {
+  display: flex;
+  flex-direction: column;  /* stack vertically */
+  gap: 32px;
+  padding: 32px 24px;
+  max-width: 1400px;       /* narrower since stacked */
+  margin: 0 auto;
+  align-items: center;    /* center horizontally */
+}
+
+
+.banner-upload-section {
+  width: 100%;
+  flex: 0 0 280px;
+}
+
+/* .banner-upload-area {
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #111111;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  width: 1400px;
+  display: block;
+  height: 300px;
+  margin-top: 2vw;
+} */
+
+/* Container for upload area */
+.banner-upload-area {
+  width: 100%;
+  max-width: 1400px;
+  height: 220px;
+  overflow: hidden;
+  border: 2px dashed #bbb;
+  border-radius: 8px;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-flyer-preview {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.banner-upload-area:hover {
+  border-color: #444444;
+}
+
+.banner-upload-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: #666666;
+}
+
+.banner-upload-title {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.banner-upload-subtitle {
+  color: #888888;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.banner-upload-format {
+  color: #666666;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.banner-error-text {
+  color: #ff5555;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.banner-form {
+  width: 1400px;
+}
+
+.banner-form-fields {
+  flex: 1;
+  border: 1.5px solid #444;
+  border-radius: 12px;
+  padding: 20px;
+  background: rgba(255,255,255,0.02);
+}
+
+.banner-form-row {
+  display: flex;
+  gap: 60px;
+  margin-bottom: 24px;
+}
+
+.banner-form-group {
+  flex: 1;
+}
+
+.banner-form-label {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.banner-form-input {
+  width: 91%;
+  background-color: #1a1a1a;
+  border: 0px solid #333333;
+  border-radius: 6px;
+  padding: 20px 16px;
+  font-size: 14px;
+  color: #ffffff;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.banner-form-input:focus {
+  outline: none;
+  border-color: #555555;
+}
+
+.banner-form-input::placeholder {
+  color: #666666;
+}
+
+.banner-form-footer {
+  text-align: right;
+  padding-top: 24px;
+}
+
+.banner-submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.banner-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+}
+
+.banner-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .banner-form-content {
+    flex-direction: column;
+    padding: 24px 16px;
+  }
+
+  .banner-upload-section {
+    flex: none;
+  }
+
+  .banner-form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .banner-form-footer {
+    position: static;
+    padding: 24px 16px;
+    text-align: center;
+  }
+
+  .banner-submit-btn {
+    width: 100%;
+  }
+}
+
+/* Tablets and below (max-width 768px) */
+@media (max-width: 768px) {
+  .banner-upload-section {
+    width: 100% !important;
+    margin-bottom: 24px;
+  }
+
+  .banner-upload-area {
+    width: 90% !important;
+    height: auto !important;
+    padding: 10px 0px;
+    margin-left: 17px;
+  }
+
+  .banner-flyer-preview {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  .banner-form {
+    width: 100% !important;
+  }
+
+  .banner-form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .banner-form-input {
+    width: 93% !important;
+  }
+
+  .banner-form-footer {
+    padding: 24px 0 0 0;
+    text-align: center;
+  }
+
+  .banner-submit-btn {
+    width: 100%;
+  }
+}
+
+/* Small phones (max-width 480px) */
+@media (max-width: 480px) {
+  .banner-header-title {
+    font-size: 18px;
+  }
+
+  .banner-form-label {
+    font-size: 13px;
+  }
+
+  .banner-submit-btn {
+    font-size: 14px;
+    padding: 14px 20px;
+  }
+
+  .banner-upload-area {
+    width: 90%;
+    padding: 10px 0px;
+  }
+
+  .banner-upload-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Extra small phones (max-width 360px) */
+@media (max-width: 360px) {
+  .banner-header-title {
+    font-size: 16px;
+  }
+
+  .banner-form-label {
+    font-size: 12px;
+  }
+
+  .banner-submit-btn {
+    font-size: 13px;
+    padding: 12px 16px;
+  }
+}

@@ -12,7 +12,7 @@ const Promote = () => {
                     <p>Showcase your events or banners to reach the right audience and make an impact today!</p>
                 </div>
                 <button><NavLink to='/promoteevent'>Promote an Event</NavLink></button>
-                <button>Promote a Banner</button>
+                <button><NavLink to="/promotebanner">Promote a Banner</NavLink></button>
             </div>
         </div>
     </div>

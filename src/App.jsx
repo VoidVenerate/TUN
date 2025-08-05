@@ -12,7 +12,9 @@ import BestClubs from './Pages/BestClubs/BestClubs'
 import PromoteEvent from './Pages/PromoteEvent/PromoteEvent'
 import FeatureEvent from './Pages/FeatureEvent/FeatureEvent'
 import { EventProvider } from './Components/EventContext/EventContext'
+import { BannerProvider } from './Components/BannerContext/BannerContext'
 import Review from './Pages/Review/Review'
+import Banner from './Pages/Banner/Banner'
 
 function App() {
 
@@ -23,18 +25,21 @@ function App() {
     <Router>
       <div>
         <EventProvider>
-          <Routes>
-            <Route path='/' element = {<Home/>} />
-            <Route path='/explore' element = {<ExploreLagos/>} />
-            <Route path='/beyond' element = {<BeyondLagos/>} />
-            <Route path='/contact' element = {<ContactUs/>} />
-            <Route path='/promote' element = {<PromoteWithUs/>} />
-            <Route path='/lagvisit' element = {<LagVisit/>} />
-            <Route path='/clubs' element = {<BestClubs/>} />
-            <Route path='/promoteevent' element = {<PromoteEvent/>} />
-            <Route path='/featureevent' element = {<FeatureEvent/>} />
-            <Route path='/review' element = {<Review/>} />
-          </Routes>
+          <BannerProvider>
+            <Routes>
+              <Route path='/' element = {<Home/>} />
+              <Route path='/explore' element = {<ExploreLagos/>} />
+              <Route path='/beyond' element = {<BeyondLagos/>} />
+              <Route path='/contact' element = {<ContactUs/>} />
+              <Route path='/promote' element = {<PromoteWithUs/>} />
+              <Route path='/lagvisit' element = {<LagVisit/>} />
+              <Route path='/clubs' element = {<BestClubs/>} />
+              <Route path='/promoteevent' element = {<PromoteEvent/>} />
+              <Route path='/featureevent' element = {<FeatureEvent/>} />
+              <Route path='/review' element = {<Review/>} />
+              <Route path='/promotebanner' element = {<Banner/>} />
+            </Routes>
+          </BannerProvider>
         </EventProvider>
       </div>
     </Router>
