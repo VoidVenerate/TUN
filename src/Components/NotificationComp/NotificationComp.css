@@ -1,0 +1,126 @@
+.notifications-container {
+  background-color: #0f0f0f;
+  padding: 20px;
+  color: #fff;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notifications-header h2 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.filter-btn {
+  background-color: #1d1d1d;
+  border: none;
+  padding: 8px 14px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  position: relative;
+}
+
+.notif-icon {
+  background-color: #2a2a2a;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notif-content {
+  flex: 1;
+}
+
+.notif-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.notif-message {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.notif-time {
+  font-size: 0.8rem;
+  color: #999;
+  white-space: nowrap;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+.no-notifications {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #2a2a2a;
+  border: none;
+  padding: 6px 12px;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+.notif-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 8px;
+  width: 8px;
+  background: red;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.6; }
+}

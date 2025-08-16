@@ -21,33 +21,33 @@
 }
 
 .BlEvents-header button {
-  padding: 8px 12px;
+  padding: 8px 8px;
   border: none;
   cursor: pointer;
   font-weight: 500;
+  position: relative;
   text-decoration: none;
   color: #03e9f4;
   text-transform: uppercase;
   letter-spacing: 4px;
+  transition: 0.5s;
+  -webkit-box-reflect: below 1px linear-gradient(transparent, rgb(0, 0, 0));
+  overflow: hidden;
+  transition: background 0.3s ease;
   background-color: #2f2f2f;
   border-radius: 15px;
   margin-right: 3vw;
+  width: auto;
   height: 35px;
-  transition: background 0.3s ease;
-}
-
-.BlEvents-header button:hover {
-  background-color: #03e9f4;
-  color: #000;
 }
 
 /* Events grid */
 .Bl-Events {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 20px;
   margin-top: 3vw;
-  margin-left: 2vw;
+  margin-left: -1vw;
   justify-content: flex-start;
   box-sizing: border-box;
 }

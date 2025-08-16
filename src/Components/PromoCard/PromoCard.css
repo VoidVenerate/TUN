@@ -4,7 +4,7 @@
     background: rgba(84, 35, 210, 0.25); /* Transparent purple */
     backdrop-filter: blur(15px); /* Glass blur */
     -webkit-backdrop-filter: blur(15px); /* Safari support */
-    border-radius: 20px;
+    border-radius: 40px;
     border: 1px solid rgba(255, 255, 255, 0.2); /* Soft border for glass effect */
     display: flex;
     flex-direction: column; /* stack children vertically */

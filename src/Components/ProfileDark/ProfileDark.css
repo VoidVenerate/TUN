@@ -1,0 +1,126 @@
+.profile-dark-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #121214;
+  color: #eee;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 12px;
+}
+
+.profile-dark-title {
+  font-family: 'Rushon Ground', cursive;
+  font-size: 1.6rem;
+  margin-bottom: 25px;
+  letter-spacing: 1.5px;
+}
+
+.profile-dark-content {
+  display: flex;
+  gap: 50px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Left side */
+.profile-dark-left {
+  flex: 1;
+  max-width: 250px;
+  text-align: center;
+}
+
+.profile-dark-label {
+  font-weight: 600;
+  margin-bottom: 3px;
+  font-size: 0.9rem;
+}
+
+.profile-dark-subtext {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.profile-dark-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #5423d2;
+  margin-bottom: 15px;
+  background-color: #222;
+}
+
+.profile-dark-btn {
+  background-color: #5423d2;
+  color: #eee;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.profile-dark-btn:hover {
+  background-color: #6c43e6;
+}
+
+/* Right side */
+.profile-dark-right {
+  flex: 2.3;
+}
+
+/* Each row contains two inputs side by side except single row */
+.profile-dark-row {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 22px;
+}
+
+.profile-dark-row.single-row {
+  flex-wrap: nowrap;
+}
+
+.profile-dark-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-dark-input-group.full-width {
+  flex: 1 1 100%;
+}
+
+/* Disabled input with icon */
+.profile-dark-input-disabled {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #1e1e23;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.profile-dark-input-disabled input {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  flex: 1;
+  font-size: 1rem;
+  outline: none;
+  cursor: not-allowed;
+  font-weight: 500;
+}
+
+.profile-dark-input-disabled svg {
+  margin-left: 10px;
+  color: #666;
+}
+
+/* Password input is masked by default */
+
+.profile-dark-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}

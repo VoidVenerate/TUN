@@ -20,7 +20,7 @@ const BlEvents = () => {
             <button>
                 <NavLink
                     to="/beyond"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
+                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link view-more')}
                     onClick={() => setMenuOpen(false)}
                 >
                     View More

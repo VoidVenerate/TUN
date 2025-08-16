@@ -1,0 +1,40 @@
+.DiscoverLagos-container {
+    background: #00000084;
+    width: 96%;
+    height: 950px;
+    margin-top: 2vw;
+    border-radius: 20px;
+    text-align: center;
+    margin-left: 30px;
+}
+/* Header */
+.PlacesInLagos-txt {
+    display: flex;
+    margin-top: 2vw;
+    margin-left: 2vw;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+.PlacesInLagos-txt h2 {
+  font-size: 1.8rem;
+}
+
+/* Add Button */
+.PlacesInLagos-txt button {
+  display: flex;
+  align-items: center;      /* Vertically center content */
+  justify-content: center;  /* Horizontally center content if needed */
+  gap: 8px;   
+  background: rgba(0, 132, 255, 0.101);
+  padding: 10px 15px;
+  font-weight: bold;
+  color: #0084ff;
+  border-radius: 22px;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-right: 2vw;
+  border: 0.5px solid rgba(0, 132, 255, 0.204);
+  margin-top: 27px;
+}

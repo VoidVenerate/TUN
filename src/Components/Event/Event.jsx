@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Upload, Calendar, Clock } from 'lucide-react';
+import { ArrowLeft, Upload, Calendar, Clock, CloudUpload } from 'lucide-react';
 import './Event.css';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEvent } from '../EventContext/EventContext';
+import { useAuth } from '../RoleContext/RoleContext';
 
 const Event = () => {
-    const { eventData, setEventData } = useEvent(); // use context
+    const { eventData, setEventData } = useEvent(); // Event context
     const [flyerPreview, setFlyerPreview] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const navigate = useNavigate();
+    const { rules } = useAuth(); // get role from context
+    const role = rules.role; // 'admin', 'user', etc.
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,15 +22,35 @@ const Event = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setEventData(prev => ({ ...prev, flyer: file }));
-            setFlyerPreview(URL.createObjectURL(file));
+            const img = new Image();
+            img.onload = () => {
+                if (img.width <= 800 && img.height <= 400) {
+                    const previewURL = URL.createObjectURL(file);
+                    setEventData(prev => ({
+                        ...prev,
+                        event_flyer: file,
+                        flyerPreview: previewURL // <-- Save preview in context
+                    }));
+                    setFlyerPreview(previewURL);
+                } else {
+                    alert("Image must be max 800x400px.");
+                }
+            };
+            img.src = URL.createObjectURL(file);
         }
     };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Navigate happens via NavLink
+
+        // Navigate to different pages based on role
+        if (role === 'sub-admin' || role === 'super-admin') {
+            navigate('/adminfeatureevent');
+        } else {
+            navigate('/featureevent');
+        }
     };
 
     return (
@@ -39,24 +64,22 @@ const Event = () => {
                 {/* Upload Section */}
                 <div className="upload-section">
                     <div className="upload-label">
-                        <span className="upload-flyer-text">Upload Flyer</span>
+                        <span className="upload-flyer-text"><CloudUpload size={16}/><p>Upload Flyer</p></span>
                         <div className="upload-description">
                             Select and upload flyer for the event.
                         </div>
                     </div>
                     <label className="upload-area">
                         {flyerPreview || eventData.flyer ? (
-                            <img src={eventData.flyerPreview || URL.createObjectURL(eventData.flyer)} alt="Preview" className="flyer-preview" />
+                            <img src={flyerPreview || URL.createObjectURL(eventData.flyer)} alt="Preview" className="flyer-preview" />
                         ) : (
-                            <div className='upload-section'>
-                                <div className="upload-sec">
-                                    <Upload className="upload-icon" />
-                                    <div className="upload-text">
-                                        <div className="upload-title">Click to upload</div>
-                                        <div className="upload-subtitle">or drag and drop</div>
-                                        <div className="upload-format">
-                                            SVG, PNG, JPG or GIF (max. 800x400px)
-                                        </div>
+                            <div className='upload-sec'>
+                                <Upload className="upload-icon" />
+                                <div className="upload-text">
+                                    <div className="upload-title">Click to upload</div>
+                                    <div className="upload-subtitle">or drag and drop</div>
+                                    <div className="upload-format">
+                                        SVG, PNG, JPG or GIF (max. 800x400px)
                                     </div>
                                 </div>
                             </div>
@@ -172,9 +195,7 @@ const Event = () => {
                         </div>
                         <div className="form-footer">
                             <button className="create-event-btn" disabled={isSubmitting}>
-                                <NavLink to='/featureevent'>
-                                    {isSubmitting ? 'Building Your Event...' : "Let's Keep Building your Event"}
-                                </NavLink>
+                                {isSubmitting ? 'Building Your Event...' : "Let's Keep Building your Event"}
                             </button>
                         </div>
                     </form>

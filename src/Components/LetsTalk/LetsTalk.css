@@ -1,7 +1,7 @@
 .LetsTalk-container {
     margin-left: 2vw;
     margin-top: 2vw;
-    background-color: #252525a3;
+    background-color: rgba(255, 255, 255, 0.050);
     width: 96%;
     border-radius: 20px;
 }
@@ -42,7 +42,7 @@
     padding-right: 24px;
     padding-bottom: 20px;
     padding-left: 24px;
-    background-color: #5b5b5ba4;
+    background-color: rgba(255, 255, 255, 0.050);
     border: 0px;
     color: #fff;
 }

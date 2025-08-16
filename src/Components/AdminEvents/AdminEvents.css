@@ -1,0 +1,310 @@
+/* Header styles */
+.adminEvents-header {
+  display: flex;
+  margin-top: 2vw;
+  margin-left: 2vw;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.adminEvents-header p {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.adminEvents-header button {
+  display: flex;
+  align-items: center;      /* Vertically center content */
+  justify-content: center;  /* Horizontally center content if needed */
+  gap: 8px;   
+  background: rgba(0, 132, 255, 0.101);
+  padding: 10px 15px;
+  font-weight: bold;
+  color: #0084ff;
+  border-radius: 22px;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-right: 2vw;
+  border: 0.5px solid rgba(0, 132, 255, 0.204);
+  margin-top: 27px;
+}
+
+/* Events wrapper */
+.admin-Events {
+  display: flex;
+  margin-top: 3vw;
+  margin-left: 2vw;
+  flex-wrap: wrap;
+}
+
+/* Event card */
+.event-card {
+  margin-left: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.141);
+  border-radius: 20px;
+  width: 435px;
+  height: 670px;
+  margin-top: 2vw;
+}
+
+/* Event content */
+.events {
+  padding: 20px;
+}
+
+.events img {
+  border-radius: 10px;
+  width: 395px;
+  height: 455px;
+}
+
+.events h3 {
+  color: #fff;
+}
+
+.events p {
+  color: #6d6d6d;
+}
+
+.event-txt {
+  display: flex;
+  justify-content: space-between;
+}
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #222;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  color: white;
+  position: relative;
+}
+.modal-close {
+  margin-top: 15px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #333;
+  padding: 12px 20px;
+  border-radius: 5px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1100;
+}
+.toast.success {
+  background: #4caf50;
+}
+.toast.error {
+  background: #f44336;
+}
+.toast button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Pagination */
+.pagination-controls button {
+  margin: 0 3px;
+  padding: 6px 12px;
+  border-radius: 3px;
+  border: none;
+  background: #444;
+  color: white;
+  cursor: pointer;
+}
+.pagination-controls button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.active-page {
+  background: #5423D2;
+}
+
+/* Actions dropdown */
+.actions-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background: #111;
+  border: 1px solid #555;
+  margin-top: 5px;
+  padding: 8px;
+  border-radius: 6px;
+  z-index: 10;
+}
+.actions-dropdown button {
+  background: none;
+  border: none;
+  color: white;
+  padding: 6px 8px;
+  text-align: left;
+  cursor: pointer;
+}
+.actions-dropdown button:hover {
+  background: #333;
+}
+
+/* Search bar and sort */
+.search-sort-bar {
+  margin: 15px 0;
+  display: flex;
+  gap: 10px;
+}
+.search-sort-bar input {
+  flex-grow: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #222;
+  color: white;
+}
+.search-sort-bar button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #5423D2;
+  color: white;
+  cursor: pointer;
+}
+
+
+/* Responsive design */
+
+/* Small phones */
+@media (max-width: 360px) {
+  .pendingEvents-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 1vw;
+  }
+
+  .pendingEvents-header p {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .pendingEvents-header button {
+    margin-right: 0;
+    padding: 0.5rem 1rem;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+  }
+
+  .pending-Events {
+    justify-content: center;
+    margin-left: 0;
+  }
+
+  .event-card {
+    width: 90vw;
+    margin-left: 0;
+    margin-bottom: 2rem;
+    height: auto;
+  }
+
+  .events img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Phones up to 480px */
+@media (min-width: 361px) and (max-width: 480px) {
+  .pendingEvents-header {
+    margin-left: 2vw;
+  }
+
+  .pending-Events {
+    justify-content: center;
+    margin-left: 0;
+    gap: 1rem;
+  }
+
+  .event-card {
+    width: 320px;
+    margin-left: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .events img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Tablets (481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .pendingEvents-header {
+    margin-left: 3vw;
+  }
+
+  .pending-Events {
+    justify-content: center;
+    margin-left: 0;
+    gap: 1.5rem;
+  }
+
+  .event-card {
+    width: 300px;
+    margin-left: 0;
+    margin-bottom: 2rem;
+  }
+
+  .events img {
+    width: 100%;
+    height: auto;
+  }
+}
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.pagination-controls button {
+  background-color: #2f2f2f;
+  color: #03e9f4;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  color: #fff;
+  font-weight: 500;
+}

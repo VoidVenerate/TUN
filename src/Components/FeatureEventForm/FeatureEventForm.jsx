@@ -1,7 +1,7 @@
-// FeatureEventForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEvent } from '../EventContext/EventContext';
+import { useAuth } from '../RoleContext/RoleContext'; // Import useAuth hook
 import './FeatureEventForm.css';
 
 const FeatureEventForm = () => {
@@ -10,13 +10,13 @@ const FeatureEventForm = () => {
   // Get event data and updater from global context
   const { eventData, setEventData } = useEvent();
 
+  // Get rules (including role) from auth context
+  const { rules } = useAuth();
+
   // Local state for form error messages
   const [error, setError] = useState("");
 
-  /**
-   * Validate form inputs
-   * - If user wants to feature event ("yes-feature") but has no contact info, return an error message
-   */
+  // Validate form inputs
   const validateForm = () => {
     if (eventData.featureChoice === "yes-feature" && !eventData.contactValue) {
       return 'Contact Information is needed';
@@ -24,29 +24,30 @@ const FeatureEventForm = () => {
     return "";
   };
 
-  /**
-   * Handle navigation to review page
-   * - Checks for validation errors before moving to /review
-   */
+  // Handle navigation to review page or role-based page
   const handleNext = () => {
     const validationError = validateForm();
     if (validationError) {
-      setError(validationError); // Show error if validation fails
+      setError(validationError);
       return;
     }
-    navigate("/review"); // Go to review page if form is valid
+
+    // Navigate based on role
+    if (rules.role === 'sub-admin' || rules.role === 'super-admin') {
+      navigate('/adminreviewevent'); // example admin feature review page
+    } else {
+      navigate('/review'); // example user feature review page
+    }
   };
 
   return (
-    // Form container
-    <form 
+    <form
       className="feature-event-container"
       onSubmit={(e) => {
-        e.preventDefault(); // Prevent page reload
-        handleNext(); // Proceed to next step if valid
+        e.preventDefault();
+        handleNext();
       }}
     >
-
       {/* === Feature Choice Section === */}
       <div className="feature-section">
         <h2 className="feature-title">
@@ -55,19 +56,18 @@ const FeatureEventForm = () => {
         <p className="feature-description">
           Want more eyes on your event? We'll reach out to discuss featuring options and pricing.
         </p>
-        
-        {/* Buttons for choosing Yes or No to feature */}
+
         <div className="feature-buttons">
-          <button 
+          <button
             type="button"
-            className={eventData.featureChoice === 'no-feature' ? "feature-btn active" : "feature-btn"} 
+            className={eventData.featureChoice === 'no-feature' ? "feature-btn active" : "feature-btn"}
             onClick={() => setEventData(prev => ({ ...prev, featureChoice: "no-feature" }))}
           >
             No, I do not want to feature my event
           </button>
-          <button 
+          <button
             type="button"
-            className={eventData.featureChoice === 'yes-feature' ? "feature-btn active" : "feature-btn"} 
+            className={eventData.featureChoice === 'yes-feature' ? "feature-btn active" : "feature-btn"}
             onClick={() => setEventData(prev => ({ ...prev, featureChoice: "yes-feature" }))}
           >
             Yes, I want to feature my event
@@ -75,7 +75,7 @@ const FeatureEventForm = () => {
         </div>
       </div>
 
-      {/* === Contact Info Section (only visible if "Yes" is selected) === */}
+      {/* === Contact Info Section === */}
       {eventData.featureChoice === "yes-feature" && (
         <div className="contact-section">
           <h3 className="contact-title">
@@ -86,9 +86,8 @@ const FeatureEventForm = () => {
           </p>
 
           <div className="contact-form">
-            {/* Dropdown for selecting contact method */}
             <div className="contact-group">
-              <select 
+              <select
                 className="contact-select"
                 value={eventData.contactMethod}
                 onChange={(e) =>
@@ -101,9 +100,8 @@ const FeatureEventForm = () => {
               </select>
             </div>
 
-            {/* Input for entering contact value (depends on method selected) */}
-            <input 
-              className="contact-input" 
+            <input
+              className="contact-input"
               placeholder={`Enter your ${eventData.contactMethod}`}
               value={eventData.contactValue}
               onChange={(e) =>
@@ -120,12 +118,11 @@ const FeatureEventForm = () => {
         <p className="additional-description">
           Add any link that gives attendees more context — could be a WhatsApp group, ticket page, Linktree, or Snapchat link.
         </p>
-        
-        {/* Input for extra link */}
+
         <div className="additional-input-group">
-          <input 
-            type="url" 
-            className="additional-input" 
+          <input
+            type="url"
+            className="additional-input"
             placeholder="Paste a link (WhatsApp, Linktree, etc.) or leave blank"
             value={eventData.link}
             onChange={(e) => setEventData(prev => ({ ...prev, link: e.target.value }))}

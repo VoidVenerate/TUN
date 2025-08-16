@@ -41,7 +41,7 @@ const [activeBtn, setActiveBtn] = useState({index: null, type: null})
             <button>
                 <NavLink
                     to="/explore"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
+                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link view-more')}
                     onClick={() => setMenuOpen(false)}
                 >
                     View More

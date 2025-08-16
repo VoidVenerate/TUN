@@ -4,6 +4,7 @@ import { useBanner } from '../BannerContext/BannerContext';
 import { Upload } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Modal from '../Modal/Modal';
+import axios from 'axios';
 
 const PromoteBanner = () => {
   const [flyerPreview, setFlyerPreview] = useState(null);
@@ -15,6 +16,7 @@ const PromoteBanner = () => {
       title: '',
       message: '',
       type: '', // 'success' or 'error'
+      footerButtons: ''
   });
   const closeModal = () => {
     setModalInfo(prev => ({ ...prev, show: false }));
@@ -40,7 +42,7 @@ const PromoteBanner = () => {
       const previewUrl = URL.createObjectURL(file);
       const img = new Image();
       img.onload = () => {
-        if (img.width === 1400 && img.height === 300) {
+        if (img.width <= 1400 && img.height <= 300) {
           setBannerData((prev) => ({
             ...prev,
             flyer: file,
@@ -57,38 +59,75 @@ const PromoteBanner = () => {
       img.src = previewUrl;
     }
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!bannerData.flyer) {
-      setError('Please upload a valid banner image before submitting.');
+      setError("Please upload a valid banner image before submitting.");
       return;
     }
+
     setIsSubmitting(true);
 
-    // Simulate submission
-    setTimeout(() => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("You must be logged in to submit a banner.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Build the form data to match backend keys
+      const formData = new FormData();
+      formData.append("name", bannerData.bannerName);
+      formData.append("banner", bannerData.flyer); // backend expects this exact field name
+      formData.append("banner_url", bannerData.bannerLink || "");
+      formData.append("is_approved", false); // backend default
+
+      const res = await axios.post(
+        "https://lagos-turnup.onrender.com/event/banners/create", // replace with your actual POST route
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Banner upload success:", res.data);
+
+      setModalInfo({
+        show: true,
+        title: "Success!",
+        message: "Banner submitted successfully.",
+        subMessage:
+          "Thanks for uploading your banner. Our team will review it, and if approved, it will go live within 24–48 hours.",
+        type: "success",
+      });
+
+      // Clear form
+      setBannerData({
+        bannerName: "",
+        flyer: null,
+        bannerLink: "",
+      });
+      setFlyerPreview(null);
+    } catch (err) {
+      console.error("Error submitting banner:", err);
+      setModalInfo({
+        show: true,
+        title: "Error!",
+        message:
+          err.response?.data?.message || "Failed to submit banner. Please try again.",
+        type: "error",
+      });
+    } finally {
       setIsSubmitting(false);
-      alert('Banner submitted successfully!');
-    }, 1500);
-    const success = true; // replace with real API result
-    if (success) {
-      setModalInfo({
-        show: true,
-        title: 'Success!',
-        message: 'Event submitted successfully.',
-        subMessage: "Thanks for uploading your banner. Our team will review it, and if approved, it will go live within 24–48 hours.",
-        type: 'success',
-      });
-    } else {
-      setModalInfo({
-        show: true,
-        title: 'Error!',
-        message: 'Failed to submit banner.',
-        type: 'error',
-      });
     }
   };
+
+
 
   return (
     <div className="banner-form-container">
@@ -186,6 +225,11 @@ const PromoteBanner = () => {
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
         type={modalInfo.type}
+        footerButtons={ <>
+        
+        </>
+          
+        }
       />
     </div>
   );

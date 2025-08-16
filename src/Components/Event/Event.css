@@ -33,14 +33,19 @@
   display: flex;
   gap: 32px;
   padding: 32px 24px;
-  max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 }
 
 .upload-section {
-  flex: 0 0 280px;
+  flex: 0 0 495px;
+  padding-top: 20px;
+  padding-left: 20px;
 }
-
+.upload-label {
+  margin-top: 30px;
+  margin-left: 23px;
+}
 .upload-area {
   /* border: 2px dashed #333333; */
   border-radius: 8px;
@@ -51,22 +56,22 @@
   cursor: pointer;
   transition: border-color 0.2s ease;
   width: 260px;
-  display: block;
   height: 335px;
-  margin-top: 2vw;
 }
   /* Container for upload area */
 .upload-area {
-  width: 100%;           /* full width of parent */
-  max-width: 400px;      /* max width to keep it neat */
-  height: 220px;         /* fixed height to contain the image */
-  overflow: hidden;      /* hide overflow */
-  border: 2px dashed #bbb;
+  width: 100%;
+  max-width: 400px;
+  height: 800px;
+  overflow: hidden;
+  border: 0.5px dashed #343434;
   border-radius: 8px;
   padding: 0px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 3vw;
+  margin-top: 2vw;
 }
 
 /* Image preview styling */
@@ -81,7 +86,7 @@
 
 
 .upload-area:hover {
-  border-color: #444444;
+  border-color: #686868;
 }
 
 .upload-icon {
@@ -114,6 +119,11 @@
   color: #ffffff;
   font-size: 14px;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.upload-flyer-text p {
+  margin-left: 10px;
 }
 
 .upload-description {
@@ -156,7 +166,7 @@
 .form-textarea {
   width: 91%;
   background-color: #1a1a1a;
-  border: 0px solid #333333;
+  border: 1px solid #333333;
   border-radius: 6px;
   padding: 12px 16px;
   font-size: 14px;
@@ -165,6 +175,7 @@
   transition: border-color 0.2s ease;
   resize: none;
 }
+
 .form-input[type="date"],
 .form-input[type="time"] {
   background-color: #1a1a1a;
@@ -276,12 +287,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   transform: translateY(0);
 }
 .upload-section {
-  border: 1.5px dashed #888; /* dashed for drop zone effect */
+  border: 0.5px solid #888; /* dashed for drop zone effect */
   border-radius: 12px;
   padding: 0px;
   margin-bottom: 20px;
   background: rgba(255,255,255,0.02);
   transition: border-color 0.3s ease;
+  width: 600px;
+  margin-left: 2vw;
 }
 
 /* .upload-section:hover {
@@ -319,6 +332,9 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .create-event-btn {
     width: 100%;
   }
+}
+.upload-sec {
+  border: none;
 }
 /* Additional Mobile Responsiveness for EventForm */
 

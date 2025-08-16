@@ -22,14 +22,14 @@ const Le = [
         image: le3,
         title: 'Brymo Live',
         location: 'Lagos',
-        desciption: 'Experience the Brymo live concert in Lagos!'
+        desciption: 'Experience the Brymo live concert in Lagos! Live performance with Tomike Adeoye, amazing vibes and more.'
     },
      {
         id: 4,
         image: le1,
         title: 'Glow in the Dark',
         location: 'Lagos',
-        desciption: 'Get ready to illuminate your night at the Glow in the Dark Silent Disco Party!'
+        desciption: 'Get ready to illuminate your night at the Glow in the Dark Silent Disco Party! '
     },
     {
         id: 5,
@@ -43,7 +43,7 @@ const Le = [
         image: le3,
         title: 'Brymo Live',
         location: 'Lagos',
-        desciption: 'Experience the Brymo live concert in Lagos!'
+        desciption: 'Experience the Brymo live concert in Lagos! Live performance with Tomike Adeoye, amazing vibes and more.'
     }
 ]
 export default Le

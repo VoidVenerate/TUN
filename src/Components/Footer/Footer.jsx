@@ -43,7 +43,7 @@ const Footer = () => {
           <h4>Stay In The Loop</h4>
           <p>Join our mailing list to stay in the loop with our newest for Event and concert</p>
           <div className="footer-input">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='subscribe'>
               <input type="email" placeholder="Enter email address" className="email-ftinput" />
               <button type="submit" className={isActive ? 'active' : ''}>
                 {isActive ? 'Subscribing...' : 'Subscribe now'}

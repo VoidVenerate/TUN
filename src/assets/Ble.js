@@ -22,7 +22,7 @@ const Ble = [
         image: le3,
         title: 'Brymo Live',
         location: 'Lagos',
-        desciption: 'Experience the Brymo live concert in Lagos!'
+        desciption: 'Experience the Brymo live concert in Lagos! Live performance with Tomike Adeoye, amazing vibes and more.'
     },
      {
         id: 4,
@@ -43,7 +43,7 @@ const Ble = [
         image: le3,
         title: 'Brymo Live',
         location: 'Lagos',
-        desciption: 'Experience the Brymo live concert in Lagos!'
+        desciption: 'Experience the Brymo live concert in Lagos! Live performance with Tomike Adeoye, amazing vibes and more.'
     }
 ]
 export default Ble

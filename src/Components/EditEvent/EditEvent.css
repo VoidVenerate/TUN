@@ -1,0 +1,305 @@
+/* Container outline with dotted blue border */
+.review-container {
+  border: 0px dotted #007bff;
+  padding: 20px;
+  background-color: #0c0c0c;
+  color: #eee;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  
+  width: 94%;       /* take full width */
+  max-width: none;   /* remove max width limit */
+  margin: 0;         /* remove auto centering */
+  
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: 1vw;
+}
+
+
+/* Header */
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.review-header-title {
+  font-family: 'Rushon Ground', cursive;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.review-back-btn {
+  background: transparent;
+  border: none;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.review-back-btn:hover {
+  color: #fff;
+}
+
+/* Form layout: left image preview + right form */
+.review-content {
+  display: flex;
+  gap: 24px;
+  color: #ddd;
+}
+
+/* Left side flyer */
+.review-upload-section {
+  flex: 1;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 8px;
+  background: #1a1a1a;
+  padding: 12px;
+  height: 600px;
+}
+
+.review-upload-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #eee;
+}
+
+.review-upload-description {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.review-upload-area {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #444;
+  background: #222;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 495px;
+}
+
+.review-flyer-preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Right side form */
+.review-form {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.review-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Rows with two columns */
+.review-row {
+  display: flex;
+  gap: 16px;
+}
+
+.review-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.review-full {
+  flex: 1 1 100%;
+}
+
+/* Labels */
+.review-label {
+  font-weight: 600;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+/* Inputs */
+.form-input, .form-textarea, select {
+  background-color: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #eee;
+  padding: 10px 14px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus, .form-textarea:focus, select:focus {
+  border-color: #7a5af8;
+  box-shadow: 0 0 6px #7a5af8aa;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Radio toggle group */
+.toggle-group {
+  display: flex;
+  gap: 16px;
+}
+
+.toggle-group label {
+  cursor: pointer;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.toggle-group input[type="radio"] {
+  margin-right: 6px;
+  accent-color: #7a5af8;
+}
+
+/* Contact info inputs */
+.review-group.review-full {
+  margin-top: 12px;
+}
+
+/* Submit Button */
+.review-footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.review-submit-btn {
+  background-color: #7a5af8;
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.review-submit-btn:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.review-submit-btn:hover:not(:disabled) {
+  background-color: #693be6;
+}
+
+/* Edit and Delete buttons - you can add these styles to your buttons */
+
+.edit-event-btn {
+  background-color: #444;
+  border: none;
+  color: #eee;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.delete-event-btn {
+  background-color: #d9534f;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .review-content {
+    flex-direction: column;
+  }
+  
+  .review-upload-section, .review-form {
+    max-width: 100%;
+  }
+  
+  .review-row {
+    flex-direction: column;
+  }
+}
+
+.toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.toggle-group button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+  border: 1px solid #2a2a2a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-group button:hover {
+  background: #333;
+}
+
+.toggle-group button.active {
+  background: #6d28d9;
+  border-color: #6d28d9;
+}
+.upload-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  background-color: transparent;
+  border: 2px solid #7a5af8;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #7a5af8;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-top: 12px;
+  font-size: 1rem;
+  user-select: none;
+}
+
+.upload-icon-btn:hover {
+  background-color: #7a5af8;
+  color: #fff;
+}
+
+.upload-icon-btn svg {
+  display: block;
+}
+.review-delete-btn {
+  background-color: #d9534f;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.review-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
