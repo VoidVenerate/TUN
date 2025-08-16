@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import Modal from '../Modal/Modal';
 import { Upload, TrendingUp, TrendingDown, Mail } from 'lucide-react';
 import axios from 'axios';
-import './NewsLetter.css';
+import './Newsletter.css';
 import api from '../api';
 
 const Newsletter = () => {
