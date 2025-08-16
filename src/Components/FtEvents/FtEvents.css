@@ -62,7 +62,7 @@
 .slider li {
   width: 400px;
   background-color: #000000;
-  border-radius: 10px;
+  border-radius: 24px;
   padding: 1rem;
   list-style: none;
   flex-shrink: 0;
@@ -76,6 +76,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 597px;
+  position: relative;
 }
 
 .event-text {
@@ -89,7 +90,7 @@
   width: 400px;
   height: 474px;
   /* object-fit: cover; */
-  border-radius: 24px;
+  border-radius: 12px;
 }
 
 .event-info div p:first-child {
@@ -118,6 +119,7 @@
   color: #fff;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
+  
 }
 
 .slider-btn button:hover {
