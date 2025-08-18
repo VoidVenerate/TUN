@@ -7,9 +7,9 @@ import Modal from '../Modal/Modal';
 import FeatureDuration from '../FeatureDuration/FeatureDuration';
 
 const EditableEventReviewRHF = ({ role }) => {
-  const { eventData, updateEvent, setEventData } = useEvent(); 
+  const { eventData, updateEvent, setEventData, deleteEvent } = useEvent(); 
   const navigate = useNavigate();
-  const { id } = useParams();  // 👈 Grab event ID from URL
+  const { event_id } = useParams(); // 👈 grab event_id from URL
 
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: {
@@ -53,26 +53,27 @@ const EditableEventReviewRHF = ({ role }) => {
 
   // ✅ Fetch event details
   useEffect(() => {
-    if (!id) return;
+    if (!event_id) return;
 
     const fetchEvent = async () => {
       try {
-        const res = await api.get(`/event/events/${id}`);
-        setEventData(res.data);
+        const res = await api.get(`/event/events/${event_id}`);
+        const data = res.data;
+        setEventData(data);
 
         reset({
-          eventName: res.data.event_name,
-          date: res.data.date,
-          time: res.data.time,
-          location: res.data.state,
-          venue: res.data.venue,
-          dressCode: res.data.dress_code,
-          description: res.data.event_description,
-          link: res.data.link,
-          contactMethod: res.data.contact_method,
-          contactValue: res.data.contact_value,
-          flyerPreview: res.data.flyer_url,
-          featureChoice: res.data.is_featured ? "yes-feature" : "no-feature",
+          eventName: data.event_name,
+          date: data.date,
+          time: data.time,
+          location: data.state,
+          venue: data.venue,
+          dressCode: data.dress_code,
+          description: data.event_description,
+          link: data.link,
+          contactMethod: data.contact_method,
+          contactValue: data.contact_value,
+          flyerPreview: data.flyer_url,
+          featureChoice: data.is_featured ? "yes-feature" : "no-feature",
         });
       } catch (err) {
         console.error("Failed to fetch event", err);
@@ -86,7 +87,7 @@ const EditableEventReviewRHF = ({ role }) => {
     };
 
     fetchEvent();
-  }, [id, reset, setEventData]);
+  }, [event_id, reset, setEventData]);
 
   // ✅ Save event
   const onSubmit = async (data) => {
@@ -124,6 +125,8 @@ const EditableEventReviewRHF = ({ role }) => {
         updated = res.data;
       }
 
+      setEventData(updated);
+
       setModalInfo({ show: true, title: 'Success', message: 'Event updated successfully.', subMessage: '' });
 
       if (featureChoice === 'yes-feature') {
@@ -153,14 +156,14 @@ const EditableEventReviewRHF = ({ role }) => {
 
     setDeleting(true);
     try {
-      if (typeof updateEvent === 'function' && updateEvent.deleteEvent) {
-        await updateEvent.deleteEvent(eventData.event_id);
+      if (typeof deleteEvent === 'function') {
+        await deleteEvent(eventData.event_id);
       } else {
         await api.delete(`/event/events/${eventData.event_id}`);
       }
 
       setModalInfo({ show: true, title: 'Deleted', message: 'Event deleted successfully.', subMessage: '' });
-      navigate('/events'); 
+      navigate('/events');
     } catch (err) {
       setModalInfo({
         show: true,

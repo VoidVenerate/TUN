@@ -16,7 +16,7 @@ body {
 .footer-container {
     display: flex;
     justify-content: space-between;
-    padding-left: 2vw;
+    padding-left: 4.4vw;
 }
 .footer-pt1 {
     width: 400px;
@@ -26,22 +26,27 @@ body {
     color: #000;
 }
 .footer-input{
-    border: 1px solid #404040;
-    width: 350px;
+    border: 0px solid #404040;
+    /* width: 450px; */
     display: flex;
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
-    border-radius: 16px;
-    height: 57px;
 }
 .subscribing {
   display: flex;
   justify-content: space-between;
 }
 .email-ftinput {
-    border: none;
+    border: 1px solid #404040;
+    width: 225px;
+    height: 57px;
     padding-left: 10px;
+    border-radius: 16px;
+    opacity: 0.5;
+}
+.email-ftinput::placeholder .active {
+  opacity: 1;
 }
 .footer-input button {
     padding: 16px;
@@ -49,7 +54,8 @@ body {
     border: 0px;
     background-color: #5423D2;
     color: #fff;
-    margin-left: 48px;
+    margin-left: 15px;
+    height: 57px;
 }
 .footer-input button:hover {
     background-color: #5319e5;

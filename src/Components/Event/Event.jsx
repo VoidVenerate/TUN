@@ -28,7 +28,7 @@ const Event = () => {
                     const previewURL = URL.createObjectURL(file);
                     setEventData(prev => ({
                         ...prev,
-                        event_flyer: file,
+                        flyer: file,
                         flyerPreview: previewURL // <-- Save preview in context
                     }));
                     setFlyerPreview(previewURL);

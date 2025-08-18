@@ -50,21 +50,21 @@ const AdminCards = () => {
                 setPendingEvents(newPending)
             //total events
                 const eventRes = await axios.get('https://lagos-turnup.onrender.com/event/events', 
-                  { headers: { 'Content-Type': 'application/json',Authorization: `Bearer${token}`  } }
+                  { headers: { 'Content-Type': 'application/json',Authorization: `Bearer ${token}`  } }
                 )
                 const eventData = eventRes.data
                 setTotalEvents(eventData.length)
 
             //total banners
-                const bannerRes = await axios.get ('https://lagos-turnup.onrender.com/event/banner', 
-                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer${token}` } }
+                const bannerRes = await axios.get ('https://lagos-turnup.onrender.com/event/banners', 
+                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
                 )
                 const bannerData = bannerRes.data
                 setTotalBanner(bannerData.length)
             
             //discover lagos
                 const discoverRes = await axios.get ('https://lagos-turnup.onrender.com/discoverlagos', 
-                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer${token}` } }
+                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
                 )
                 const discoverData = discoverRes.data
                 setDiscoverCount(discoverData.length)

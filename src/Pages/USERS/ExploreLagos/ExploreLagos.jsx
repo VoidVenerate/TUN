@@ -30,7 +30,7 @@ const ExploreLagos = () => {
                             <h3>{event.title}</h3>
                             <p>{event.location}</p>
                         </div>
-                        <p>{event.description}</p>
+                        <p>{event.desciption}</p>
                         <div className="slider-btn">
                             <button
                                 className={activeBtn.index === index && activeBtn.type === 'details' ? 'active' : ''}

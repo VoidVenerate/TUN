@@ -70,7 +70,7 @@ const ProfileDark = () => {
   const fetchSubAdmins = async () => {
     setManagementLoading(true);
     try {
-      const res = await api.get("/api/v1/accounts/sub-admins/", {
+      const res = await api.get("https://lagos-turnup.onrender.com/get-sub-admin", {
         headers: { 'Content-Type': 'multiform/data' },
       });
       setSubAdmins(res.data);
@@ -124,7 +124,7 @@ const ProfileDark = () => {
       if (profileImageFile) formData.append("profileImage", profileImageFile);
       if (password) formData.append("password", password);
 
-      const res = await api.put("/api/v1/accounts/profile/", formData, {
+      const res = await api.patch("https://lagos-turnup.onrender.com/me", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -145,32 +145,36 @@ const ProfileDark = () => {
   };
 
   // ====== SUB-ADMIN MANAGEMENT ACTIONS ======
-  const handleDeactivate = (id) => {
-    setModalInfo({
-      show: true,
-      title: "Deactivate Sub-Admin",
-      message: "Are you sure you want to deactivate this sub-admin?",
-      confirmAction: () => performAction(`/api/v1/accounts/sub-admins/${id}/deactivate`),
-    });
-  };
+  // Deactivate
+    const handleDeactivate = (id) => {
+      setModalInfo({
+        show: true,
+        title: "Deactivate Sub-Admin",
+        message: "Are you sure you want to deactivate this sub-admin?",
+        confirmAction: () => performAction(`https://lagos-turnup.onrender.com/event/deactivate-user/${id}`, "put"),
+      });
+    };
 
-  const handleReactivate = (id) => {
-    setModalInfo({
-      show: true,
-      title: "Reactivate Sub-Admin",
-      message: "Are you sure you want to reactivate this sub-admin?",
-      confirmAction: () => performAction(`/api/v1/accounts/sub-admins/${id}/reactivate`),
-    });
-  };
+    // Reactivate
+    const handleReactivate = (id) => {
+      setModalInfo({
+        show: true,
+        title: "Reactivate Sub-Admin",
+        message: "Are you sure you want to reactivate this sub-admin?",
+        confirmAction: () => performAction(`https://lagos-turnup.onrender.com/event/activate-user/${id}`, "put"),
+      });
+    };
 
-  const handleDelete = (id) => {
-    setModalInfo({
-      show: true,
-      title: "Delete Sub-Admin",
-      message: "This action is permanent. Continue?",
-      confirmAction: () => performAction(`/api/v1/accounts/sub-admins/${id}`, "delete"),
-    });
-  };
+    // Delete
+    const handleDelete = (id) => {
+      setModalInfo({
+        show: true,
+        title: "Delete Sub-Admin",
+        message: "This action is permanent. Continue?",
+        confirmAction: () => performAction(`https://lagos-turnup.onrender.com/delete-user/${id}`, "delete"),
+      });
+    };
+
 
   const performAction = async (url, method = "patch") => {
     try {
@@ -232,7 +236,7 @@ const ProfileDark = () => {
             <div className="profile-dark-input-group">
               <label>Firstname</label>
               <div className="profile-dark-input-disabled">
-                <input type="text" value={userData?.firstName || ""} disabled />
+                <input type="text" value={userData?.first_name || ""} readOnly autoComplete="family name" />
                 <Lock size={16} color="#666" />
               </div>
             </div>
@@ -241,7 +245,7 @@ const ProfileDark = () => {
             <div className="profile-dark-input-group">
               <label>Lastname</label>
               <div className="profile-dark-input-disabled">
-                <input type="text" value={userData?.lastName || ""} disabled />
+                <input type="text" value={userData?.last_name || ""} disabled />
                 <Lock size={16} color="#666" />
               </div>
             </div>
@@ -307,46 +311,67 @@ const ProfileDark = () => {
       {/* ====== SUB-ADMIN MANAGEMENT (SUPER-ADMIN ONLY) ====== */}
       {userData?.role === "super-admin" && (
         <div className="sub-admin-section">
-          <h3>Manage Sub-Admins</h3>
+          <h3 className="sub-admin-title">Manage Sub Admins</h3>
+
           {managementLoading ? (
             <p>Loading sub-admins...</p>
           ) : (
-            <table className="sub-admin-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {subAdmins.map((admin) => (
-                  <tr key={admin.id}>
-                    <td>{admin.firstName} {admin.lastName}</td>
-                    <td>{admin.email}</td>
-                    <td>{admin.is_active ? "Active" : "Inactive"}</td>
-                    <td>
-                      {admin.is_active ? (
-                        <button onClick={() => handleDeactivate(admin.id)} className="action-btn danger">
-                          <UserX size={16} /> Deactivate
-                        </button>
-                      ) : (
-                        <button onClick={() => handleReactivate(admin.id)} className="action-btn success">
-                          <UserCheck size={16} /> Reactivate
-                        </button>
-                      )}
-                      <button onClick={() => handleDelete(admin.id)} className="action-btn delete">
-                        <Trash2 size={16} /> Delete
+            <div className="sub-admin-list">
+              {subAdmins.map((admin) => (
+                <div key={admin.id} className="sub-admin-card">
+                  <div className="sub-admin-info">
+                    <img
+                      src={admin.profile_picture_url || "/default-profile.png"}
+                      alt={`${admin.first_name} ${admin.last_name}`}
+                      className="sub-admin-avatar"
+                    />
+                    <div>
+                      <p className="sub-admin-name">
+                        {admin.first_name} {admin.last_name}
+                      </p>
+                      <p className="sub-admin-email">{admin.email}</p>
+                    </div>
+                  </div>
+
+                  <div className="sub-admin-actions">
+                    <button
+                      className="action-btn"
+                      onClick={() => console.log("View logs for", admin.id)}
+                    >
+                      View Admin Activity Logs
+                    </button>
+
+                    {admin.is_active ? (
+                      <button
+                        onClick={() => handleDeactivate(admin.id)}
+                        className="action-btn deactivate"
+                      >
+                        Deactivate Admin
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    ) : (
+                      <button
+                        onClick={() => handleReactivate(admin.id)}
+                        className="action-btn reactivate"
+                      >
+                        Reactivate Admin
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => handleDelete(admin.id)}
+                      className="action-btn delete"
+                    >
+                      Delete Admin
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+            </div>
           )}
         </div>
       )}
+
 
       {/* ====== MODAL ====== */}
       {modalInfo.show && (

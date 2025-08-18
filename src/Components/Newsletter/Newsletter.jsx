@@ -70,7 +70,8 @@ const Newsletter = () => {
     useEffect(() => {
         const fetchSubscription = async () => {
             try {
-                const res = await api.get('https://lagos-turnup.onrender.com/event/newsletter');
+                const res = await api.get
+                ('https://lagos-turnup.onrender.com/event/newsletter');
                 const pendingData = res.data;
                 const newCount = Array.isArray(pendingData) ? pendingData.length : 0;
 

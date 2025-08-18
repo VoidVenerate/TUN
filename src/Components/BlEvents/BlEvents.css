@@ -21,24 +21,22 @@
 }
 
 .BlEvents-header button {
-  padding: 8px 8px;
   border: none;
   cursor: pointer;
   font-weight: 500;
   position: relative;
   text-decoration: none;
   color: #03e9f4;
-  text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 0px;
   transition: 0.5s;
   -webkit-box-reflect: below 1px linear-gradient(transparent, rgb(0, 0, 0));
   overflow: hidden;
   transition: background 0.3s ease;
   background-color: #2f2f2f;
-  border-radius: 15px;
+  border-radius: 60px;
   margin-right: 3vw;
-  width: auto;
-  height: 35px;
+  width: 117px;
+  height: 58px;
 }
 
 /* Events grid */
@@ -46,7 +44,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  margin-top: 3vw;
+  margin-top: 0vw;
   margin-left: -1vw;
   justify-content: flex-start;
   box-sizing: border-box;
@@ -65,12 +63,12 @@
 }
 
 .events {
-  padding: 20px;
+  padding: 24px;
   box-sizing: border-box;
 }
 
 .events img {
-  border-radius: 10px;
+  border-radius: 16px;
   width: 100%;
   height: auto;
 }

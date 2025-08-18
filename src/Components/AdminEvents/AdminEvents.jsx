@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
 import api from "../api";
 import "./AdminEvents.css";
+import { useEvent } from "../EventContext/EventContext";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -16,7 +17,7 @@ const AdminEvents = () => {
 
   const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
   const [detailsEvent, setDetailsEvent] = useState(null);
-  const [deleteEvent, setDeleteEvent] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const [modalFeedback, setModalFeedback] = useState({
     show: false,
@@ -26,7 +27,25 @@ const AdminEvents = () => {
     footerButtons: null,
   });
 
+  const { deleteEvent } = useEvent();
   const navigate = useNavigate();
+
+  // ✅ Centralized URL normalization
+  const normalizeUrl = (path) => {
+    if (!path) return "/placeholder.png";
+
+    let url = path.trim();
+
+    // Fix broken domain+uploads (missing slash)
+    url = url.replace(/\.comuploads/, ".com/uploads");
+
+    // Handle relative paths (uploads/... or /uploads/...)
+    if (!url.startsWith("http")) {
+      url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
+    }
+
+    return url;
+  };
 
   const handleClick = (index, type, eventId) => {
     if (activeBtn.index === index && activeBtn.type === type) {
@@ -39,7 +58,6 @@ const AdminEvents = () => {
       navigate(`/editevent/${eventId}`);
     }
   };
-
 
   const handleAddNew = () => {
     navigate("/adminpromoteevent");
@@ -55,28 +73,12 @@ const AdminEvents = () => {
 
         const fetched = res.data.events || res.data;
 
-        const normalized = fetched.map(e => {
-          let flyerSrc = "/placeholder.png"; // fallback
-
-          if (e.event_flyer) {
-            // ✅ event_flyer is usually a relative path (safer to prefer this)
-            flyerSrc = `https://lagos-turnup.onrender.com/${e.event_flyer.replace(/^\/?/, "")}`;
-          } else if (e.flyer_url) {
-            // ✅ fix common API bug: missing slash after domain
-            flyerSrc = e.flyer_url.replace(/onrender\.com\/?uploads/, "onrender.com/uploads");
-
-            // in case flyer_url is just a relative path without https://
-            if (!flyerSrc.startsWith("http")) {
-              flyerSrc = `https://lagos-turnup.onrender.com/${flyerSrc.replace(/^\/?/, "")}`;
-            }
-          }
-
-          return {
-            ...e,
-            event_id: e.event_id || e.id,
-            flyerSrc,
-          };
-        });
+        // ✅ cleaner mapping using normalizeUrl
+        const normalized = fetched.map((e) => ({
+          ...e,
+          event_id: e.event_id || e.id,
+          flyerSrc: normalizeUrl(e.event_flyer || e.flyer_url),
+        }));
 
         setEvents(normalized);
         setTotalPages(res.data.totalPages || 1);
@@ -91,8 +93,6 @@ const AdminEvents = () => {
     fetchEvents();
   }, [currentPage, searchTerm]);
 
-
-
   // Sort events client-side by title
   const sortedEvents = [...events].sort((a, b) => {
     if (!a.event_name || !b.event_name) return 0;
@@ -101,14 +101,10 @@ const AdminEvents = () => {
       : b.event_name.localeCompare(a.event_name);
   });
 
-  // Delete event handler
   const handleConfirmDelete = async () => {
-    if (!deleteEvent) return;
+    if (!deleteTarget) return;
     try {
-      await api.delete(
-        `https://lagos-turnup.onrender.com/event/events/${deleteEvent.event_id}`,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      await deleteEvent(deleteTarget.event_id);
       setModalFeedback({
         show: true,
         type: "success",
@@ -119,7 +115,7 @@ const AdminEvents = () => {
             className="modal-close-btn"
             onClick={() => {
               setModalFeedback((prev) => ({ ...prev, show: false }));
-              setDeleteEvent(null);
+              setDeleteTarget(null);
               setCurrentPage(1);
             }}
           >
@@ -127,7 +123,7 @@ const AdminEvents = () => {
           </button>
         ),
       });
-      setEvents(events.filter(e => e.event_id !== deleteEvent.event_id));
+      setEvents(events.filter((e) => e.event_id !== deleteTarget.event_id));
     } catch (err) {
       setModalFeedback({
         show: true,
@@ -137,7 +133,9 @@ const AdminEvents = () => {
         footerButtons: (
           <button
             className="modal-close-btn"
-            onClick={() => setModalFeedback((prev) => ({ ...prev, show: false }))}
+            onClick={() =>
+              setModalFeedback((prev) => ({ ...prev, show: false }))
+            }
           >
             Close
           </button>
@@ -180,10 +178,18 @@ const AdminEvents = () => {
         {sortedEvents.map((event, index) => (
           <div key={event.event_id || index} className="event-card">
             <div className="events">
-              {event.event_flyer ? (
+              {event.flyerSrc ? (
                 <img src={event.flyerSrc} alt={event.event_name} loading="lazy" />
               ) : (
-                <div style={{ width: "100%", height: "150px", background: "#ccc" }}>No image</div>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "150px",
+                    background: "#ccc",
+                  }}
+                >
+                  No image
+                </div>
               )}
               <div className="event-txt">
                 <h3>{event.event_name}</h3>
@@ -192,7 +198,11 @@ const AdminEvents = () => {
               <p>{event.description}</p>
               <div className="slider-btn">
                 <button
-                  className={activeBtn.index === index && activeBtn.type === "details" ? "active" : ""}
+                  className={
+                    activeBtn.index === index && activeBtn.type === "details"
+                      ? "active"
+                      : ""
+                  }
                   onClick={() => handleClick(index, "details", event.event_id)}
                 >
                   Edit Event
@@ -200,8 +210,10 @@ const AdminEvents = () => {
 
                 {activeBtn.index === index && activeBtn.type === "details" && (
                   <div className="actions-dropdown">
-                    <button onClick={() => setDetailsEvent(event)}>View Details</button>
-                    <button onClick={() => setDeleteEvent(event)}>
+                    <button onClick={() => setDetailsEvent(event)}>
+                      View Details
+                    </button>
+                    <button onClick={() => setDeleteTarget(event)}>
                       <Trash2 size={14} /> Delete
                     </button>
                   </div>
@@ -214,16 +226,27 @@ const AdminEvents = () => {
 
       {/* Pagination */}
       <div className="pagination-controls">
-        <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
           Previous
         </button>
         {pageNumbers.map((num) => (
-          <button key={num} onClick={() => setCurrentPage(num)} className={num === currentPage ? "active-page" : ""}>
+          <button
+            key={num}
+            onClick={() => setCurrentPage(num)}
+            className={num === currentPage ? "active-page" : ""}
+          >
             {num}
           </button>
         ))}
         <button
-          onClick={() => setCurrentPage((prev) => (totalPages ? Math.min(prev + 1, totalPages) : prev + 1))}
+          onClick={() =>
+            setCurrentPage((prev) =>
+              totalPages ? Math.min(prev + 1, totalPages) : prev + 1
+            )
+          }
           disabled={totalPages ? currentPage === totalPages : false}
         >
           Next
@@ -245,32 +268,44 @@ const AdminEvents = () => {
                   style={{ maxWidth: "100%", marginBottom: 10 }}
                 />
               )}
-              <p><strong>Location:</strong> {detailsEvent.location}</p>
-              <p><strong>Description:</strong> {detailsEvent.description}</p>
-              <p><strong>Date:</strong> {detailsEvent.date || "N/A"}</p>
+              <p>
+                <strong>Location:</strong> {detailsEvent.location}
+              </p>
+              <p>
+                <strong>Description:</strong> {detailsEvent.description}
+              </p>
+              <p>
+                <strong>Date:</strong> {detailsEvent.date || "N/A"}
+              </p>
             </>
           ) : (
             ""
           )
         }
         footerButtons={
-          <button className="modal-close-btn" onClick={() => setDetailsEvent(null)}>
+          <button
+            className="modal-close-btn"
+            onClick={() => setDetailsEvent(null)}
+          >
             Close
           </button>
         }
       />
 
       <Modal
-        show={!!deleteEvent}
+        show={!!deleteTarget}
         title="Confirm Delete"
-        onClose={() => setDeleteEvent(null)}
-        message={`Are you sure you want to delete the event "${deleteEvent?.event_name}"?`}
+        onClose={() => setDeleteTarget(null)}
+        message={`Are you sure you want to delete the event "${deleteTarget?.event_name}"?`}
         footerButtons={
           <>
             <button className="modal-btn-danger" onClick={handleConfirmDelete}>
               Yes, Delete
             </button>
-            <button className="modal-close-btn" onClick={() => setDeleteEvent(null)}>
+            <button
+              className="modal-close-btn"
+              onClick={() => setDeleteTarget(null)}
+            >
               Cancel
             </button>
           </>
@@ -279,7 +314,9 @@ const AdminEvents = () => {
 
       <Modal
         show={modalFeedback.show}
-        onClose={() => setModalFeedback((prev) => ({ ...prev, show: false }))}
+        onClose={() =>
+          setModalFeedback((prev) => ({ ...prev, show: false }))
+        }
         title={modalFeedback.title}
         message={modalFeedback.message}
         type={modalFeedback.type}

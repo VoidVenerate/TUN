@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import UserNavbar from '../../../Components/UserNavbar/UserNavbar'
 import Ble from '../../../assets/Ble'
 import Footer from '../../../Components/Footer/Footer'
+import './BeyondLagos.css'
 
 const BeyondLagos = () => {
     const [activeBtn, setActiveBtn] = useState({index: null, type: null})
@@ -16,10 +17,10 @@ const BeyondLagos = () => {
   return (
     <div>
         <UserNavbar/>
-        <div className="BlEvents-header">
-            <p style={{fontFamily: 'Rushon Ground'}}>Beyond Lagos</p>
+        <div className="BlEvents-header ">
+            <p style={{fontFamily: 'Rushon Ground', marginLeft: '20px'}}>Beyond Lagos</p>
         </div>
-        <div className="Bl-Events">
+        <div className="Bl-Events more-bl-events">
             {[...Ble,...Ble].map((event, index) => (
                 <div key={`${event.id}-${Math.random()}`} className='event-card'>
                     <div className="events">

@@ -124,3 +124,79 @@
   display: flex;
   justify-content: flex-end;
 }
+.sub-admin-section {
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.sub-admin-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.sub-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sub-admin-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.sub-admin-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sub-admin-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sub-admin-name {
+  font-weight: 600;
+}
+
+.sub-admin-email {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.sub-admin-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+}
+
+.action-btn.deactivate {
+  background: goldenrod;
+  color: black;
+}
+
+.action-btn.reactivate {
+  background: green;
+  color: white;
+}
+
+.action-btn.delete {
+  background: crimson;
+  color: white;
+}

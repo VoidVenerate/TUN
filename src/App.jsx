@@ -31,6 +31,8 @@ import AdminEditEvent from './Pages/ADMIN/AdminEditEvent/AdminEditEvent'
 import Profile from './Pages/Profile/Profile'
 import AdminReview from './Pages/ADMIN/AdminReview/AdminReview'
 import AdminFeature from './Pages/ADMIN/AdminFeature/AdminFeature'
+import AdminViewEventDetails from './Pages/ADMIN/AdminViewEventDetails/AdminViewEventDetails'
+import ViewEventDetails from './Pages/USERS/ViewEventDetails/ViewEventDetails'
 
 function App() {
 
@@ -49,6 +51,7 @@ function App() {
         <Route path='/promoteevent' element = {<PromoteEvent/>} />
         <Route path='/featureevent' element = {<FeatureEvent/>} />
         <Route path='/review' element = {<Review/>} />
+        <Route path='/viewdetails/:id' element = {<ViewEventDetails/>} />
         <Route path='/promotebanner' element = {<Banner/>} />
         <Route path='/auth' element = {<Auth/>} />
         <Route path='/adminhome' element = {<AdminPendingEvents/>} />
@@ -63,8 +66,9 @@ function App() {
         <Route path='/newbanner' element = {<NewBanner/>} />
         <Route path='/adminspots' element = {<AdminSpots/>} />
         <Route path='/actionevents' element = {<ActionEvent/>} />
-        <Route path='/editevent/:id' element = {<AdminEditEvent/>} />
+        <Route path='/editevent/:event_id' element = {<AdminEditEvent/>} />
         <Route path='/profile' element = {<Profile/>} />
+        <Route path='/adminviewdetails/:id' element = {<AdminViewEventDetails/>} />
       </Routes>
     </div>
   )

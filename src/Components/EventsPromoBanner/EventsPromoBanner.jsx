@@ -6,9 +6,9 @@ const EventsPromoBanner = () => {
     <div className="promo-section">
         <div className="gradient-banner">
             <h2>Got an Event? We've Got the Hype.</h2>
-            <p>
+            <p style={ {paddingTop: '16px'}}>
                 Reach thousands of partygoers, culture lovers, and city explorers who are always down for a good time. 
-                TurnUpLagos puts your event in the spotlight.
+                <br />TurnUpLagos puts your event in the spotlight.
             </p>
             <button className="promo-btn">Promote Your Event</button>
         </div>
