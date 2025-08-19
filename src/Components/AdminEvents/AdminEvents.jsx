@@ -5,6 +5,7 @@ import Modal from "../Modal/Modal";
 import api from "../api";
 import "./AdminEvents.css";
 import { useEvent } from "../EventContext/EventContext";
+import placeholder from '../../assets/placeholder.png'
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -45,6 +46,13 @@ const AdminEvents = () => {
     }
 
     return url;
+  };
+
+  const truncateWords = (text, maxWords = 20) => {
+    if (!text) return "";
+    const words = text.split(" ");
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(" ") + "...";
   };
 
 
@@ -187,7 +195,7 @@ const AdminEvents = () => {
                   src={event.flyerSrc}
                   alt={event.event_name}
                   loading="lazy"
-                  onError={(e) => { e.currentTarget.src = "/placeholder.png"; }}
+                  onError={(e) => { e.currentTarget.src = placeholder }}
                 />
 
               ) : (
@@ -203,9 +211,9 @@ const AdminEvents = () => {
               )}
               <div className="event-txt">
                 <h3>{event.event_name}</h3>
-                <p>{event.location}</p>
+                <p>{event.state}</p>
               </div>
-              <p>{event.description}</p>
+              <p>{truncateWords(event.event_description,17)}</p>
               <div className="slider-btn">
                 <button
                   className={

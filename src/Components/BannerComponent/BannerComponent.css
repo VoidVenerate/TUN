@@ -19,12 +19,12 @@ body {
 
 /* Header */
 .banner-manager-header {
-    display: flex;
-    margin-top: 2vw;
-    margin-left: 2vw;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  margin-top: 2vw;
+  margin-left: 2vw;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
 }
 .banner-manager-header h2 {
   font-size: 1.8rem;
@@ -33,9 +33,9 @@ body {
 /* Add Button */
 .banner-manager-header button {
   display: flex;
-  align-items: center;      /* Vertically center content */
-  justify-content: center;  /* Horizontally center content if needed */
-  gap: 8px;   
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: rgba(0, 132, 255, 0.101);
   padding: 10px 15px;
   font-weight: bold;
@@ -48,16 +48,15 @@ body {
   border: 0.5px solid rgba(0, 132, 255, 0.204);
   margin-top: 27px;
 }
-
 .banner-manager-header:hover button {
   background: rgba(0, 132, 255, 0.363);
 }
 
 /* Grid of banners */
 .banner-list {
-    width: 90%;
-    max-width: 1400px;
-    margin-left: 2vw;
+  width: 90%;
+  max-width: 1400px;
+  margin-left: 2vw;
 }
 .banner-grid {
   display: grid;
@@ -65,6 +64,7 @@ body {
   gap: 1.5rem;
 }
 
+/* Fix card width for responsiveness */
 .banner-card {
   background: #000;
   border: 1px solid #333;
@@ -72,10 +72,10 @@ body {
   overflow: hidden;
   padding: 1rem;
   transition: transform 0.2s;
-  width: 1425px;
-  height: 230px;
+  width: 100%;      /* ⬅ FIXED: full width of grid cell */
+  max-width: 100%;  /* ⬅ prevent overflow */
+  height: auto;     /* ⬅ let content decide height */
 }
-
 .banner-card:hover {
   transform: scale(1.02);
 }
@@ -93,6 +93,7 @@ body {
   word-break: break-word;
 }
 
+/* Buttons */
 .btn-group {
   display: flex;
   align-items: center;
@@ -100,7 +101,6 @@ body {
   justify-content: flex-end;
   margin-top: 0.6rem;
 }
-
 .btn-group button {
   display: flex;
   padding: 0.4rem;
@@ -111,7 +111,6 @@ body {
   font-weight: bold;
   transition: all 0.2s ease-in-out;
 }
-
 .btn-group button:first-child {
   background-color: #000;
   color: #03e9f4;
@@ -120,13 +119,11 @@ body {
   transition: background 0.3s ease;
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
-
 .btn-group button:first-child:hover {
   background: #03e9f4;
   color: #050801;
   box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 75px #03e9f4, 0 0 200px #03e9f4;
 }
-
 .btn-group .delete-btn {
   background-color: #ff3c3c1a;
   border-radius: 25px;
@@ -135,7 +132,6 @@ body {
   border: 0.5px solid #ff3c3c42;
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
-
 .btn-group .delete-btn:hover {
   background-color: rgba(255, 60, 60, 0.2);
 }
@@ -148,7 +144,6 @@ body {
   gap: 1rem;
   margin-top: 2rem;
 }
-
 .banner-pagination-controls button {
   color: #000;
   font-weight: bold;
@@ -160,13 +155,12 @@ body {
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 .banner-pagination-controls button:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 .banner-pagination-controls button:hover:not(:disabled) {
   background-color: #777;
   transform: scale(1.06);
 }
-
 .banner-pagination-controls button:disabled {
   background-color: #44444470;
   color: #aaaaaa70;
@@ -174,12 +168,71 @@ body {
   box-shadow: none;
   border-radius: 22px;
 }
-
 .banner-pagination-controls span {
   font-size: 1rem;
   font-weight: bold;
   color: #fff;
 }
 
+/* ========================= */
+/* 📱 RESPONSIVENESS */
+/* ========================= */
 
+/* Tablets (≤ 1024px) */
+@media (max-width: 1024px) {
+  .banner-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .banner-card img {
+    height: 130px;
+  }
+}
 
+/* Phones (≤ 768px) */
+@media (max-width: 768px) {
+  .banner-manager-header {
+    flex-direction: column;
+    gap: 1rem;
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+  .banner-manager-header h2 {
+    font-size: 1.4rem;
+  }
+  .banner-manager-header button {
+    margin: 0;
+    width: 100%;
+  }
+  .banner-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+  .banner-card img {
+    height: 120px;
+  }
+}
+
+/* Small phones (≤ 480px) */
+@media (max-width: 480px) {
+  .banner-grid {
+    grid-template-columns: 1fr; /* stack cards */
+  }
+  .banner-card {
+    padding: 0.8rem;
+  }
+  .banner-card img {
+    height: 100px;
+  }
+  .banner-card p {
+    font-size: 0.85rem;
+  }
+  .btn-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+  .btn-group button {
+    width: 100%;
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+}

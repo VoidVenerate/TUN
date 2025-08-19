@@ -10,6 +10,7 @@
   height: auto;
 }
 
+/* Image */
 .banner-card__image img {
   width: 100%;
   height: 300px;
@@ -18,6 +19,7 @@
   border: 1px solid #333;
 }
 
+/* Info row */
 .banner-card__info {
   display: flex;
   gap: 1rem;
@@ -46,16 +48,18 @@
   margin-top: auto;
 }
 
-/* Base button */
+/* Info + buttons wrapper */
 .banner-info-btns {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
+/* Base button */
 .banner-card__btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;            /* space between icon and text */
+  gap: 0.5rem;
   padding: 10px 15px;
   border-radius: 25px;
   border: none;
@@ -91,4 +95,79 @@
 }
 .banner-card__btn--delete:hover {
   background-color: rgba(255, 60, 60, 0.2);
+}
+
+/* ========================= */
+/* 📱 RESPONSIVENESS */
+/* ========================= */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .banner-card__image img {
+    height: 220px; /* smaller images */
+  }
+
+  .banner-card__info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .banner-card__name {
+    font-size: 0.95rem;
+  }
+
+  .banner-card__btn {
+    font-size: 0.85rem;
+    padding: 8px 12px;
+  }
+}
+
+/* Phones (600px and below) */
+@media (max-width: 600px) {
+  .banner-card {
+    padding: 0.8rem;
+  }
+
+  .banner-card__image img {
+    height: 180px;
+  }
+
+  .banner-card__info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .banner-card__btn {
+    flex: 1;               /* buttons stretch */
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  .banner-card__actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Small phones (400px and below) */
+@media (max-width: 400px) {
+  .banner-card__image img {
+    height: 150px;
+  }
+
+  .banner-card__name {
+    font-size: 0.85rem;
+  }
+
+  .banner-card__link {
+    font-size: 0.75rem;
+    word-break: break-word;
+  }
+
+  .banner-card__btn {
+    font-size: 0.75rem;
+    padding: 6px 8px;
+  }
 }

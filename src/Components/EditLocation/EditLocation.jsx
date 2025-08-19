@@ -42,67 +42,70 @@ const EditableLocationRHF = () => {
 
   // ✅ Fetch spot details
   useEffect(() => {
-    if (!spot_id) return;
-
     const fetchSpot = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await api.get(`/event/spots`, {
-          params: { id: spot_id },
-          headers: { Authorization: `Bearer ${token}` },
+        const token = localStorage.getItem("token");
+        const res = await api.get("/event/spots", {
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
         });
 
-        const data = res.data[0];
-        if (!data) throw new Error("Spot not found");
+        const spots = (Array.isArray(res.data) ? res.data : []).map((s) => ({
+          ...s,
+          id: String(s.id), // keep IDs safe as strings
+        }));
 
-        reset({
-          locationName: data.location_name || '',
-          city: data.city || '',
-          state: data.state || '',
-          typeOfSpot: data.spot_type || '',
-          additionalInfo: data.additional_info || '',
-          flyerPreview: data.cover_image_url || '',
-        });
+        console.log("All spots:", spots);
+
+        const spot = spots.find((s) => s.id === spot_id);
+
+        console.log("Fetched spot:", spot);
+
+        if (spot) {
+          reset({
+            locationName: spot.location_name,
+            city: spot.city,
+            state: spot.state,
+            typeOfSpot: spot.spot_type,
+            additionalInfo: spot.additional_info,
+            flyerPreview: spot.cover_image
+            ? `https://lagos-turnup.onrender.com/${spot.cover_image}`
+            : "",
+          });
+        }
       } catch (err) {
-        console.error("Failed to fetch spot", err);
-        setModalInfo({
-          show: true,
-          title: "Error",
-          message: "Error fetching spot details.",
-          subMessage: err?.message || '',
-        });
+        console.error("Error fetching spot:", err);
       }
     };
-
     fetchSpot();
   }, [spot_id, reset]);
 
+
+
+
   // ✅ Save changes
   const onSubmit = async (data) => {
-    if (!spot_id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No spot ID to update.', subMessage: '' });
-      return;
-    }
-
-    setSaving(true);
     try {
-      const fd = new FormData();
-      fd.append('location_name', data.locationName);
-      fd.append('city', data.city);
-      fd.append('state', data.state);
-      fd.append('spot_type', data.typeOfSpot);
-      fd.append('additional_info', data.additionalInfo);
-
-      if (data.flyerFile && data.flyerFile.length > 0) {
-        fd.append('cover_image', data.flyerFile[0]);
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("location_name", data.locationName);
+      formData.append("city", data.city);
+      formData.append("state", data.state);
+      formData.append("spot_type", data.typeOfSpot);
+      formData.append("additional_info", data.additionalInfo);
+      if (data.flyerFile && data.flyerFile[0]) {
+         formData.append("cover_image", data.flyerFile[0]);
       }
 
-      await api.put(`/event/spots/${spot_id}`, fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      await api.put(`/event/spots/edit/${spot_id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
-      setModalInfo({ show: true, title: 'Success', message: 'Spot updated successfully.', subMessage: '' });
+
+      // Redirect to new spot type admin page
       let redirectPath = "/discoverlagos";
-      switch (locationData.typeOfSpot) {
+      switch (data.typeOfSpot) {
         case "club":
           redirectPath = "/adminclubs";
           break;
@@ -118,16 +121,10 @@ const EditableLocationRHF = () => {
       }
       navigate(redirectPath);
     } catch (err) {
-      setModalInfo({
-        show: true,
-        title: 'Error',
-        message: 'Failed to update spot.',
-        subMessage: err?.message || '',
-      });
-    } finally {
-      setSaving(false);
+      console.error("Error updating spot:", err);
     }
   };
+
 
   // ✅ Delete spot
   const handleDelete = () => {

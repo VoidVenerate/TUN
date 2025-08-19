@@ -1,4 +1,4 @@
-/* Header styles */
+/* ===== HEADER ===== */
 .adminEvents-header {
   display: flex;
   margin-top: 2vw;
@@ -16,8 +16,8 @@
 
 .adminEvents-header button {
   display: flex;
-  align-items: center;      /* Vertically center content */
-  justify-content: center;  /* Horizontally center content if needed */
+  align-items: center;
+  justify-content: center;
   gap: 8px;   
   background: rgba(0, 132, 255, 0.101);
   padding: 10px 15px;
@@ -32,7 +32,7 @@
   margin-top: 27px;
 }
 
-/* Events wrapper */
+/* ===== EVENTS WRAPPER ===== */
 .admin-Events {
   display: flex;
   margin-top: 3vw;
@@ -40,7 +40,7 @@
   flex-wrap: wrap;
 }
 
-/* Event card */
+/* ===== EVENT CARD ===== */
 .event-card {
   margin-left: 40px;
   border: 1px solid rgba(255, 255, 255, 0.141);
@@ -48,17 +48,20 @@
   width: 435px;
   height: 670px;
   margin-top: 2vw;
+  overflow: hidden; /* ✅ keeps content inside */
 }
 
-/* Event content */
+/* ===== EVENT CONTENT ===== */
 .events {
   padding: 20px;
 }
 
 .events img {
   border-radius: 10px;
-  width: 395px;
-  height: 455px;
+  width: 100%;
+  height: auto;
+  max-height: 455px;
+  object-fit: cover; /* ✅ prevents stretched images */
 }
 
 .events h3 {
@@ -73,7 +76,8 @@
   display: flex;
   justify-content: space-between;
 }
-/* Modal */
+
+/* ===== MODAL ===== */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -99,7 +103,7 @@
   margin-top: 15px;
 }
 
-/* Toast */
+/* ===== TOAST ===== */
 .toast {
   position: fixed;
   bottom: 20px;
@@ -113,12 +117,8 @@
   gap: 12px;
   z-index: 1100;
 }
-.toast.success {
-  background: #4caf50;
-}
-.toast.error {
-  background: #f44336;
-}
+.toast.success { background: #4caf50; }
+.toast.error { background: #f44336; }
 .toast button {
   background: transparent;
   border: none;
@@ -127,25 +127,37 @@
   cursor: pointer;
 }
 
-/* Pagination */
-.pagination-controls button {
-  margin: 0 3px;
-  padding: 6px 12px;
-  border-radius: 3px;
-  border: none;
-  background: #444;
-  color: white;
-  cursor: pointer;
+/* ===== PAGINATION ===== */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
 }
-.pagination-controls button[disabled] {
-  opacity: 0.5;
+.pagination-controls button {
+  background-color: #2f2f2f;
+  color: #03e9f4;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+.pagination-controls button:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
+}
+.pagination-controls span {
+  color: #fff;
+  font-weight: 500;
 }
 .active-page {
   background: #5423D2;
 }
 
-/* Actions dropdown */
+/* ===== ACTIONS DROPDOWN ===== */
 .actions-dropdown {
   display: flex;
   flex-direction: column;
@@ -169,7 +181,7 @@
   background: #333;
 }
 
-/* Search bar and sort */
+/* ===== SEARCH & SORT ===== */
 .search-sort-bar {
   margin: 15px 0;
   display: flex;
@@ -192,119 +204,64 @@
   cursor: pointer;
 }
 
-
-/* Responsive design */
+/* ===== RESPONSIVE DESIGN ===== */
 
 /* Small phones */
 @media (max-width: 360px) {
-  .pendingEvents-header {
+  .adminEvents-header {
     flex-direction: column;
     align-items: flex-start;
     margin-left: 1vw;
   }
-
-  .pendingEvents-header p {
+  .adminEvents-header p {
     font-size: 1.6rem;
     margin-bottom: 1rem;
   }
-
-  .pendingEvents-header button {
+  .adminEvents-header button {
     margin-right: 0;
     padding: 0.5rem 1rem;
-    letter-spacing: 2px;
     font-size: 0.8rem;
   }
-
-  .pending-Events {
+  .admin-Events {
     justify-content: center;
     margin-left: 0;
   }
-
   .event-card {
     width: 90vw;
     margin-left: 0;
     margin-bottom: 2rem;
     height: auto;
   }
-
-  .events img {
-    width: 100%;
-    height: auto;
-  }
 }
 
 /* Phones up to 480px */
 @media (min-width: 361px) and (max-width: 480px) {
-  .pendingEvents-header {
-    margin-left: 2vw;
-  }
-
-  .pending-Events {
+  .adminEvents-header { margin-left: 2vw; }
+  .admin-Events {
     justify-content: center;
     margin-left: 0;
     gap: 1rem;
   }
-
   .event-card {
     width: 320px;
     margin-left: 0;
     margin-bottom: 1.5rem;
-  }
-
-  .events img {
-    width: 100%;
     height: auto;
   }
 }
 
 /* Tablets (481px to 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
-  .pendingEvents-header {
-    margin-left: 3vw;
-  }
-
-  .pending-Events {
+  .adminEvents-header { margin-left: 3vw; }
+  .admin-Events {
     justify-content: center;
     margin-left: 0;
     gap: 1.5rem;
   }
-
   .event-card {
     width: 300px;
     margin-left: 0;
     margin-bottom: 2rem;
-  }
-
-  .events img {
-    width: 100%;
     height: auto;
   }
-}
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2rem;
-  gap: 1rem;
-}
-
-.pagination-controls button {
-  background-color: #2f2f2f;
-  color: #03e9f4;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.pagination-controls button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.pagination-controls span {
-  color: #fff;
-  font-weight: 500;
 }

@@ -52,6 +52,14 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     }
   };
 
+  const truncateWords = (text, maxWords = 20) => {
+    if (!text) return "";
+    const words = text.split(" ");
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(" ") + "...";
+  };
+
+
   const handleAddNew = () => {
     navigate(addPath);
   };
@@ -69,10 +77,14 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         const fetched = res.data.spots || res.data[spotType] || res.data;
 
         const normalized = fetched.map((s) => ({
-          ...s,
-          spot_id: s.spot_id || s.id,
-          flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
+            ...s,
+            spot_id: s.spot_id || s.id,
+            name: s.location_name,          // ✅ map to name
+            location: `${s.city}, ${s.state}`, // ✅ combine city + state
+            description: s.additional_info, // ✅ map to description
+            flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
         }));
+
 
         setSpots(normalized);
         setTotalPages(res.data.totalPages || 1);
@@ -196,7 +208,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
                 <h3>{spot.name}</h3>
                 <p>{spot.location}</p>
               </div>
-              <p>{spot.description}</p>
+              <p>{truncateWords(spot.description,17)}</p>
               <div className="slider-btn">
                 <button
                   className={

@@ -78,7 +78,7 @@ function App() {
         <Route path='/adminhotels' element = {<AdminHotels/>} />
         <Route path='/adminfoodspots' element = {<AdminFood/>} />
         <Route path='/adminbeaches' element = {<AdminBeaches/>} />
-        <Route path='/editlocation' element = {<EditSpot/>} />
+        <Route path='/editlocation/:spot_id' element = {<EditSpot/>} />
       </Routes>
     </div>
   )

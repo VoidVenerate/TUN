@@ -121,6 +121,7 @@
   padding: 8px;
   font-size: 0.9rem;
   color: #fff;
+  word-break: break-word; /* ✅ prevents overflow */
 }
 
 /* ===== TOGGLE BUTTONS ===== */
@@ -166,6 +167,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  font-size: 0.9rem;
 }
 
 .review-back-btn:hover {
@@ -181,20 +183,50 @@
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  font-size: 0.9rem;
 }
 
 .review-submit-btn:hover {
-  background: #6d28d9;
+  background: #5a21b5;
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
+
+/* Tablets (≤ 1024px) */
+@media (max-width: 1024px) {
   .review-content {
     flex-direction: column;
   }
 
   .review-row {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .review-group {
+    flex: 1 1 45%;
+  }
+
+  .review-footer {
+    justify-content: center;
+  }
+}
+
+/* Normal Phones (≤ 768px) */
+@media (max-width: 768px) {
+  .review-header-title {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .review-content {
     flex-direction: column;
+    gap: 15px;
+  }
+
+  .review-row {
+    flex-direction: column;
+    gap: 10px;
   }
 
   .toggle-group {
@@ -202,6 +234,49 @@
   }
 
   .review-footer {
-    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .review-back-btn,
+  .review-submit-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Small Phones (≤ 480px) */
+@media (max-width: 480px) {
+  .review-container {
+    padding: 10px;
+  }
+
+  .review-header-title {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+  }
+
+  .review-upload-text {
+    font-size: 1rem;
+  }
+
+  .review-upload-description {
+    font-size: 0.75rem;
+  }
+
+  .review-label {
+    font-size: 0.75rem;
+  }
+
+  .review-value {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .review-back-btn,
+  .review-submit-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
   }
 }

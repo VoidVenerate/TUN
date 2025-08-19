@@ -52,7 +52,7 @@
 /* Phones up to 480px */
 @media (min-width: 361px) and (max-width: 480px) {
   .visit-container {
-    width: 95%;
+    width: 100%;
     margin-left: 2vw;
   }
 }

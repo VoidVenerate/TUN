@@ -5,6 +5,7 @@ import './AdminNavbar.css';
 import { Bell, LogOut } from 'lucide-react';
 import axios from 'axios';
 import Modal from '../Modal/Modal';
+import defaultAvatar from '../../assets/defaultAvatar.png'
 
 const AdminNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -142,7 +143,8 @@ const AdminNavbar = () => {
                 alt="Profile"
                 className="profile-avatar"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                onError={(e) => { e.target.src = '/default-avatar.png'; }}
+                onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop
+                              e.currentTarget.src = defaultAvatar; }}
               />
             ) : (
               renderLetterAvatar()

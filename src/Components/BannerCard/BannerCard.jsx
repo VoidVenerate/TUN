@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, Pencil } from 'lucide-react';
 import './BannerCard.css'
+import placeholder from '../../assets/placeholder.png'
 
 
 const BannerCard = ({ banner, onEdit, onDelete }) => {
@@ -15,6 +16,7 @@ const BannerCard = ({ banner, onEdit, onDelete }) => {
                 : '/assets/placeholder.jpg'
             }
             alt={banner.name}
+            onError={(e) => { e.currentTarget.src = placeholder }}
           />
         </div>
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Lock } from "lucide-react";
 import "./ProfileDark.css";
 import api from "../api";
+import defaultAvatar from '../../assets/defaultAvatar.png'
 
 const ProfileDark = () => {
   const token = localStorage.getItem("token");
@@ -258,9 +259,12 @@ const ProfileDark = () => {
           <p className="profile-dark-label">Profile Image</p>
           <p className="profile-dark-subtext">Displayed on your profile.</p>
           <img
-            src={profileImagePreview || "/default-profile.png"}
+            src={profileImagePreview}
             alt="Profile"
             className="profile-dark-image"
+            onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop
+              e.currentTarget.src = defaultAvatar; }}
+
           />
           <input
             type="file"
@@ -385,6 +389,7 @@ const ProfileDark = () => {
                       src={admin.profile_picture_url || "/default-profile.png"}
                       alt={`${admin.first_name} ${admin.last_name}`}
                       className="sub-admin-avatar"
+                      onError={(e) => { e.currentTarget.src = defaultAvatar }}
                     />
                     <div>
                       <p className="sub-admin-name">
