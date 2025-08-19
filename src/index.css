@@ -1,0 +1,11 @@
+/* Hide horizontal overflow on small devices up to tablets */
+html, body, #root {
+  overflow-x: hidden;
+}
+
+/* Optional: only apply for screens <= tablet width */
+@media (max-width: 1024px) {
+  html, body, #root {
+    overflow-x: hidden;
+  }
+}
