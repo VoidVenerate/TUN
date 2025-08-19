@@ -151,7 +151,7 @@ const Auth = () => {
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
-      const res = await axios.post('/api/v1/accounts/google-auth/', {
+      const res = await axios.post('https://lagos-turnup.onrender.com/auth/google/login', {
         token: credentialResponse.credential
       });
       localStorage.setItem('token', res.data.token);
@@ -163,17 +163,21 @@ const Auth = () => {
 
   const handleForgotPassword = async () => {
     if (!forgotEmail) {
-      setModalMessage('Please enter your email');
+      setModalMessage("Please enter your email");
       setShowSuccessModal(true);
       return;
     }
     setForgotLoading(true);
     try {
-      await axios.post('/api/v1/accounts/forgot-password/', { email: forgotEmail });
+      await axios.post("/email/send-otp-email", {
+        to_email: forgotEmail,
+        recipient_name: "User",
+      });
       setShowForgotModal(false);
       setShowResetModal(true);
     } catch (err) {
-      setModalMessage(err.response?.data?.message || 'Password reset request failed');
+      console.error("Forgot Password Error:", err.response?.data || err.message);
+      setModalMessage(err.response?.data?.message || "Failed to send reset email");
       setShowSuccessModal(true);
     } finally {
       setForgotLoading(false);
@@ -182,27 +186,44 @@ const Auth = () => {
 
   const handleResetPassword = async () => {
     if (newPassword !== confirmNewPassword) {
-      setModalMessage('Passwords do not match');
+      setModalMessage("Passwords do not match");
       setShowSuccessModal(true);
       return;
     }
     if (!isPasswordStrong(newPassword)) {
-      setModalMessage('Password must be 8+ chars, include uppercase, lowercase, number, and special character.');
+      setModalMessage(
+        "Password must be 8+ chars, include uppercase, lowercase, number, and special character."
+      );
       setShowSuccessModal(true);
       return;
     }
     setResetLoading(true);
     try {
-      await axios.post('/api/v1/accounts/reset-password/', {
+      // Step 1: Verify OTP
+      const verifyRes = await axios.post("/email/verify-otp", {
         email: forgotEmail,
         otp: resetOTP,
-        password: newPassword
       });
+
+      if (!verifyRes.data.verified) {
+        setModalMessage("Invalid or expired OTP");
+        setShowSuccessModal(true);
+        return;
+      }
+
+      // Step 2: Actually reset password
+      await axios.post("/reset-password", {
+        email: forgotEmail,
+        new_password: newPassword,
+        confirm_password: confirmNewPassword,
+      });
+
       setShowResetModal(false);
-      setModalMessage('Password has been reset! Please log in.');
+      setModalMessage("Password has been reset! Please log in.");
       setShowSuccessModal(true);
     } catch (err) {
-      setModalMessage(err.response?.data?.message || 'Password reset failed');
+      console.error("Reset Password Error:", err.response?.data || err.message);
+      setModalMessage(err.response?.data?.message || "Password reset failed");
       setShowSuccessModal(true);
     } finally {
       setResetLoading(false);

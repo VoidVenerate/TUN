@@ -17,7 +17,7 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
     message: '',
     type: '' // "success", "error", "loading"
   });
-
+  const token = localStorage.getItem('token')
   useEffect(() => {
     if (editingBanner) {
       setName(editingBanner.name || '');
@@ -55,8 +55,9 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
     try {
       if (editingBanner) {
         await api.put(
-          `https://lagos-turnup.onrender.com/event/banners/${editingBanner.id}`,
-          formData
+          `https://lagos-turnup.onrender.com/event/banners/${editingBanner.id}`,formData, {
+            headers: {'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${token}`}
+          }
         );
       } else {
         await api.post('https://lagos-turnup.onrender.com/event/banners', formData);

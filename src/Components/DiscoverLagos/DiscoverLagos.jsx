@@ -22,7 +22,7 @@ const DiscoverLagos = () => {
         <div className="PlacesInLagos">
             <button>
                 <NavLink
-                    to="/clubs"
+                    to="/adminclubs"
                     className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
@@ -31,7 +31,7 @@ const DiscoverLagos = () => {
             </button>
             <button>
                 <NavLink
-                    to="/hotels"
+                    to="/adminhotels"
                     className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
@@ -40,7 +40,7 @@ const DiscoverLagos = () => {
             </button>
             <button>
                 <NavLink
-                    to="/foodspots"
+                    to="/adminfoodspots"
                     className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
@@ -49,7 +49,7 @@ const DiscoverLagos = () => {
             </button>
             <button>
                 <NavLink
-                    to="/beaches"
+                    to="/adminbeaches"
                     className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >

@@ -3,11 +3,9 @@ import { Upload, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
 import api from "../api";
-import "./AdminEvents.css";
-import { useEvent } from "../EventContext/EventContext";
 
-const AdminEvents = () => {
-  const [events, setEvents] = useState([]);
+const ReusableSpots = ({ spotType, addPath, editPath }) => {
+  const [spots, setSpots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +14,7 @@ const AdminEvents = () => {
   const [sortAsc, setSortAsc] = useState(true);
 
   const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
-  const [detailsEvent, setDetailsEvent] = useState(null);
+  const [detailsSpot, setDetailsSpot] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const [modalFeedback, setModalFeedback] = useState({
@@ -27,7 +25,6 @@ const AdminEvents = () => {
     footerButtons: null,
   });
 
-  const { deleteEvent } = useEvent();
   const navigate = useNavigate();
 
   // ✅ Centralized URL normalization
@@ -35,85 +32,76 @@ const AdminEvents = () => {
     if (!path) return "/placeholder.png";
 
     let url = path.trim();
-
-    // Fix broken domain+uploads (missing slash)
     url = url.replace(/\.comuploads/, ".com/uploads");
 
-    // Handle relative paths (uploads/... or /uploads/...)
     if (!url.startsWith("http")) {
       url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
     }
-
     return url;
   };
 
-
-  const handleClick = (index, type, eventId) => {
+  const handleClick = (index, type, spotId) => {
     if (activeBtn.index === index && activeBtn.type === type) {
       setActiveBtn({ index: null, type: null });
     } else {
       setActiveBtn({ index, type });
     }
 
-    if (type === "details" && eventId) {
-      navigate(`/editevent/${eventId}`);
+    if (type === "details" && spotId) {
+      navigate(`${editPath}/${spotId}`);
     }
   };
 
   const handleAddNew = () => {
-    navigate("/adminpromoteevent");
+    navigate(addPath);
   };
 
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchSpots = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await api.get(`https://lagos-turnup.onrender.com/event/events`);
-        console.log("API response:", res.data);
+        const res = await api.get(
+          `https://lagos-turnup.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
+        );
+        console.log(`API response (${spotType}):`, res.data);
 
-        const fetched = res.data.events || res.data;
+        const fetched = res.data.spots || res.data[spotType] || res.data;
 
-        // ✅ cleaner mapping using normalizeUrl
-        const normalized = fetched.map((e) => ({
-          ...e,
-          event_id: e.event_id || e.id,
-          flyerSrc: normalizeUrl(
-            e.event_flyer || e.flyer_url || e.flyer || "" // unify fields
-          ),
+        const normalized = fetched.map((s) => ({
+          ...s,
+          spot_id: s.spot_id || s.id,
+          flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
         }));
 
-
-        setEvents(normalized);
+        setSpots(normalized);
         setTotalPages(res.data.totalPages || 1);
       } catch (err) {
-        setError("Failed to fetch events.");
+        setError(`Failed to fetch ${spotType}s.`);
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEvents();
-  }, [currentPage, searchTerm]);
+    fetchSpots();
+  }, [spotType, currentPage, searchTerm]);
 
-  // Sort events client-side by title
-  const sortedEvents = [...events].sort((a, b) => {
-    if (!a.event_name || !b.event_name) return 0;
-    return sortAsc
-      ? a.event_name.localeCompare(b.event_name)
-      : b.event_name.localeCompare(a.event_name);
+  // Sort spots by name
+  const sortedSpots = [...spots].sort((a, b) => {
+    if (!a.name || !b.name) return 0;
+    return sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
   });
 
   const handleConfirmDelete = async () => {
     if (!deleteTarget) return;
     try {
-      await deleteEvent(deleteTarget.event_id);
+      await api.delete(`/${spotType}/${deleteTarget.spot_id}`);
       setModalFeedback({
         show: true,
         type: "success",
         title: "Success",
-        message: "Event deleted successfully",
+        message: `${spotType} deleted successfully`,
         footerButtons: (
           <button
             className="modal-close-btn"
@@ -127,13 +115,13 @@ const AdminEvents = () => {
           </button>
         ),
       });
-      setEvents(events.filter((e) => e.event_id !== deleteTarget.event_id));
+      setSpots(spots.filter((s) => s.spot_id !== deleteTarget.spot_id));
     } catch (err) {
       setModalFeedback({
         show: true,
         type: "error",
         title: "Error",
-        message: "Failed to delete event",
+        message: `Failed to delete ${spotType}`,
         footerButtons: (
           <button
             className="modal-close-btn"
@@ -158,9 +146,11 @@ const AdminEvents = () => {
   return (
     <div>
       <div className="adminEvents-header">
-        <p style={{ fontFamily: "Rushon Ground" }}>Events</p>
+        <p style={{ fontFamily: "Rushon Ground" }}>
+          {spotType.charAt(0).toUpperCase() + spotType.slice(1)}s
+        </p>
         <button onClick={handleAddNew}>
-          <Upload size={16} /> Upload Events
+          <Upload size={16} /> Upload {spotType}
         </button>
       </div>
 
@@ -168,28 +158,29 @@ const AdminEvents = () => {
       <div className="search-sort-bar">
         <input
           type="text"
-          placeholder="Search events by title"
+          placeholder={`Search ${spotType}s by name`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <button onClick={() => setSortAsc((prev) => !prev)}>
-          Sort Title {sortAsc ? "↑" : "↓"}
+          Sort Name {sortAsc ? "↑" : "↓"}
         </button>
       </div>
 
       <div className="admin-Events">
-        {sortedEvents.length === 0 && <p>No events found.</p>}
-        {sortedEvents.map((event, index) => (
-          <div key={event.event_id || index} className="event-card">
+        {sortedSpots.length === 0 && <p>No {spotType}s found.</p>}
+        {sortedSpots.map((spot, index) => (
+          <div key={spot.spot_id || index} className="event-card">
             <div className="events">
-              {event.flyerSrc ? (
+              {spot.flyerSrc ? (
                 <img
-                  src={event.flyerSrc}
-                  alt={event.event_name}
+                  src={spot.flyerSrc}
+                  alt={spot.name}
                   loading="lazy"
-                  onError={(e) => { e.currentTarget.src = "/placeholder.png"; }}
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.png";
+                  }}
                 />
-
               ) : (
                 <div
                   style={{
@@ -202,10 +193,10 @@ const AdminEvents = () => {
                 </div>
               )}
               <div className="event-txt">
-                <h3>{event.event_name}</h3>
-                <p>{event.location}</p>
+                <h3>{spot.name}</h3>
+                <p>{spot.location}</p>
               </div>
-              <p>{event.description}</p>
+              <p>{spot.description}</p>
               <div className="slider-btn">
                 <button
                   className={
@@ -213,17 +204,17 @@ const AdminEvents = () => {
                       ? "active"
                       : ""
                   }
-                  onClick={() => handleClick(index, "details", event.event_id)}
+                  onClick={() => handleClick(index, "details", spot.spot_id)}
                 >
-                  Edit Event
+                  Edit {spotType}
                 </button>
 
                 {activeBtn.index === index && activeBtn.type === "details" && (
                   <div className="actions-dropdown">
-                    <button onClick={() => setDetailsEvent(event)}>
+                    <button onClick={() => setDetailsSpot(spot)}>
                       View Details
                     </button>
-                    <button onClick={() => setDeleteTarget(event)}>
+                    <button onClick={() => setDeleteTarget(spot)}>
                       <Trash2 size={14} /> Delete
                     </button>
                   </div>
@@ -265,27 +256,24 @@ const AdminEvents = () => {
 
       {/* Modals */}
       <Modal
-        show={!!detailsEvent}
-        title={detailsEvent?.event_name}
-        onClose={() => setDetailsEvent(null)}
+        show={!!detailsSpot}
+        title={detailsSpot?.name}
+        onClose={() => setDetailsSpot(null)}
         message={
-          detailsEvent ? (
+          detailsSpot ? (
             <>
-              {detailsEvent.flyerSrc && (
+              {detailsSpot.flyerSrc && (
                 <img
-                  src={detailsEvent.flyerSrc}
-                  alt={detailsEvent.event_name}
+                  src={detailsSpot.flyerSrc}
+                  alt={detailsSpot.name}
                   style={{ maxWidth: "100%", marginBottom: 10 }}
                 />
               )}
               <p>
-                <strong>Location:</strong> {detailsEvent.location}
+                <strong>Location:</strong> {detailsSpot.location}
               </p>
               <p>
-                <strong>Description:</strong> {detailsEvent.description}
-              </p>
-              <p>
-                <strong>Date:</strong> {detailsEvent.date || "N/A"}
+                <strong>Description:</strong> {detailsSpot.description}
               </p>
             </>
           ) : (
@@ -295,7 +283,7 @@ const AdminEvents = () => {
         footerButtons={
           <button
             className="modal-close-btn"
-            onClick={() => setDetailsEvent(null)}
+            onClick={() => setDetailsSpot(null)}
           >
             Close
           </button>
@@ -306,7 +294,7 @@ const AdminEvents = () => {
         show={!!deleteTarget}
         title="Confirm Delete"
         onClose={() => setDeleteTarget(null)}
-        message={`Are you sure you want to delete the event "${deleteTarget?.event_name}"?`}
+        message={`Are you sure you want to delete the ${spotType} "${deleteTarget?.name}"?`}
         footerButtons={
           <>
             <button className="modal-btn-danger" onClick={handleConfirmDelete}>
@@ -336,4 +324,4 @@ const AdminEvents = () => {
   );
 };
 
-export default AdminEvents;
+export default ReusableSpots;

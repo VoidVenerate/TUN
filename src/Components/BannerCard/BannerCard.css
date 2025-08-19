@@ -1,62 +1,94 @@
 .banner-card {
-  background: #1a1a1a;
+  background: rgba(0, 0, 0, 0.050);
   border: 1px solid #2a2a2a;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1rem;
   transition: transform 0.2s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 0.5rem;
+  gap: 1rem;
+  height: auto;
 }
 
-.banner-card:hover {
-  transform: scale(1.02);
-}
-
-.banner-card img {
+.banner-card__image img {
   width: 100%;
-  height: 160px;
+  height: 300px;
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #333;
 }
 
-.banner-card .banner-info {
-  margin-top: 0.5rem;
-  color: #ccc;
-  font-size: 0.95rem;
-  word-break: break-word;
+.banner-card__info {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.banner-card .banner-name {
+.banner-card__name {
   font-weight: bold;
-  color: #00ffff;
+  color: #fff;
   font-size: 1rem;
-  margin-bottom: 0.3rem;
 }
 
-.banner-card .banner-link {
-  font-size: 0.85rem;
-  color: #999;
+.banner-card__link {
+  font-size: 0.9rem;
+  color: #ccc;
   word-wrap: break-word;
 }
 
-/* Button group inside banner card */
-.banner-card .btn-group {
+/* Actions pinned to bottom-right */
+.banner-card__actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 3.4rem;
-  gap: 0.6rem;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: auto;
 }
 
-.banner-card .btn-group button {
-  flex: 1;
-  padding: 0.45rem 0.8rem;
-  border-radius: 6px;
+/* Base button */
+.banner-info-btns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.banner-card__btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;            /* space between icon and text */
+  padding: 10px 15px;
+  border-radius: 25px;
   border: none;
-  font-size: 0.85rem;
-  font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+/* Edit button – neon cyan */
+.banner-card__btn--edit {
+  background-color: #000;
+  color: #03e9f4;
+  transition: background 0.3s ease;
+}
+.banner-card__btn--edit:hover {
+  background: #03e9f4;
+  color: #050801;
+  box-shadow:
+    0 0 5px #03e9f4,
+    0 0 25px #03e9f4,
+    0 0 50px #03e9f4,
+    0 0 75px #03e9f4,
+    0 0 200px #03e9f4;
+}
+
+/* Delete button – soft red */
+.banner-card__btn--delete {
+  background-color: #ff3c3c1a;
+  color: #ff3b30;
+  border: 0.5px solid #ff3c3c42;
+}
+.banner-card__btn--delete:hover {
+  background-color: rgba(255, 60, 60, 0.2);
 }

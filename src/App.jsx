@@ -33,6 +33,11 @@ import AdminReview from './Pages/ADMIN/AdminReview/AdminReview'
 import AdminFeature from './Pages/ADMIN/AdminFeature/AdminFeature'
 import AdminViewEventDetails from './Pages/ADMIN/AdminViewEventDetails/AdminViewEventDetails'
 import ViewEventDetails from './Pages/USERS/ViewEventDetails/ViewEventDetails'
+import AdminClubs from './Pages/ADMIN/AdminClubs/AdminClubs'
+import AdminHotels from './Pages/ADMIN/AdminHotels/AdminHotels'
+import AdminFood from './Pages/ADMIN/AdminFood/AdminFood'
+import AdminBeaches from './Pages/ADMIN/AdminBeaches/AdminBeaches'
+import EditSpot from './Pages/ADMIN/EditSpot/EditSpot'
 
 function App() {
 
@@ -69,6 +74,11 @@ function App() {
         <Route path='/editevent/:event_id' element = {<AdminEditEvent/>} />
         <Route path='/profile' element = {<Profile/>} />
         <Route path='/adminviewdetails/:id' element = {<AdminViewEventDetails/>} />
+        <Route path='/adminclubs' element = {<AdminClubs/>} />
+        <Route path='/adminhotels' element = {<AdminHotels/>} />
+        <Route path='/adminfoodspots' element = {<AdminFood/>} />
+        <Route path='/adminbeaches' element = {<AdminBeaches/>} />
+        <Route path='/editlocation' element = {<EditSpot/>} />
       </Routes>
     </div>
   )

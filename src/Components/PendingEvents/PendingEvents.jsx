@@ -9,7 +9,7 @@ const PendingEvents = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1) // if your API sends this
 
-
+    
     const [activeBtn, setActiveBtn] = useState({index: null, type: null})
       const handleClick = (index, type) => {
         if(activeBtn.index === index && activeBtn.type === type) {
@@ -23,7 +23,14 @@ const PendingEvents = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const res = await api.get(`api/pendingevents`)
+                const token = localStorage.getItem('token')
+                const res = await api.get(`https://lagos-turnup.onrender.com/event/admin/featured-requests`,
+                    {
+                        headers: {
+                        Authorization: `Bearer ${token}`,
+                        },
+                    }
+                )
                 setEvents(res.data)
                 setTotalPages(res.data.totalPages)
             } catch (error) {

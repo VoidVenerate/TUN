@@ -57,23 +57,33 @@ const EditableEventReviewRHF = ({ role }) => {
 
     const fetchEvent = async () => {
       try {
-        const res = await api.get(`/event/events/${event_id}`);
-        const data = res.data;
-        setEventData(data);
+        const token = localStorage.getItem('token');
+        const res = await api.get(`/event/events`, {
+          params: { id: event_id },
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        // API returns an array → take first item
+        const data = res.data[0];
+        if (!data) throw new Error("Event not found");
+        
+        const normalizedData = { ...data, event_id: data.event_id || data.id };
+        setEventData(normalizedData);
 
         reset({
-          eventName: data.event_name,
-          date: data.date,
-          time: data.time,
-          location: data.state,
-          venue: data.venue,
-          dressCode: data.dress_code,
-          description: data.event_description,
-          link: data.link,
-          contactMethod: data.contact_method,
-          contactValue: data.contact_value,
-          flyerPreview: data.flyer_url,
+          eventName: data.event_name || '',
+          date: data.date || '',
+          time: data.time || '',
+          location: data.state || '',
+          venue: data.venue || '',
+          dressCode: data.dress_code || '',
+          description: data.event_description || '',
+          flyerPreview: data.flyer_url || '',
           featureChoice: data.is_featured ? "yes-feature" : "no-feature",
+          // These may not exist on the API, but keep in case your backend actually supports them
+          link: data.link || '',
+          contactMethod: data.contact_method || '',
+          contactValue: data.contact_value || ''
         });
       } catch (err) {
         console.error("Failed to fetch event", err);
@@ -85,6 +95,7 @@ const EditableEventReviewRHF = ({ role }) => {
         });
       }
     };
+
 
     fetchEvent();
   }, [event_id, reset, setEventData]);
@@ -132,6 +143,7 @@ const EditableEventReviewRHF = ({ role }) => {
       if (featureChoice === 'yes-feature') {
         setShowFeatureDuration(true);
       }
+      navigate('/adminevents');
     } catch (err) {
       setModalInfo({
         show: true,
@@ -145,36 +157,52 @@ const EditableEventReviewRHF = ({ role }) => {
   };
 
   // ✅ Delete event
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!eventData?.event_id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No event ID to delete.', subMessage: '' });
-      return;
-    }
-
-    const confirmed = window.confirm('Are you sure you want to delete this event? This action cannot be undone.');
-    if (!confirmed) return;
-
-    setDeleting(true);
-    try {
-      if (typeof deleteEvent === 'function') {
-        await deleteEvent(eventData.event_id);
-      } else {
-        await api.delete(`/event/events/${eventData.event_id}`);
-      }
-
-      setModalInfo({ show: true, title: 'Deleted', message: 'Event deleted successfully.', subMessage: '' });
-      navigate('/events');
-    } catch (err) {
       setModalInfo({
         show: true,
         title: 'Error',
-        message: 'Failed to delete event. Please try again.',
-        subMessage: err?.message || '',
+        message: 'No event ID to delete.',
+        subMessage: '',
       });
-    } finally {
-      setDeleting(false);
+      return;
     }
+
+    setModalInfo({
+      show: true,
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete this event? This action cannot be undone.',
+      subMessage: '',
+      onConfirm: async () => {
+        setDeleting(true);
+        try {
+          if (typeof deleteEvent === 'function') {
+            await deleteEvent(eventData.event_id);
+          } else {
+            await api.delete(`/event/events/${eventData.event_id}`);
+          }
+
+          setModalInfo({
+            show: true,
+            title: 'Deleted',
+            message: 'Event deleted successfully.',
+            subMessage: '',
+          });
+          navigate('/adminevents');
+        } catch (err) {
+          setModalInfo({
+            show: true,
+            title: 'Error',
+            message: 'Failed to delete event. Please try again.',
+            subMessage: err?.message || '',
+          });
+        } finally {
+          setDeleting(false);
+        }
+      },
+    });
   };
+
 
   const closeModal = () => setModalInfo(prev => ({ ...prev, show: false }));
   const handleFeatureConfirm = (selectedDuration) => {
@@ -329,8 +357,25 @@ const EditableEventReviewRHF = ({ role }) => {
         title={modalInfo.title}
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
-        footerButtons={<button onClick={closeModal}>Close</button>}
+        footerButtons={
+          modalInfo.onConfirm ? (
+            <>
+              <button onClick={closeModal}>Cancel</button>
+              <button
+                onClick={() => {
+                  modalInfo.onConfirm();
+                  closeModal();
+                }}
+              >
+                Confirm
+              </button>
+            </>
+          ) : (
+            <button onClick={closeModal}>Close</button>
+          )
+        }
       />
+
     </div>
   );
 };

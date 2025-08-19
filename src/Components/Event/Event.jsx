@@ -46,6 +46,7 @@ const Event = () => {
         setIsSubmitting(true);
 
         // Navigate to different pages based on role
+        console.log("Role is:", role);
         if (role === 'sub-admin' || role === 'super-admin') {
             navigate('/adminfeatureevent');
         } else {

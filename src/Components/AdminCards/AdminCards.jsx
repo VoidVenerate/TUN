@@ -26,7 +26,7 @@ const AdminCards = () => {
                   return;
               }
             //pending events
-                const pendingRes = await api.get('https://lagos-turnup.onrender.com/pendingevents', 
+                const pendingRes = await api.get('https://lagos-turnup.onrender.com/event/admin/featured-requests', 
                   { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
                 )
                 const pendingData = pendingRes.data
@@ -63,7 +63,7 @@ const AdminCards = () => {
                 setTotalBanner(bannerData.length)
             
             //discover lagos
-                const discoverRes = await axios.get ('https://lagos-turnup.onrender.com/discoverlagos', 
+                const discoverRes = await axios.get ('https://lagos-turnup.onrender.com/event/spots', 
                   { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
                 )
                 const discoverData = discoverRes.data

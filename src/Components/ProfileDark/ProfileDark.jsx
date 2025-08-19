@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Lock, UserX, UserCheck, Trash2 } from "lucide-react";
+import { Lock } from "lucide-react";
 import "./ProfileDark.css";
 import api from "../api";
 
 const ProfileDark = () => {
-  const token = localStorage.getItem("token"); // JWT stored after login
+  const token = localStorage.getItem("token");
 
   // ====== STATE FOR OWN PROFILE ======
-  const [userData, setUserData] = useState(null); // Logged-in user's profile data
-  const [profileImageFile, setProfileImageFile] = useState(null); // File object for upload
-  const [profileImagePreview, setProfileImagePreview] = useState(null); // Preview URL
+  const [userData, setUserData] = useState(null);
+  const [profileImageFile, setProfileImageFile] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+
+  const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // ====== STATE FOR LOADING / FEEDBACK ======
+  // ====== FEEDBACK ======
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  // ====== STATE FOR SUB-ADMIN MANAGEMENT ======
-  const [subAdmins, setSubAdmins] = useState([]); // List of sub-admins
+  // ====== SUB-ADMIN MANAGEMENT ======
+  const [subAdmins, setSubAdmins] = useState([]);
   const [managementLoading, setManagementLoading] = useState(false);
 
-  // ====== STATE FOR MODALS ======
+  // ====== MODAL ======
   const [modalInfo, setModalInfo] = useState({
     show: false,
     title: "",
     message: "",
-    confirmAction: null, // Stores function to execute if confirmed
+    confirmAction: null,
   });
 
-  // Fetch logged-in user's profile
+  // ====== FETCH USER ======
   useEffect(() => {
     if (!token) {
       setError("Not authenticated. Please log in.");
@@ -42,12 +44,10 @@ const ProfileDark = () => {
       setLoading(true);
       try {
         const res = await api.get("https://lagos-turnup.onrender.com/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(res.data);
-        setProfileImagePreview(res.data.profileImageUrl || null);
+        setProfileImagePreview(res.data.profile_picture_url || null);
       } catch (err) {
         console.error(err);
         setError("Failed to load profile.");
@@ -59,20 +59,20 @@ const ProfileDark = () => {
     fetchProfile();
   }, [token]);
 
-
-  // Fetch sub-admins if logged-in user is super-admin
+  // ====== FETCH SUB-ADMINS IF SUPER ======
   useEffect(() => {
-    if (userData?.role === "super-admin") {
-      fetchSubAdmins();
-    }
+    if (userData?.role === "super-admin") fetchSubAdmins();
   }, [userData]);
 
   const fetchSubAdmins = async () => {
     setManagementLoading(true);
     try {
-      const res = await api.get("https://lagos-turnup.onrender.com/get-sub-admin", {
-        headers: { 'Content-Type': 'multiform/data' },
-      });
+      const res = await api.get(
+        "https://lagos-turnup.onrender.com/get-sub-admin",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setSubAdmins(res.data);
     } catch {
       setError("Failed to load sub-admins.");
@@ -81,116 +81,165 @@ const ProfileDark = () => {
     }
   };
 
-  // Handle profile image selection
+  // ====== IMAGE HANDLER ======
+  // ====== IMAGE HANDLER ======
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const newPreview = URL.createObjectURL(file);
       setProfileImageFile(file);
-      setProfileImagePreview(URL.createObjectURL(file)); // Live preview
+      setProfileImagePreview(newPreview);
+
+      // Cleanup old blob URL to avoid memory leaks
+      return () => URL.revokeObjectURL(newPreview);
     }
   };
 
-  // Password strength check
-  const isPasswordStrong = (pwd) =>
-    pwd.length >= 8 &&
-    /[A-Z]/.test(pwd) &&
-    /[a-z]/.test(pwd) &&
-    /\d/.test(pwd) &&
-    /[@$!%*?&]/.test(pwd);
-
-  // Submit profile updates
+  // ====== SUBMIT FORM ======
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
 
-    // Password validation if changed
-    if (password || confirmPassword) {
-      if (password !== confirmPassword) {
-        setError("Passwords do not match.");
-        return;
-      }
-      if (!isPasswordStrong(password)) {
-        setError(
-          "Password must be 8+ chars, include uppercase, lowercase, number, and special character."
-        );
-        return;
-      }
-    }
-
-    setLoading(true);
     try {
-      const formData = new FormData();
-      if (profileImageFile) formData.append("profileImage", profileImageFile);
-      if (password) formData.append("password", password);
+      const updatePromises = [];
 
-      const res = await api.patch("https://lagos-turnup.onrender.com/me", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // ✅ Profile image update
+      if (profileImageFile) {
+        const formData = new FormData();
+        formData.append("profile_picture", profileImageFile);
 
-      setMessage("Profile updated successfully!");
-      setUserData(res.data);
+        updatePromises.push(
+          api.put(
+            `https://lagos-turnup.onrender.com/sub-admin/${userData.id}`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+        );
+      }
+
+      // ✅ Password update
+      if (password || confirmPassword) {
+        if (password !== confirmPassword) {
+          setError("Passwords do not match.");
+          return;
+        }
+        if (!isPasswordStrong(password)) {
+          setError(
+            "Password must be stronger (8+ chars, upper, lower, number, special char)."
+          );
+          return;
+        }
+        if (!currentPassword) {
+          setError("Current password is required to update your password.");
+          return;
+        }
+
+        updatePromises.push(
+          api.put(
+            "https://lagos-turnup.onrender.com/update-password",
+            new URLSearchParams({
+              current_password: currentPassword,
+              new_password: password,
+              confirm_password: confirmPassword,
+            }),
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            }
+          )
+        );
+      }
+
+      if (updatePromises.length === 0) {
+        setMessage("Nothing to update.");
+        return;
+      }
+
+      setLoading(true);
+      const results = await Promise.all(updatePromises);
+
+      // ✅ If profile image was updated, use backend's permanent URL
+      const updatedProfile = results.find((res) =>
+        res.config.url.includes(`/sub-admin/`)
+      );
+
+      if (updatedProfile) {
+        setUserData(updatedProfile.data);
+        setProfileImagePreview(updatedProfile.data.profile_picture_url); // permanent URL
+        setProfileImageFile(null);
+      }
+
+      // Reset password fields
+      setCurrentPassword("");
       setPassword("");
       setConfirmPassword("");
-      setProfileImageFile(null);
-      setProfileImagePreview(res.data.profileImageUrl || null);
-    } catch {
-      setError("Failed to update profile.");
+
+      setMessage("Update successful!");
+    } catch (err) {
+      console.error(err);
+      setError("Update failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ====== SUB-ADMIN MANAGEMENT ACTIONS ======
-  // Deactivate
-    const handleDeactivate = (id) => {
-      setModalInfo({
-        show: true,
-        title: "Deactivate Sub-Admin",
-        message: "Are you sure you want to deactivate this sub-admin?",
-        confirmAction: () => performAction(`https://lagos-turnup.onrender.com/event/deactivate-user/${id}`, "put"),
-      });
-    };
 
-    // Reactivate
-    const handleReactivate = (id) => {
-      setModalInfo({
-        show: true,
-        title: "Reactivate Sub-Admin",
-        message: "Are you sure you want to reactivate this sub-admin?",
-        confirmAction: () => performAction(`https://lagos-turnup.onrender.com/event/activate-user/${id}`, "put"),
-      });
-    };
-
-    // Delete
-    const handleDelete = (id) => {
-      setModalInfo({
-        show: true,
-        title: "Delete Sub-Admin",
-        message: "This action is permanent. Continue?",
-        confirmAction: () => performAction(`https://lagos-turnup.onrender.com/delete-user/${id}`, "delete"),
-      });
-    };
-
-
+  // ====== SUB-ADMIN ACTIONS ======
   const performAction = async (url, method = "patch") => {
     try {
-      await axios({
-        method,
-        url,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchSubAdmins(); // Refresh list
+      await axios({ method, url, headers: { Authorization: `Bearer ${token}` } });
+      fetchSubAdmins();
       setModalInfo({ show: false, title: "", message: "", confirmAction: null });
     } catch {
       setError("Action failed. Please try again.");
     }
   };
 
-  // ====== CONDITIONAL RENDERS ======
+  const handleDeactivate = (id) =>
+    setModalInfo({
+      show: true,
+      title: "Deactivate Sub-Admin",
+      message: "Are you sure you want to deactivate this sub-admin?",
+      confirmAction: () =>
+        performAction(
+          `https://lagos-turnup.onrender.com/event/deactivate-user/${id}`,
+          "put"
+        ),
+    });
+
+  const handleReactivate = (id) =>
+    setModalInfo({
+      show: true,
+      title: "Reactivate Sub-Admin",
+      message: "Are you sure you want to reactivate this sub-admin?",
+      confirmAction: () =>
+        performAction(
+          `https://lagos-turnup.onrender.com/event/activate-user/${id}`,
+          "put"
+        ),
+    });
+
+  const handleDelete = (id) =>
+    setModalInfo({
+      show: true,
+      title: "Delete Sub-Admin",
+      message: "This action is permanent. Continue?",
+      confirmAction: () =>
+        performAction(
+          `https://lagos-turnup.onrender.com/delete-user/${id}`,
+          "delete"
+        ),
+    });
+
+  // ====== CONDITIONAL UI ======
   if (!token) return <p>Please log in to view your profile.</p>;
   if (loading && !userData) return <p>Loading profile...</p>;
   if (error && !userData) return <p className="error">{error}</p>;
@@ -203,8 +252,8 @@ const ProfileDark = () => {
       {error && userData && <p className="error">{error}</p>}
 
       {/* ====== PROFILE FORM ====== */}
-      <form onSubmit={handleSubmit} className="profile-dark-content" encType="multipart/form-data">
-        {/* LEFT SIDE: IMAGE */}
+      <form onSubmit={handleSubmit} className="profile-dark-content">
+        {/* LEFT SIDE */}
         <div className="profile-dark-left">
           <p className="profile-dark-label">Profile Image</p>
           <p className="profile-dark-subtext">Displayed on your profile.</p>
@@ -229,14 +278,14 @@ const ProfileDark = () => {
           </button>
         </div>
 
-        {/* RIGHT SIDE: FIELDS */}
+        {/* RIGHT SIDE */}
         <div className="profile-dark-right">
           <div className="profile-dark-row">
             {/* First Name */}
             <div className="profile-dark-input-group">
               <label>Firstname</label>
               <div className="profile-dark-input-disabled">
-                <input type="text" value={userData?.first_name || ""} readOnly autoComplete="family name" />
+                <input type="text" value={userData?.first_name || ""} readOnly />
                 <Lock size={16} color="#666" />
               </div>
             </div>
@@ -245,7 +294,7 @@ const ProfileDark = () => {
             <div className="profile-dark-input-group">
               <label>Lastname</label>
               <div className="profile-dark-input-disabled">
-                <input type="text" value={userData?.last_name || ""} disabled />
+                <input type="text" value={userData?.last_name || ""} readOnly />
                 <Lock size={16} color="#666" />
               </div>
             </div>
@@ -254,33 +303,46 @@ const ProfileDark = () => {
           <div className="profile-dark-row">
             {/* Email */}
             <div className="profile-dark-input-group">
-              <label>Email Address</label>
+              <label>Email</label>
               <div className="profile-dark-input-disabled">
-                <input type="email" value={userData?.email || ""} disabled />
+                <input type="email" value={userData?.email || ""} readOnly />
                 <Lock size={16} color="#666" />
               </div>
             </div>
 
-            {/* Password */}
+            {/* Current Password */}
             <div className="profile-dark-input-group">
-              <label>Password</label>
+              <label>Current Password</label>
               <input
                 type="password"
-                placeholder="New Password"
+                placeholder="Enter current password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                autoComplete="current-password"
+                required={password || confirmPassword}
+              />
+            </div>
+          </div>
+
+          <div className="profile-dark-row">
+            {/* New Password */}
+            <div className="profile-dark-input-group">
+              <label>New Password</label>
+              <input
+                type="password"
+                placeholder="New password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
               />
             </div>
-          </div>
 
-          {/* Confirm Password */}
-          <div className="profile-dark-row single-row">
-            <div className="profile-dark-input-group full-width">
-              <label>Confirm Password</label>
+            {/* Confirm Password */}
+            <div className="profile-dark-input-group">
+              <label>Confirm New Password</label>
               <input
                 type="password"
-                placeholder="Confirm New Password"
+                placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 autoComplete="new-password"
@@ -293,13 +355,13 @@ const ProfileDark = () => {
             <div className="profile-dark-input-group full-width">
               <label>Role</label>
               <div className="profile-dark-input-disabled">
-                <input type="text" value={userData?.role || ""} disabled />
+                <input type="text" value={userData?.role || ""} readOnly />
                 <Lock size={16} color="#666" />
               </div>
             </div>
           </div>
 
-          {/* Save Button */}
+          {/* Save */}
           <div className="profile-dark-btn-wrapper">
             <button className="profile-dark-btn" type="submit" disabled={loading}>
               {loading ? "Saving..." : "Save Changes"}
@@ -308,11 +370,10 @@ const ProfileDark = () => {
         </div>
       </form>
 
-      {/* ====== SUB-ADMIN MANAGEMENT (SUPER-ADMIN ONLY) ====== */}
+      {/* ====== SUB-ADMIN MANAGEMENT ====== */}
       {userData?.role === "super-admin" && (
         <div className="sub-admin-section">
           <h3 className="sub-admin-title">Manage Sub Admins</h3>
-
           {managementLoading ? (
             <p>Loading sub-admins...</p>
           ) : (
@@ -332,46 +393,41 @@ const ProfileDark = () => {
                       <p className="sub-admin-email">{admin.email}</p>
                     </div>
                   </div>
-
                   <div className="sub-admin-actions">
                     <button
                       className="action-btn"
                       onClick={() => console.log("View logs for", admin.id)}
                     >
-                      View Admin Activity Logs
+                      View Logs
                     </button>
-
                     {admin.is_active ? (
                       <button
                         onClick={() => handleDeactivate(admin.id)}
                         className="action-btn deactivate"
                       >
-                        Deactivate Admin
+                        Deactivate
                       </button>
                     ) : (
                       <button
                         onClick={() => handleReactivate(admin.id)}
                         className="action-btn reactivate"
                       >
-                        Reactivate Admin
+                        Reactivate
                       </button>
                     )}
-
                     <button
                       onClick={() => handleDelete(admin.id)}
                       className="action-btn delete"
                     >
-                      Delete Admin
+                      Delete
                     </button>
                   </div>
                 </div>
               ))}
-
             </div>
           )}
         </div>
       )}
-
 
       {/* ====== MODAL ====== */}
       {modalInfo.show && (
@@ -380,16 +436,13 @@ const ProfileDark = () => {
             <h3>{modalInfo.title}</h3>
             <p>{modalInfo.message}</p>
             <div className="modal-buttons">
-              <button
-                onClick={() => {
-                  modalInfo.confirmAction();
-                }}
-                className="profile-dark-btn"
-              >
+              <button onClick={modalInfo.confirmAction} className="profile-dark-btn">
                 Confirm
               </button>
               <button
-                onClick={() => setModalInfo({ show: false, title: "", message: "", confirmAction: null })}
+                onClick={() =>
+                  setModalInfo({ show: false, title: "", message: "", confirmAction: null })
+                }
                 className="profile-dark-btn cancel"
               >
                 Cancel

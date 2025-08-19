@@ -1,7 +1,7 @@
 /* ===== Desktop Navbar ===== */
 .navbar {
   background-color: transparent;
-  padding: 1rem 2rem;
+  padding: 1rem 5vw; /* flexible padding */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9,7 +9,7 @@
 }
 
 .navbar-logo img {
-  height: 40px;
+  height: 2.5rem; /* scales better */
 }
 
 .navbar-links {
@@ -29,9 +29,11 @@
   font-weight: 500;
   transition: color 0.3s ease;
 }
+
 .navbar .navbar-link {
-    margin-left: 44px;
+  margin-left: 2rem; /* spacing instead of hard 44px */
 }
+
 .navbar-link.active,
 .navbar-link:hover {
   color: #fff;
@@ -63,6 +65,7 @@
     0 0 200px #03e9f4;
 }
 
+/* ===== Animated button borders ===== */
 .navbar-button button span {
   position: absolute;
   display: block;
@@ -119,7 +122,7 @@
   50%, 100% { bottom: 100%; }
 }
 
-/* ===== Hamburger Icon (hidden on desktop) ===== */
+/* ===== Hamburger Icon ===== */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -139,7 +142,6 @@
   position: relative;
 }
 
-/* Animate hamburger to X when open */
 .hamburger.open span:nth-child(1) {
   transform: rotate(45deg);
   top: 8px;
@@ -158,8 +160,8 @@
   width: 25px;
 }
 
-/* ===== Mobile Styles ===== */
-@media (max-width: 480px) {
+/* ===== Mobile & Tablet Styles ===== */
+@media (max-width: 1024px) {
   .navbar {
     flex-direction: column;
     align-items: stretch;
@@ -188,9 +190,8 @@
   }
 
   .navbar-links.open {
-    max-height: 500px; /* enough to show all links */
-    padding-top: 10px;
-    padding-bottom: 10px;
+    max-height: 500px;
+    padding: 10px 0;
   }
 
   .navbar-link {
@@ -206,30 +207,59 @@
 
   .navbar-button button {
     width: 100%;
-    padding: 10px;
+    padding: 0.9rem;
     font-size: 0.9rem;
   }
 
-  /* Prevent body scroll when menu is open */
   body.menu-open {
     overflow: hidden;
   }
 }
 
-/* ===== Tablet tweaks ===== */
-@media (min-width: 481px) and (max-width: 768px) {
-  .navbar {
-    padding: 0.8rem 1rem;
-    flex-wrap: wrap;
-  }
-
+/* ===== Tiny phones (≤360px) ===== */
+@media (max-width: 360px) {
   .navbar-links {
-    gap: 1rem;
+    font-size: 0.8rem;
+    gap: 0.5rem;
+  }
+  .navbar-button button {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+}
+
+/* ===== Larger phones (≤430px) ===== */
+@media (max-width: 430px) {
+  .navbar-links {
+    gap: 0.8rem;
+  }
+  .navbar-link {
     font-size: 0.9rem;
   }
+}
 
+/* ===== Small tablets (481px–768px) ===== */
+@media (min-width: 481px) and (max-width: 768px) {
+  .navbar {
+    padding: 1rem 2rem;
+    flex-wrap: wrap;
+  }
+  .navbar-links {
+    gap: 1rem;
+    font-size: 0.95rem;
+  }
   .navbar-button button {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== Medium tablets (769px–1024px) ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .navbar-links {
+    gap: 1.5rem;
+    font-size: 1rem;
+  }
+  .navbar-button button {
+    font-size: 0.95rem;
   }
 }

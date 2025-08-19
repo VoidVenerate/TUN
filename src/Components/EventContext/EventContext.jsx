@@ -24,6 +24,7 @@ export const EventProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const token = localStorage.getItem('token')
 
   // ✅ Persist current event (without raw file objects) into localStorage
   useEffect(() => {
@@ -82,7 +83,7 @@ export const EventProvider = ({ children }) => {
     setError(null);
     try {
       const res = await api.put(`/event/events/${id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}`  },
       });
       const updated = res.data;
 
@@ -110,7 +111,9 @@ export const EventProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      await api.delete(`/event/events/${id}`);
+      await api.delete(`/event/events/${id}`, {
+        headers: { Authorization: `Bearer ${token}`}
+      });
       clearEventData();
       setLoading(false);
       return true;

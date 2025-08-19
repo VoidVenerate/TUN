@@ -1,69 +1,162 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Upload, CloudUpload, LockKeyhole } from 'lucide-react';
-// import './UploadLocation.css';
 import Modal from '../Modal/Modal';
-import { NavLink } from 'react-router-dom';
 import { useLocate } from '../LocationContext/LocationContext';
+import api from '../api';
+import { useNavigate } from 'react-router-dom';
+
+const MAX_FILE_SIZE_MB = 5; // limit file size (you can tweak this)
 
 const UploadLocation = () => {
-  const { locationData, setLocationData } = useLocate(); // fixed hook name from useEvent to useLocate
+  const { locationData, setLocationData } = useLocate();
   const [flyerPreview, setFlyerPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
   const [modalInfo, setModalInfo] = useState({
     show: false,
     title: '',
     message: '',
     subMessage: '',
-    type: '', // 'success' or 'error'
-    footerButtons: ''
-
+    type: '',
   });
+
+  // Cleanup object URLs when component unmounts or new file selected
+  useEffect(() => {
+    return () => {
+      if (flyerPreview) URL.revokeObjectURL(flyerPreview);
+    };
+  }, [flyerPreview]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setLocationData(prev => ({ ...prev, [name]: value }));
+    setLocationData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setLocationData(prev => ({ ...prev, flyer: file }));
-      setFlyerPreview(URL.createObjectURL(file));
-    }
-  };
-  const closeModal = () => {
-    setModalInfo(prev => ({ ...prev, show: false }));
-    // After closing success modal, navigate somewhere if needed
-    // if (modalInfo.type === 'success') {
-    //   navigate('/featureevent'); // Example route, change as needed
-    // }
-  };
+  const handleFileChange = (file) => {
+    if (!file) return;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate API call success/failure
-    const success = true; // Replace with real API logic
-
-    if (success) {
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
       setModalInfo({
         show: true,
-        title: 'Success!',
-        message: 'Spot Added Successfully!',
-        subMessage: "Your location has been published on Discover Lagos and is now visible to all users.!",
-        type: 'success',
-      });
-    } else {
-      setModalInfo({
-        show: true,
-        title: 'Error!',
-        message: 'Failed to submit spot.',
+        title: 'File Too Large',
+        message: `File must be under ${MAX_FILE_SIZE_MB}MB.`,
         subMessage: '',
         type: 'error',
       });
+      return;
+    }
+
+    setLocationData((prev) => ({ ...prev, flyer: file }));
+    setFlyerPreview(URL.createObjectURL(file));
+  };
+
+  const handleInputFileChange = (e) => {
+    const file = e.target.files[0];
+    handleFileChange(file);
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const handleDragLeave = () => setDragActive(false);
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    const file = e.dataTransfer.files[0];
+    handleFileChange(file);
+  };
+
+  const closeModal = () => {
+    setModalInfo((prev) => ({ ...prev, show: false }));
+  };
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("location_name", locationData.locationName);
+      formData.append("city", locationData.city);
+      formData.append("state", locationData.state);
+      formData.append("spot_type", locationData.typeOfSpot);
+      formData.append("additional_info", locationData.additionalInformation);
+      if (locationData.flyer instanceof File) {
+        formData.append("cover_image", locationData.flyer);
+      }
+
+      const token = localStorage.getItem("token");
+      console.log([...formData]);
+      const res = await api.post("/event/spots/create", formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      // ✅ Success modal
+      setModalInfo({
+        show: true,
+        title: "Success!",
+        message: "Spot Added Successfully!",
+        subMessage: "Your location has been published on Discover Lagos 🎉",
+        type: "success",
+      });
+
+      // ✅ Navigate to correct category page after 2s
+      setTimeout(() => {
+        setModalInfo((prev) => ({ ...prev, show: false }));
+        switch (locationData.typeOfSpot) {
+          case "club":
+            navigate("/adminclubs");
+            break;
+          case "hotel":
+            navigate("/adminhotels");
+            break;
+          case "food_spot":
+            navigate("/adminfoodspots");
+            break;
+          case "beach":
+            navigate("/adminbeaches");
+            break;
+          default:
+            navigate("/discoverlagos"); // fallback
+        }
+      }, 2000);
+
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.detail?.[0]?.msg ||
+        err.response?.data?.message ||
+        "Something went wrong";
+
+      setModalInfo({
+        show: true,
+        title: "Error!",
+        message: "Failed to submit spot.",
+        subMessage: errorMessage,
+        type: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+
+  // Required fields validation
+  const isFormValid =
+    locationData.locationName &&
+    locationData.city &&
+    locationData.state &&
+    locationData.typeOfSpot &&
+    locationData.additionalInformation &&
+    locationData.flyer;
 
   return (
     <div className="event-form-container">
@@ -74,28 +167,41 @@ const UploadLocation = () => {
 
       <div className="form-content">
         {/* Upload Section */}
-        <div className="upload-section">
+        <div
+          className={`upload-section ${dragActive ? 'drag-active' : ''}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           <div className="upload-label">
-            <span className="upload-flyer-text"><CloudUpload size={16} /><p>Upload Cover Image</p></span>
+            <span className="upload-flyer-text">
+              <CloudUpload size={16} />
+              <p>Upload Cover Image</p>
+            </span>
             <div className="upload-description">
-              Select and upload a visual for this spot
+              Select or drag a visual for this spot
             </div>
           </div>
           <label className="upload-area">
             {(flyerPreview || locationData.flyer) ? (
               <img
-                src={flyerPreview || (typeof locationData.flyer === 'string' ? locationData.flyer : URL.createObjectURL(locationData.flyer))}
+                src={
+                  flyerPreview ||
+                  (typeof locationData.flyer === 'string'
+                    ? locationData.flyer
+                    : URL.createObjectURL(locationData.flyer))
+                }
                 alt="Preview"
                 className="flyer-preview"
               />
             ) : (
-              <div className='upload-sec'>
+              <div className="upload-sec">
                 <Upload className="upload-icon" />
                 <div className="upload-text">
                   <div className="upload-title">Click to upload</div>
                   <div className="upload-subtitle">or drag and drop</div>
                   <div className="upload-format">
-                    SVG, PNG, JPG or GIF (max. 800x400px)
+                    SVG, PNG, JPG or GIF (max. {MAX_FILE_SIZE_MB}MB)
                   </div>
                 </div>
               </div>
@@ -103,7 +209,7 @@ const UploadLocation = () => {
             <input
               type="file"
               accept="image/*"
-              onChange={handleFileChange}
+              onChange={handleInputFileChange}
               hidden
             />
           </label>
@@ -175,10 +281,10 @@ const UploadLocation = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select One</option>
-                  <option value='clubs'>Clubs</option>
-                  <option value='hotels'>Hotels</option>
-                  <option value='foodSpots'>Food Spots</option>
-                  <option value='beaches'>Beaches</option>
+                  <option value='club'>Clubs</option>
+                  <option value='hotel'>Hotels</option>
+                  <option value='food_spot'>Food Spots</option>
+                  <option value='beache'>Beaches</option>
                 </select>
               </div>
             </div>
@@ -197,12 +303,17 @@ const UploadLocation = () => {
             </div>
 
             <div className="form-footer">
-              <button className="create-event-btn" disabled={isSubmitting} type="submit">
+              <button
+                className="create-event-btn"
+                disabled={isSubmitting || !isFormValid}
+                type="submit"
+              >
                 {isSubmitting ? 'Submitting...' : 'Submit Spot'}
               </button>
             </div>
           </form>
         </div>
+
         <Modal
           show={modalInfo.show}
           onClose={closeModal}
@@ -210,14 +321,13 @@ const UploadLocation = () => {
           message={modalInfo.message}
           subMessage={modalInfo.subMessage}
           type={modalInfo.type}
-          footerButtons={<button className="modal-close-btn" onClick={closeModal}>
-            Close
-          </button>}
+          footerButtons={
+            <button className="modal-close-btn" onClick={closeModal}>
+              Close
+            </button>
+          }
         />
       </div>
-      
-      {/* You can add modal here if you want */}
-      {/* {modalInfo?.show && <Modal {...modalInfo} onClose={() => setModalInfo(null)} />} */}
     </div>
   );
 };
