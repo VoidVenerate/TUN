@@ -25,6 +25,7 @@ const LagEvents = ({ events }) => {
 //     currentIndex * cardsPerPage,
 //     currentIndex * cardsPerPage + cardsPerPage
 //   );
+
 const [activeBtn, setActiveBtn] = useState({index: null, type: null})
   const handleClick = (index, type) => {
     if(activeBtn.index === index && activeBtn.type === type) {
@@ -34,6 +35,7 @@ const [activeBtn, setActiveBtn] = useState({index: null, type: null})
       setActiveBtn({index,type})
     }
   }
+  
   return (
     <nav className='LagEvents-container'>
         <div className="LagEvents-header">
@@ -74,6 +76,8 @@ const [activeBtn, setActiveBtn] = useState({index: null, type: null})
                 </div>
             ))}
         </div>
+        {/* Pagination controls */}
+       
     </nav>
   )
 }

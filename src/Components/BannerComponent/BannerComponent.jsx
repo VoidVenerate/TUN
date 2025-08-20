@@ -45,7 +45,7 @@ const BannerComponent = () => {
               }
       const res = await axios.get('https://lagos-turnup.onrender.com/event/banners', { headers: { 'Content-Type': 'multipart/form-data',Authorization: `Bearer ${token}`  } }); // Adjust to your actual API endpoint
       console.log('Fetch Banner:', res.data);
-      setBanners(res.data);
+      setBanners(res.data.filter((banner) => banner.is_approved));
     } catch (err) {
       console.error('Error fetching banners:', err);
     }

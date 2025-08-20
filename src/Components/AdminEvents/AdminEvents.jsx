@@ -15,7 +15,6 @@ const AdminEvents = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
-
   const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
   const [detailsEvent, setDetailsEvent] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);

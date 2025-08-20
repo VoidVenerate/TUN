@@ -38,6 +38,7 @@ import AdminHotels from './Pages/ADMIN/AdminHotels/AdminHotels'
 import AdminFood from './Pages/ADMIN/AdminFood/AdminFood'
 import AdminBeaches from './Pages/ADMIN/AdminBeaches/AdminBeaches'
 import EditSpot from './Pages/ADMIN/EditSpot/EditSpot'
+import AdminPendingBanner from './Pages/ADMIN/AdminPendingBanner/AdminPendingBanner'
 
 function App() {
 
@@ -79,6 +80,7 @@ function App() {
         <Route path='/adminfoodspots' element = {<AdminFood/>} />
         <Route path='/adminbeaches' element = {<AdminBeaches/>} />
         <Route path='/editlocation/:spot_id' element = {<EditSpot/>} />
+        <Route path='/pendingbanner' element = {<AdminPendingBanner/>} />
       </Routes>
     </div>
   )

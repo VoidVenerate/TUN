@@ -1,191 +1,218 @@
 .LetsTalk-container {
-    margin-left: 2vw;
-    margin-top: 2vw;
-    background-color: rgba(255, 255, 255, 0.050);
+    margin: 2vw auto;
+    background-color: rgba(255, 255, 255, 0.05);
     width: 96%;
     border-radius: 20px;
+    padding: 2rem;
+    box-sizing: border-box;
 }
-.LetsTalk{
-    margin-left: 2vw;
+
+.LetsTalk {
+    margin: 0 auto;
+    width: 100%;
 }
-.LetsTalk-header{
-  display: flex;
-  flex-direction: column;
-  color: #fff;
+
+.LetsTalk-header {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    margin-bottom: 2rem;
 }
+
 .LetsTalk-header p {
-  margin-top: -8px;
+    margin-top: 0.25rem;
+    font-size: 1rem;
 }
+
 .LetsTalk-form {
     color: #fff;
 }
+
 .form-field {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem 1rem;   /* row-gap column-gap */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 2rem;   /* row-gap column-gap */
 }
 
-.form-field field {
-  margin-top: 24px;
-}
-
-.LetsTalk-form .field {
-  display: flex;
-  flex-direction: column;
+.form-field .field {
+    display: flex;
+    flex-direction: column;
 }
 
 .LetsTalk-form label {
-  margin-bottom: -6px;
-  font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.95rem;
 }
+
 .form-field input {
-  width: 100%;
-  max-width: 645px;
-  height: 58px;
-  opacity: 1;
-  gap: 4px;
-  border-radius: 8px;
-  padding-left: 24px;
-  background-color: rgba(255, 255, 255, 0.050);
-  border: 0px;
-  color: #fff;
+    width: 100%;
+    height: 58px;
+    border-radius: 8px;
+    padding-left: 16px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
+
 .field-message {
     width: 100%;
-    max-width: 1351px;
     height: 300px;
-    opacity: 1;
-    gap: 4px;
     border-radius: 8px;
-    padding-top: 20px;
-    padding-right: 24px;
-    padding-bottom: 20px;
-    padding-left: 24px;
-    background-color: rgba(255, 255, 255, 0.050);
-    border: 0px;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #fff;
     resize: none;
-    margin-top: 24px;
+    margin-top: 1rem;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
+
 .field-checkbox {
     display: flex;
     justify-content: space-between;
-    margin-top: 2vw;
     align-items: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
+
 .checkbox-text {
     display: flex;
+    align-items: center;
+    font-size: 0.9rem;
 }
-.field-checkbox button{
-    margin-right: 23px;
+
+.field-checkbox button {
     border-radius: 10px;
-    border: 0;
+    border: none;
     background: #5423D2;
     color: #fff;
-    padding: 10px 20px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    cursor: pointer;
     transition: 0.3s;
-    height: 48px;
-    margin-bottom: 24px;
+    min-width: 140px;
 }
-.field-checkbox button:hover{
+
+.field-checkbox button:hover {
     background-color: #3b149d;
 }
 
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .form-field {
-    grid-template-columns: 1fr; /* stack fields vertically */
-    gap: 1rem 0; /* reduce horizontal gap */
-  }
-
-  .form-field input,
-  .field-message {
-    width: 100%;  /* full width on mobile */
-    height: auto; /* let height adjust naturally */
-    padding-top: 12px;
-    padding-bottom: 12px;
-    font-size: 1rem;
-  }
-
-  .field-message {
-    height: 180px; /* smaller textarea on mobile */
-  }
-
-  .field-checkbox {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .field-checkbox button {
-    width: 100%; /* full width submit button */
-    margin-right: 0;
-    padding: 14px 0;
-    font-size: 1.1rem;
-  }
-
-  .checkbox-text {
-    font-size: 0.9rem;
-  }
-
-  .LetsTalk-container {
-    margin-left: -2vw;
-    margin-top: 1vw;
-    width: 95%;
-    padding: 1rem;
-    overflow-x: hidden;
-  }
-
-  .LetsTalk {
-    margin-left: 0;
-  }
-}
-/* For small tablets and larger phones */
-@media (max-width: 480px) {
-  .field-message {
-    height: 140px; /* reduce textarea height a bit */
-  }
-
-  .form-field input,
-  .field-message {
-    font-size: 0.95rem;
-    padding: 10px 0px;
-  }
-
-  .field-checkbox button {
-    font-size: 1rem;
-    padding: 12px 0;
-  }
-
-  .checkbox-text {
+.error {
+    color: #ff4d4d;
     font-size: 0.85rem;
-  }
+    margin-top: 4px;
 }
 
-/* For small phones (like older iPhones or very narrow devices) */
+.submit-success {
+    color: #4CAF50;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+.submit-error {
+    color: #ff4d4d;
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+/* === RESPONSIVE STYLES === */
+
+/* Laptops & medium screens */
+@media (max-width: 1024px) {
+    .LetsTalk-container {
+        width: 92%;
+        padding: 1.5rem;
+    }
+
+    .form-field {
+        gap: 0.75rem 1rem;
+    }
+
+    .field-message {
+        height: 250px;
+    }
+
+    .field-checkbox button {
+        padding: 10px 20px;
+    }
+}
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 768px) {
+    .form-field {
+        grid-template-columns: 1fr;
+    }
+
+    .field-message {
+        height: 200px;
+    }
+
+    .field-checkbox {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .field-checkbox button {
+        width: 100%;
+    }
+}
+
+/* Small tablets / large phones (480px - 767px) */
+@media (max-width: 480px) {
+    .LetsTalk-container {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .form-field input,
+    .field-message {
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+
+    .field-message {
+        height: 160px;
+    }
+
+    .field-checkbox button {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
+
+    .checkbox-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Small phones / very narrow screens (<364px) */
 @media (max-width: 364px) {
-  .LetsTalk-container {
-    width: 98%;
-    /* margin-left: 1vw;
-    margin-top: 1vw; */
-    padding: 0.5rem;
-  }
+    .LetsTalk-container {
+        width: 98%;
+        padding: 0.75rem;
+    }
 
-  .form-field input,
-  .field-message {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
+    .form-field input,
+    .field-message {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
 
-  .field-message {
-    height: 120px;
-  }
+    .field-message {
+        height: 140px;
+    }
 
-  .field-checkbox button {
-    font-size: 0.9rem;
-    padding: 10px 0;
-  }
+    .field-checkbox button {
+        font-size: 0.9rem;
+        padding: 8px 0;
+        width: 100%;
+    }
 
-  .checkbox-text {
-    font-size: 0.8rem;
-  }
+    .checkbox-text {
+        font-size: 0.8rem;
+    }
 }

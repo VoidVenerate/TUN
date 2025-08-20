@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PromoteBanner.css';
 import { useBanner } from '../BannerContext/BannerContext';
 import { Upload } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 import axios from 'axios';
+import { useAuth } from '../RoleContext/RoleContext';
 
 const PromoteBanner = () => {
   const [flyerPreview, setFlyerPreview] = useState(null);
@@ -26,6 +27,13 @@ const PromoteBanner = () => {
     const { name, value } = e.target;
     setBannerData((prev) => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    return () => {
+      if (flyerPreview) URL.revokeObjectURL(flyerPreview);
+    };
+  }, [flyerPreview]);
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -59,6 +67,9 @@ const PromoteBanner = () => {
       img.src = previewUrl;
     }
   };
+  const { rules } = useAuth();
+  const role = rules?.role; // 'admin', 'sub-admin', 'super-admin', etc.
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -77,15 +88,26 @@ const PromoteBanner = () => {
         return;
       }
 
-      // Build the form data to match backend keys
+      
+
+      const isAdmin = ["admin", "sub-admin", "super-admin"].includes(role);
+
       const formData = new FormData();
       formData.append("name", bannerData.bannerName);
-      formData.append("banner", bannerData.flyer); // backend expects this exact field name
       formData.append("banner_url", bannerData.bannerLink || "");
-      formData.append("is_approved", false); // backend default
 
-      const res = await axios.post(
-        "https://lagos-turnup.onrender.com/event/banners/create", // replace with your actual POST route
+      if (isAdmin) {
+        // Admin uploads go straight into banner and are auto-approved
+        formData.append("banner", bannerData.flyer);
+        formData.append("is_approved", true);
+      } else {
+        // Normal users → pending storage
+        formData.append("pending_banner", bannerData.flyer);
+        formData.append("is_approved", false);
+      }
+
+      await axios.post(
+        "https://lagos-turnup.onrender.com/event/banners/create",
         formData,
         {
           headers: {
@@ -95,24 +117,23 @@ const PromoteBanner = () => {
         }
       );
 
-      console.log("Banner upload success:", res.data);
-
+      // ✅ Modal message differs for admins
       setModalInfo({
         show: true,
         title: "Success!",
-        message: "Banner submitted successfully.",
-        subMessage:
-          "Thanks for uploading your banner. Our team will review it, and if approved, it will go live within 24–48 hours.",
+        message: isAdmin
+          ? "Banner successfully uploaded and auto-approved!"
+          : "Banner submitted successfully and is pending review.",
+        subMessage: isAdmin
+          ? "Your banner is live immediately."
+          : "Our team will review it, and if approved, it will go live within 24–48 hours.",
         type: "success",
       });
 
-      // Clear form
-      setBannerData({
-        bannerName: "",
-        flyer: null,
-        bannerLink: "",
-      });
+      // Reset form
+      setBannerData({ bannerName: "", flyer: null, bannerLink: "" });
       setFlyerPreview(null);
+
     } catch (err) {
       console.error("Error submitting banner:", err);
       setModalInfo({

@@ -12,7 +12,7 @@
   overflow: hidden;
   border-radius: 8px;
   aspect-ratio: 16 / 9; /* ✅ keeps consistent ratio across screens */
-  max-height: 400px; /* cap height for large screens */
+  max-height: 270px; /* cap height for large screens */
 }
 
 .slider-container img,

@@ -24,7 +24,7 @@ const Event = () => {
         if (file) {
             const img = new Image();
             img.onload = () => {
-                if (img.width <= 800 && img.height <= 400) {
+                if (img.width <= 400 && img.height <= 800) {
                     const previewURL = URL.createObjectURL(file);
                     setEventData(prev => ({
                         ...prev,

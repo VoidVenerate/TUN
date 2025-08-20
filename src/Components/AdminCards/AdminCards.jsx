@@ -5,92 +5,102 @@ import axios from 'axios'
 import api from '../api'
 
 const AdminCards = () => {
-    const [pendingEvents, setPendingEvents] = useState(0)
-    const [prevPendingEvents, setPrevPendingEvents] = useState(null)
-    const [trend, setTrend] = useState(null)
-    const [percentageChange, setPercentageChange] = useState(0)
-    const [displayedPercentage, setDisplayedPercentage] = useState(0); // 👈 For animation
+  const [pendingEvents, setPendingEvents] = useState(0)
+  const [prevPendingEvents, setPrevPendingEvents] = useState(null)
+  const [trend, setTrend] = useState(null)
+  const [percentageChange, setPercentageChange] = useState(0)
+  const [displayedPercentage, setDisplayedPercentage] = useState(0) // 👈 Animated value
 
+  const [totalEvents, setTotalEvents] = useState(0)
+  const [totalBanner, setTotalBanner] = useState(0)
+  const [pendingBanner, setPendingBanner] = useState(0)
+  const [discoverCount, setDiscoverCount] = useState(0)
 
-    const [totalEvents, setTotalEvents] = useState(0)
-    const [totalBanner, setTotalBanner] = useState(0)
-    const [discoverCount, setDiscoverCount] = useState(0)
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-              // ✅ Get token from localStorage
-              const token = localStorage.getItem('token'); 
-              if (!token) {
-                  console.warn('No token found — user might not be logged in');
-                  return;
-              }
-            //pending events
-                const pendingRes = await api.get('https://lagos-turnup.onrender.com/event/admin/featured-requests', 
-                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
-                )
-                const pendingData = pendingRes.data
-                const newPending = pendingData.length
-
-                if (prevPendingEvents !=null) {
-                    const diff = newPending - prevPendingEvents
-                    const percent = prevPendingEvents > 0 ? Math.abs((diff/prevPendingEvents) * 100).toFixed(1) : 0 
-                    setPercentageChange(percent);
-
-                    if (diff > 0) {
-                        setTrend('up')
-                    }else if(diff < 0) {
-                        setTrend('down')
-                    } else {
-                        null
-                    }
-                    
-                } 
-                setPrevPendingEvents(newPending)
-                setPendingEvents(newPending)
-            //total events
-                const eventRes = await axios.get('https://lagos-turnup.onrender.com/event/events', 
-                  { headers: { 'Content-Type': 'application/json',Authorization: `Bearer ${token}`  } }
-                )
-                const eventData = eventRes.data
-                setTotalEvents(eventData.length)
-
-            //total banners
-                const bannerRes = await axios.get ('https://lagos-turnup.onrender.com/event/banners', 
-                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
-                )
-                const bannerData = bannerRes.data
-                setTotalBanner(bannerData.length)
-            
-            //discover lagos
-                const discoverRes = await axios.get ('https://lagos-turnup.onrender.com/event/spots', 
-                  { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
-                )
-                const discoverData = discoverRes.data
-                setDiscoverCount(discoverData.length)
-            } catch (error) {
-                console.error('Error fetching Data', error)
-            }
-        }
-        fetchData()
-    },[prevPendingEvents])
-
-     // 👇 Animate displayedPercentage when percentageChange updates
   useEffect(() => {
-    let start = displayedPercentage;
-    let end = percentageChange;
-    let step = (end - start) / 20; // smooth steps
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        if (!token) {
+          console.warn('No token found — user might not be logged in')
+          return
+        }
 
-    let animation = setInterval(() => {
-      start += step;
-      if ((step > 0 && start >= end) || (step < 0 && start <= end)) {
-        start = end;
-        clearInterval(animation);
+        // ✅ Pending events
+        const pendingRes = await api.get(
+          'https://lagos-turnup.onrender.com/event/events?pending=true',
+          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+        )
+        const pendingData = pendingRes.data
+        const newPending = pendingData.length
+
+        if (prevPendingEvents !== null) {
+          const diff = newPending - prevPendingEvents
+          const percent =
+            prevPendingEvents > 0
+              ? Number(((diff / prevPendingEvents) * 100).toFixed(1)) // 👈 force number
+              : 0
+          setPercentageChange(percent)
+
+          if (diff > 0) setTrend('up')
+          else if (diff < 0) setTrend('down')
+          else setTrend(null)
+        }
+
+        setPrevPendingEvents(newPending)
+        setPendingEvents(newPending)
+
+        // ✅ Total events
+        const eventRes = await axios.get(
+          'https://lagos-turnup.onrender.com/event/events',
+          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+        )
+        setTotalEvents(eventRes.data.length)
+
+        // ✅ Total banners
+        const bannerRes = await axios.get('https://lagos-turnup.onrender.com/event/banners',
+          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+        )
+        const bannerData = bannerRes.data.filter(banner => banner.is_approved)
+        setTotalBanner(bannerData.length)
+
+        // ✅ Pending banners
+        const pendingBannerData = bannerRes.data.filter(banner => !banner.is_approved)
+        setPendingBanner(pendingBannerData.length)
+
+        // ✅ Discover Lagos
+        const discoverRes = await axios.get('https://lagos-turnup.onrender.com/event/spots',
+          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+        )
+        setDiscoverCount(discoverRes.data.length)
+      } catch (error) {
+        console.error('Error fetching Data', error)
       }
-      setDisplayedPercentage(start.toFixed(1));
-    }, 30);
+    }
+    fetchData()
+  }, [prevPendingEvents])
 
-    return () => clearInterval(animation);
+  // 👇 Animate displayedPercentage smoothly when percentageChange updates
+  useEffect(() => {
+    let startValue = displayedPercentage;
+    let endValue = percentageChange;
+    let startTime = null;
+
+    const duration = 800; // ms, you can tweak this
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const newValue = startValue + (endValue - startValue) * progress;
+      setDisplayedPercentage(Number(newValue.toFixed(1)));
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
   }, [percentageChange]);
 
 
@@ -106,14 +116,22 @@ const AdminCards = () => {
           </div>
         )}
       </div>
+
       <div className="dashboard-card">
         <h3>Total Events</h3>
         <p>{totalEvents}</p>
       </div>
+
+      <div className="dashboard-card">
+        <h3>Pending Banners</h3>
+        <p>{pendingBanner}</p>
+      </div>
+
       <div className="dashboard-card">
         <h3>Total Banners</h3>
         <p>{totalBanner}</p>
       </div>
+
       <div className="dashboard-card">
         <h3>Discover Lagos</h3>
         <p>{discoverCount}</p>

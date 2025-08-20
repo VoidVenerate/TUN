@@ -141,7 +141,7 @@ const Newsletter = () => {
             formData.append("content", content);
             if (flyer) formData.append("flyer", flyer); // optional
 
-            const res = await axios.post('https://lagos-turnup.onrender.com/event/newsletter', formData, {
+            const res = await axios.post('https://lagos-turnup.onrender.com/email/broadcast-email', formData, {
                 headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` }
             });
 
