@@ -4,7 +4,7 @@ import Modal from "../Modal/Modal";
 import api from "../api";
 import PendingBannerCard from "../PendingBannerCard/PendingBannerCard";
 import { Search } from "lucide-react";
-import './pendingBanner.css'
+import './PendingBanner.css'
 
 const PendingBanner = () => {
   const [banners, setBanners] = useState([]);
