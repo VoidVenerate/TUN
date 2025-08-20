@@ -148,3 +148,16 @@
   background-color: #3333338a !important;
   transform: none !important;
 }
+@media (min-width: 321px) and (max-width: 480px) {
+  .event-img {
+    width: 350px;
+    height: 400px;
+  }
+  .slider li {
+    width: 350px;
+    height: 520px;
+  }
+  .slider-info {
+    height: 520px;
+  }
+}

@@ -1,6 +1,5 @@
 .slider-container {
   width: 100%;
-  height: 239px;
   margin: auto;
   margin-top: 20px;
   position: relative;
@@ -12,11 +11,16 @@
   align-items: center;
   overflow: hidden;
   border-radius: 8px;
+  aspect-ratio: 16 / 9; /* ✅ keeps consistent ratio across screens */
+  max-height: 400px; /* cap height for large screens */
 }
 
-.slider-container img {
+.slider-container img,
+.slide {
   width: 100%;
-  height: 250px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 /* All slides stacked absolutely */
@@ -26,10 +30,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 12px;
 }
 
 /* Active slide visible */
@@ -47,7 +47,6 @@
   justify-content: space-between;
   transform: translateY(-50%);
   padding: 0 10px;
-  background-color: transparent;
   pointer-events: none; /* Disable unless on button */
 }
 
@@ -70,16 +69,15 @@
 /* Indicators */
 .indicators {
   position: absolute;
-  bottom: 15px;
+  bottom: 12px;
   width: 100%;
   text-align: center;
-  background-color: transparent;
 }
 
 .dot {
   height: 10px;
   width: 10px;
-  margin: 0 5px;
+  margin: 0 4px;
   background-color: gray;
   border-radius: 50%;
   display: inline-block;
@@ -90,20 +88,16 @@
 .dot.active {
   background-color: white;
 }
-/* Extra small phones - max width 320px (e.g., iPhone SE) */
+
+/* 📱 Extra small phones - max width 320px (iPhone SE, old devices) */
 @media (max-width: 320px) {
   .slider-container {
-    height: 150px; /* even shorter height */
-  }
-
-  .slider-container img,
-  .slide {
-    height: 150px;
+    aspect-ratio: 3 / 2; /* shorter and squarer */
   }
 
   .nav-buttons button {
     font-size: 1rem;
-    padding: 6px 10px;
+    padding: 6px 8px;
   }
 
   .dot {
@@ -113,48 +107,67 @@
   }
 }
 
-/* Phones - max width 480px */
+/* 📱 Small to normal phones - 321px to 480px */
 @media (min-width: 321px) and (max-width: 480px) {
   .slider-container {
-    height: 180px;  /* shorter height for small screens */
-  }
-
-  .slider-container img,
-  .slide {
-    height: 180px;
+    aspect-ratio: 16 / 10; /* slightly taller */
   }
 
   .nav-buttons button {
     font-size: 1.2rem;
-    padding: 8px 12px;
+    padding: 8px 10px;
+  }
+
+  .dot {
+    height: 7px;
+    width: 7px;
+    margin: 0 3px;
+  }
+}
+
+/* 📱 Larger phones (e.g. iPhone Pro Max, Pixel) - 481px to 600px */
+@media (min-width: 481px) and (max-width: 600px) {
+  .slider-container {
+    aspect-ratio: 16 / 9;
+  }
+
+  .nav-buttons button {
+    font-size: 1.3rem;
+    padding: 9px 12px;
   }
 
   .dot {
     height: 8px;
     width: 8px;
-    margin: 0 3px;
   }
 }
 
-/* Tablets - width between 481px and 768px */
-@media (min-width: 481px) and (max-width: 768px) {
+/* 📱 Tablets (portrait & landscape) - 601px to 768px */
+@media (min-width: 601px) and (max-width: 768px) {
   .slider-container {
-    height: 220px; /* medium height */
-  }
-
-  .slider-container img,
-  .slide {
-    height: 220px;
+    aspect-ratio: 16 / 9;
+    max-height: 280px;
   }
 
   .nav-buttons button {
     font-size: 1.4rem;
-    padding: 9px 14px;
+    padding: 10px 14px;
   }
 
   .dot {
     height: 9px;
     width: 9px;
-    margin: 0 4px;
+  }
+}
+
+/* 💻 Small laptops / larger tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .slider-container {
+    max-height: 320px;
+  }
+
+  .nav-buttons button {
+    font-size: 1.5rem;
+    padding: 12px 16px;
   }
 }
