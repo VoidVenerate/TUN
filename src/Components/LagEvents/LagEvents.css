@@ -3,21 +3,21 @@
   width: 96%;
   box-sizing: border-box;
 }
+
 .LagEvents-header {
-    display: flex;
-    margin-left: 2vw;
-    justify-content: space-between;
-    margin-top: 3vw;
-    align-items: center;
+  display: flex;
+  margin-left: 2vw;
+  justify-content: space-between;
+  margin-top: 3vw;
+  align-items: center;
 }
 .LagEvents-header p {
-    color: #fff;
-    font-size: 28px;
-    font-weight: 600;
-    margin-left: 0;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+  margin-left: 0;
 }
 .LagEvents-header button {
-  /* padding: 8px 8px; */
   border: none;
   cursor: pointer;
   font-weight: 500;
@@ -26,57 +26,118 @@
   color: #03e9f4;
   letter-spacing: 0px;
   transition: 0.5s;
-  -webkit-box-reflect: below 1px linear-gradient(transparent, rgb(0, 0, 0));
   overflow: hidden;
-  transition: background 0.3s ease;
   background-color: #2f2f2f;
   border-radius: 60px;
   margin-right: 3vw;
   width: 117px;
   height: 58px;
 }
-.view-more {
-  /* padding: 20px 24px 20px 24px; */
+.LagEvents-link.view-more {
   border-radius: 100px;
+  color: #fff;
+  text-decoration: none;
 }
-.Lag-Events{
+
+.LagEvents-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   margin-top: 0vw;
-  margin-left: -1vw;
+  margin-left: 2vw;
   justify-content: flex-start;
   box-sizing: border-box;
 }
-.event-card {
+
+.LagEvents-card {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 20px;
   width: 100%;
-  max-width: 435px; /* max width for large screens */
-  height: auto; /* let height adapt */
+  max-width: 450px;
+  height: 705px;
   margin-top: 2vw;
   box-sizing: border-box;
-  margin-left: 0; /* reset margin for flex gap */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
-.events {
-    padding: 24px;
-    box-sizing: border-box;
-    position: relative;
+
+.LagEvents-content {
+  padding: 20px;
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.events img {
-    border-radius: 16px;
-    width: 395px;
-    height: 455px;
+
+.LagEvents-img {
+  border-radius: 16px;
+  width: 410px;
+  height: 455px;
 }
-.events h3{
-    color: #fff;
+
+.LagEvents-txt {
+  display: flex;
+  justify-content: space-between;
 }
-.events p {
-    color: #6d6d6d;
+
+.LagEvents-title {
+  color: #fff;
 }
-.event-txt {
-    display: flex;
-    justify-content: space-between;
+
+.LagEvents-location {
+  color: #6d6d6d;
+}
+
+.LagEvents-desc {
+  color: #6d6d6d;
+}
+
+/* Buttons container inside each event card */
+.LagEvents-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 10px;
+}
+
+/* Style both buttons equally as base */
+.LagEvents-btns > button {
+  flex: 1;
+  padding: 20px 24px;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.07);
+  font-size: small;
+}
+
+/* First button: View Details */
+.LagEvents-btns > button:first-child {
+  background-color: rgba(255, 255, 255, 0.070); /* default active color */
+}
+
+/* First button hover effect */
+.LagEvents-btns > button:first-child:hover {
+  background-color: rgba(255, 255, 255, 0.156);
+  transform: scale(1.02);
+}
+
+/* Second button: Buy Tickets */
+.LagEvents-btns > button:last-child {
+  background-color: rgba(255, 255, 255, 0.050);
+  color: #fff;
+}
+
+
+
+
+/* Disabled button styling */
+.LagEvents-btns > button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Small phones like iPhone SE (320px width) */
@@ -105,19 +166,19 @@
     font-size: 0.8rem;
   }
 
-  .Lag-Events {
+  .LagEvents-list {
     justify-content: center;
     margin-left: 0;
   }
 
-  .event-card {
+  .LagEvents-card {
     width: 90vw;
     margin-left: 0;
     margin-bottom: 2rem;
     height: auto;
   }
 
-  .events img {
+  .LagEvents-img {
     width: 100%;
     height: 450px;
   }
@@ -134,19 +195,19 @@
     margin-left: 2vw;
   }
 
-  .Lag-Events {
+  .LagEvents-list {
     justify-content: center;
     margin-left: 0;
     gap: 1rem;
   }
 
-  .event-card {
+  .LagEvents-card {
     width: 320px;
     margin-left: 0;
     margin-bottom: 1.5rem;
   }
 
-  .events img {
+  .LagEvents-img {
     width: 100%;
     height: 450px;
   }
@@ -163,53 +224,66 @@
     margin-left: 3vw;
   }
 
-  .Lag-Events {
+  .LagEvents-list {
     justify-content: center;
     margin-left: 0;
     gap: 1.5rem;
   }
 
-  .event-card {
+  .LagEvents-card {
     width: 300px;
     margin-left: 0;
     margin-bottom: 2rem;
   }
 
-  .events img {
+  .LagEvents-img {
     width: 100%;
     height: 450px;
   }
 }
-.event-card {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 20px;
-  width: 100%;
-  max-width: 435px;
-  height: 520px;            /* fixed height for all cards */
-  margin-top: 2vw;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;   /* stack content */
-  justify-content: space-between; /* keeps top content up & buttons down */
+/* --- Small phones (max-width: 360px) --- */
+@media (max-width: 360px) {
+  .LagEvents-btns {
+    flex-direction: column; /* stack buttons vertically */
+    gap: 0.5rem;            /* space between buttons */
+  }
+
+  .LagEvents-btns > button {
+    padding: 15px 0;
+    font-size: 0.9rem;
+  }
 }
 
-.events {
-  padding: 20px;
-  box-sizing: border-box;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* --- Phones up to 480px --- */
+@media (min-width: 361px) and (max-width: 480px) {
+  .LagEvents-btns {
+    flex-direction: row; /* keep horizontal */
+    gap: 0.75rem;
+  }
+
+  .LagEvents-btns > button {
+    padding: 18px 0;
+    font-size: 0.95rem;
+  }
 }
 
-.event-txt {
-  display: flex;
-  justify-content: space-between;
+/* --- Tablets (481px to 768px) --- */
+@media (min-width: 481px) and (max-width: 768px) {
+  .LagEvents-btns {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .LagEvents-btns > button {
+    padding: 20px 0;
+    font-size: 1rem;
+  }
 }
 
-.slider-btn {
-  margin-top: auto;         /* pins to bottom */
-  display: flex;
-  gap: 10px;
-  justify-content: flex-start;
+/* --- Optional: Larger screens --- */
+@media (min-width: 769px) {
+  .LagEvents-btns > button {
+    padding: 20px 24px;
+    font-size: 1rem;
+  }
 }
-/* not intrvnfmfkfl */

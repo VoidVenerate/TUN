@@ -53,12 +53,12 @@
   color: #aaa;
 } */
 
-button.active {
+.feature-buttons button.active {
   background: #7c3aed;
   color: white;
 }
 
-button.active {
+.feature-buttons button.active {
   background: #6d28d9;
 }
 
@@ -177,7 +177,7 @@ button.active {
 }
 
 .create-event-btn {
-  background: #7c3aed;
+  background: #5423D2;
   color: white;
   border: none;
   border-radius: 6px;
@@ -217,6 +217,7 @@ button.active {
   padding-top: 24px;
   border-top: 1px solid #333;
 }
+
 
 .back-event-btn {
   background: transparent;

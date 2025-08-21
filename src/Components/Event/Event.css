@@ -1,20 +1,20 @@
-/* === Base Styles (mobile-first) === */
-.event-form-container {
-  background: #0a0a0a;
+/* === Base Container === */
+.event-unique-container {
+  background: #000000;
   color: #fff;
   min-height: 100vh;
   font-family: system-ui, sans-serif;
 }
 
-/* Header */
-.header {
+/* === Header === */
+.event-unique-header {
   display: flex;
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid #222;
 }
 
-.back-arrow {
+.event-unique-back {
   width: 22px;
   height: 22px;
   margin-right: 12px;
@@ -22,17 +22,20 @@
   color: #fff;
   transition: opacity 0.2s;
 }
-.back-arrow:hover { opacity: 0.7; }
 
-.header-title {
+.event-unique-back:hover {
+  opacity: 0.7;
+}
+
+.event-unique-title {
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.5px;
   margin: 0;
 }
 
-/* Main layout */
-.form-content {
+/* === Main Content === */
+.event-unique-content {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -41,32 +44,35 @@
 }
 
 /* === Upload Section === */
-.upload-section {
+.event-unique-upload-section {
   border: 1px solid #333;
   border-radius: 12px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.02);
 }
 
-.upload-label {
+.event-unique-upload-label {
   margin-bottom: 10px;
   font-size: 14px;
 }
 
-.upload-flyer-text {
+.event-unique-upload-text {
   display: flex;
   align-items: center;
   font-weight: 500;
 }
-.upload-flyer-text p { margin-left: 8px; }
 
-.upload-description {
+.event-unique-upload-text p {
+  margin-left: 8px;
+}
+
+.event-unique-upload-description {
   font-size: 12px;
   color: #aaa;
   margin-top: 4px;
 }
 
-.upload-area {
+.event-unique-upload-area {
   width: 100%;
   min-height: 220px;
   border: 1px dashed #444;
@@ -74,98 +80,127 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #111;
+  background: #000;
   cursor: pointer;
   transition: border-color 0.2s;
   overflow: hidden;
+  margin-top: 10vw;
 }
-.upload-area:hover { border-color: #777; }
 
-.flyer-preview {
+.event-unique-upload-area:hover {
+  border-color: #777;
+}
+
+.event-unique-flyer-preview {
   max-width: 100%;
   max-height: 250px;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.upload-icon {
+.event-unique-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.event-unique-upload-icon {
   width: 42px;
   height: 42px;
   margin-bottom: 12px;
   color: #777;
 }
 
-.upload-title {
+.event-unique-upload-title {
   font-size: 15px;
   font-weight: 500;
   margin-bottom: 4px;
 }
-.upload-subtitle { font-size: 13px; color: #999; margin-bottom: 6px; }
-.upload-format { font-size: 12px; color: #666; }
+
+.event-unique-upload-subtitle {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 6px;
+}
+
+.event-unique-upload-format {
+  font-size: 12px;
+  color: #666;
+}
 
 /* === Form Section === */
-.form-fields {
+.event-unique-form-label span {
+  color: #ff0000;
+}
+.event-unique-form span {
+  color: rgb(255, 255, 255);
+}
+
+.event-unique-form {
   border: 1px solid #333;
   border-radius: 12px;
   padding: 20px;
   background: rgba(255, 255, 255, 0.02);
 }
 
-.form-row {
+.event-unique-form-row {
   display: flex;
-  flex-direction: column;
   gap: 16px;
   margin-bottom: 16px;
 }
 
-.form-group { 
+.event-unique-form-group {
   flex: 1;
   display: flex;
   flex-direction: column;
- }
+}
 
-.form-label {
+.event-unique-form-label {
   font-size: 13px;
   font-weight: 500;
   margin-bottom: 6px;
 }
 
-.form-input,
-.form-select,
-.form-textarea {
-  width: 91%;
-  padding: 12px 14px;
+.event-unique-form-input,
+.event-unique-form-select,
+.event-unique-form-textarea {
+  width: 97%;
+  height: 58px;
   font-size: 14px;
   border: 1px solid #333;
   border-radius: 6px;
-  background: #1a1a1a;
+  background: #000000;
   color: #fff;
   transition: border 0.2s;
+  padding-left: 10px;
 }
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
+
+.event-unique-form-select{
+  width: 100%;
+}
+
+.event-unique-form-input:focus,
+.event-unique-form-select:focus,
+.event-unique-form-textarea:focus {
   outline: none;
   border-color: #666;
 }
-.form-input::placeholder,
-.form-textarea::placeholder { color: #666; }
 
-.form-select {
-  cursor: pointer;
-  appearance: none;
-  padding-right: 36px;
-  background: #1a1a1a url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23aaa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") no-repeat right 12px center/16px;
+.event-unique-form-textarea {
+  min-height: 280px;
+  resize: none;
+  width: 97.3%;
+  padding: 10px 15px;
 }
 
-.form-textarea { min-height: 160px; resize: none; }
-
-.date-input-wrapper,
-.time-input-wrapper {
+.event-unique-date-wrapper,
+.event-unique-time-wrapper {
   position: relative;
 }
-.input-icon {
+
+.event-unique-input-icon {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -177,13 +212,13 @@
 }
 
 /* === Footer === */
-.form-footer {
+.event-unique-form-footer {
   text-align: center;
   padding-top: 20px;
 }
 
-.create-event-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+.event-unique-submit-btn {
+  background: #5423D2;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -194,22 +229,57 @@
   transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
 }
-.create-event-btn:hover {
+
+.event-unique-submit-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(118, 75, 162, 0.35);
 }
-.create-event-btn:active { transform: translateY(0); }
+
+.event-unique-submit-btn:active {
+  transform: translateY(0);
+}
 
 /* === Responsive === */
 @media (min-width: 769px) {
-  .form-content {
+  .event-unique-content {
     flex-direction: row;
     gap: 32px;
     padding: 32px 24px;
   }
-  .upload-section { flex: 0 0 380px; }
-  .form { flex: 1; }
-  .form-row { flex-direction: row; gap: 24px; }
-  .form-footer { text-align: right; }
-  .create-event-btn { width: auto; }
+
+  .event-unique-upload-section {
+    flex: 0 0 380px;
+  }
+
+  .event-unique-form-container {
+    flex: 1;
+  }
+
+  .event-unique-form-row {
+    flex-direction: row;
+    gap: 24px;
+  }
+
+  .event-unique-form-footer {
+    text-align: right;
+  }
+
+  .event-unique-submit-btn {
+    width: auto;
+  }
+}
+.event-unique-timepicker {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.event-unique-timepicker:focus {
+  outline: none;
+  border-color: #7c3aed; /* neon purple focus */
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.6);
 }

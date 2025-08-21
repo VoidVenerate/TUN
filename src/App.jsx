@@ -39,6 +39,7 @@ import AdminFood from './Pages/ADMIN/AdminFood/AdminFood'
 import AdminBeaches from './Pages/ADMIN/AdminBeaches/AdminBeaches'
 import EditSpot from './Pages/ADMIN/EditSpot/EditSpot'
 import AdminPendingBanner from './Pages/ADMIN/AdminPendingBanner/AdminPendingBanner'
+import UserEventDetails from './Pages/USERS/UserEventDetails/UserEventDetails'
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
         <Route path='/promoteevent' element = {<PromoteEvent/>} />
         <Route path='/featureevent' element = {<FeatureEvent/>} />
         <Route path='/review' element = {<Review/>} />
+        <Route path='/eventdetails' element = {<UserEventDetails/>} />
         <Route path='/viewdetails/:id' element = {<ViewEventDetails/>} />
         <Route path='/promotebanner' element = {<Banner/>} />
         <Route path='/auth' element = {<Auth/>} />

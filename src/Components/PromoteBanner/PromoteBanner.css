@@ -19,7 +19,7 @@
 /* styles/PromoteBanner.css */
 
 .banner-form-container {
-  background-color: #0a0a0a;
+  background-color: #000000;
   color: #ffffff;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -150,7 +150,7 @@
 
 .banner-form-row {
   display: flex;
-  gap: 60px;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -167,7 +167,7 @@
 }
 
 .banner-form-input {
-  width: 91%;
+  width: 95%;
   background-color: #1a1a1a;
   border: 0px solid #333333;
   border-radius: 6px;
@@ -193,7 +193,7 @@
 }
 
 .banner-submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #5423D2;
   color: #ffffff;
   border: none;
   border-radius: 8px;

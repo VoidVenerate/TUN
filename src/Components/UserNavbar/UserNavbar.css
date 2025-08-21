@@ -1,6 +1,6 @@
 /* ===== Desktop Navbar ===== */
 .navbar {
-  background-color: transparent;
+  background-color: #000000;
   padding: 1rem 5vw; /* flexible padding */
   display: flex;
   align-items: center;

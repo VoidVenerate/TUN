@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 import axios from 'axios';
 import { useAuth } from '../RoleContext/RoleContext';
+import { ArrowLeft } from 'lucide-react';
 
 const PromoteBanner = () => {
   const [flyerPreview, setFlyerPreview] = useState(null);
@@ -153,7 +154,7 @@ const PromoteBanner = () => {
   return (
     <div className="banner-form-container">
       <div className="banner-header">
-        <span className="banner-back-arrow">⬅</span>
+        <NavLink to='/promote' ><ArrowLeft className="event-unique-back" /></NavLink>
         <h2 className="banner-header-title" style={{ fontFamily: 'Rushon Ground' }}>
           PROMOTE A BANNER
         </h2>

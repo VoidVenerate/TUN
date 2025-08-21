@@ -201,3 +201,42 @@
     padding-left: 10px;
   }
 }
+.promote-btn {
+  display: block;
+  width: 661px;
+  margin-top: 1vw;
+  height: 58px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  text-align: left;
+  padding-left: 2vw;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  line-height: 58px; /* vertically center text */
+  text-decoration: none;
+}
+
+/* Hover effect */
+.promote-btn:hover {
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+.promote-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-25deg);
+  transition: all 0.5s ease;
+}
+
+.promote-btn:hover::after {
+  left: 100%;
+}

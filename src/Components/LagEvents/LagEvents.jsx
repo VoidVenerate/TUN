@@ -1,74 +1,52 @@
-import React, {useState} from 'react'
-import { NavLink, useLocation } from 'react-router-dom';
+import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom';
 import './LagEvents.css'
 import Le from '../../assets/Le';
 
 const LagEvents = ({ events }) => {
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const cardsPerPage = 3;
-
-//   const totalSets = Math.ceil(events.length / cardsPerPage);
-
-//   const handleNext = () => {
-//     if (currentIndex < totalSets - 1) {
-//       setCurrentIndex(currentIndex + 1);
-//     }
-//   };
-
-//   const handlePrev = () => {
-//     if (currentIndex > 0) {
-//       setCurrentIndex(currentIndex - 1);
-//     }
-//   };
-
-//   const currentEvents = events.slice(
-//     currentIndex * cardsPerPage,
-//     currentIndex * cardsPerPage + cardsPerPage
-//   );
-
-const [activeBtn, setActiveBtn] = useState({index: null, type: null})
+  const [activeBtn, setActiveBtn] = useState({ index: null, type: null })
   const handleClick = (index, type) => {
-    if(activeBtn.index === index && activeBtn.type === type) {
-      setActiveBtn({index:null, type:null})
-    }
-    else {
-      setActiveBtn({index,type})
+    if (activeBtn.index === index && activeBtn.type === type) {
+      setActiveBtn({ index: null, type: null })
+    } else {
+      setActiveBtn({ index, type })
     }
   }
-  
+
   return (
     <nav className='LagEvents-container'>
         <div className="LagEvents-header">
-            <p style={{fontFamily: 'Rushon Ground'}}>Lagos Events</p>
+            <p style={{ fontFamily: 'Rushon Ground' }}>Lagos Events</p>
             <button>
                 <NavLink
                     to="/explore"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link view-more')}
-                    onClick={() => setMenuOpen(false)}
+                    className={({ isActive }) => (isActive ? 'LagEvents-link active' : 'LagEvents-link view-more')}
                 >
                     View More
                 </NavLink>
             </button>
         </div>
-        <div className="Lag-Events">
+        <div className="LagEvents-list">
             {Le.map((event, index) => (
-                <div key={event.id} className='event-card'>
-                    <div className="events">
-                        <img src={event.image} alt={event.title} />
-                        <div className="event-txt">
-                            <h3>{event.title}</h3>
-                            <p>{event.location}</p>
+                <div key={event.id} className='LagEvents-card'>
+                    <div className="LagEvents-content">
+                        <img src={event.image} alt={event.title} className="LagEvents-img" />
+                        <div className="LagEvents-txt">
+                            <h3 className="LagEvents-title">{event.title}</h3>
+                            <p className="LagEvents-location">{event.location}</p>
                         </div>
-                        <p>{event.desciption}</p>
-                        <div className="slider-btn">
+                        <p className="LagEvents-desc">{event.desciption}</p>
+                        <div className="LagEvents-btns">
                             <button
-                                className={activeBtn.index === index && activeBtn.type === 'details' ? 'active' : ''}
+                                className={activeBtn.index === index && activeBtn.type === 'details' ? 'LagEvents-activeBtn' : ''}
                                 onClick={() => handleClick(index, 'details')}
-                                >
-                                View Details
+
+                                style={{fontSize: '13px'}}
+                            >
+                                <NavLink to='eventdetails' style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
                             </button>
 
-                            <button disabled className='buy-tickets-btn'>
+                            <button disabled className='LagEvents-buyBtn' style={{fontSize: '12px'}}>
                                 Buy Tickets
                             </button>
                         </div>
@@ -76,8 +54,6 @@ const [activeBtn, setActiveBtn] = useState({index: null, type: null})
                 </div>
             ))}
         </div>
-        {/* Pagination controls */}
-       
     </nav>
   )
 }

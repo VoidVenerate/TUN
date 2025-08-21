@@ -1,5 +1,6 @@
 import React from 'react'
 import './EventsPromoBanner.css'
+import { NavLink } from 'react-router-dom'
 
 const EventsPromoBanner = () => {
   return (
@@ -10,7 +11,7 @@ const EventsPromoBanner = () => {
                 Reach thousands of partygoers, culture lovers, and city explorers who are always down for a good time. 
                 <br />TurnUpLagos puts your event in the spotlight.
             </p>
-            <button className="promo-btn">Promote Your Event</button>
+            <button className="promo-btn"><NavLink to ='/promoteevent'>Promote Your Event</NavLink></button>
         </div>
     </div>
 

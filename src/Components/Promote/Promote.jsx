@@ -11,8 +11,9 @@ const Promote = () => {
                     <h2>Promote with us</h2>
                     <p>Showcase your events or banners to reach the right audience and make an impact today!</p>
                 </div>
-                <button><NavLink to='/promoteevent'>Promote an Event</NavLink></button>
-                <button><NavLink to="/promotebanner">Promote a Banner</NavLink></button>
+                <NavLink to='/promoteevent' className="promote-btn">Promote an Event</NavLink>
+                <NavLink to='/promotebanner' className="promote-btn">Promote a Banner</NavLink>
+
             </div>
         </div>
     </div>

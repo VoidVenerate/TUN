@@ -11,12 +11,12 @@
     #DE2778,   
     #B03DE2  
   );
-  border-radius: 20px;
+  border-radius: 24px;
   color: white;
   padding: 2rem;
   text-align: center;
-  width: 88%;
-  margin-left: 1.5vw;
+  width: 89%;
+  margin-left: 0vw;
   height: 300px;
   display: flex;
   flex-direction: column;
@@ -40,4 +40,8 @@
 
 .promo-btn:hover {
   background: rgba(255,255,255,0.2);
+}
+.promo-btn a {
+  color: #fff;
+  text-decoration: none;
 }
