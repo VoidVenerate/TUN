@@ -51,7 +51,7 @@ const AdminCards = () => {
 
         // ✅ Total events
         const eventRes = await axios.get(
-          'https://lagos-turnup.onrender.com/event/events',
+          'https://lagos-turnup.onrender.com/event/events?pending=false',
           { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
         )
         setTotalEvents(eventRes.data.length)

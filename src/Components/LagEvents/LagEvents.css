@@ -288,3 +288,25 @@
     font-size: 1rem;
   }
 }
+@media (min-width: 1330px) and (max-width: 1480px) {
+  .LagEvents-list {
+    margin-left: 0vw;
+    width: 100%;
+  }
+  .LagEvents-card {
+    width: 90%;
+    max-width: 400px;
+  }
+  .LagEvents-img {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+@media (min-width: 980px) and (max-width: 1330px) {
+  .LagEvents-list {
+    margin-left: 0vw;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+}

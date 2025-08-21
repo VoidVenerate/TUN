@@ -289,3 +289,33 @@
     font-size: 1rem;
   }
 }
+@media (min-width: 1330px) and (max-width: 1480px) {
+  .BlEvents-list {
+    margin-left: 0vw;
+    width: 100%;
+  }
+  .BlEvents-card {
+    width: 90%;
+    max-width: 400px;
+  }
+  .BlEvents-img {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+@media (min-width: 980px) and (max-width: 1330px) {
+  .BlEvents-list {
+    margin-left: 0vw;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .BlEvents-card {
+    width: 100%;
+    max-width: 450px;
+  }
+  .BlEvents-img {
+    width: 100%;
+    max-width: 430px;
+  }
+}
