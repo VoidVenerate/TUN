@@ -149,7 +149,7 @@
   }
 
   .LagEvents-header {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     margin-left: 1vw;
   }
@@ -161,9 +161,10 @@
 
   .LagEvents-header button {
     margin-right: 0;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem;
     letter-spacing: 2px;
     font-size: 0.8rem;
+    margin-top: 4vw;
   }
 
   .LagEvents-list {
