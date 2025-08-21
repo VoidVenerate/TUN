@@ -239,7 +239,7 @@
 
   .LagEvents-img {
     width: 100%;
-    height: 450px;
+    height: 320px;
   }
 }
 /* --- Small phones (max-width: 360px) --- */
@@ -303,6 +303,14 @@
   }
 }
 @media (min-width: 980px) and (max-width: 1330px) {
+  .LagEvents-list {
+    margin-left: 0vw;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+}
+@media (min-width: 768px) and (max-width: 979px) {
   .LagEvents-list {
     margin-left: 0vw;
     width: 100%;
