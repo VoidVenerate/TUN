@@ -92,7 +92,7 @@
 /* 📱 Extra small phones - max width 320px (iPhone SE, old devices) */
 @media (max-width: 320px) {
   .slider-container {
-    aspect-ratio: 3 / 2; /* shorter and squarer */
+    aspect-ratio: 3 / 2;/* shorter and squarer */
   }
 
   .nav-buttons button {
@@ -111,7 +111,7 @@
 @media (min-width: 321px) and (max-width: 480px) {
   .slider-container {
     aspect-ratio: 16 / 10; /* slightly taller */
-    height: 130px;
+    height: 90px; 
   }
 
   .nav-buttons button {
