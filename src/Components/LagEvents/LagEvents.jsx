@@ -43,7 +43,7 @@ const LagEvents = ({ events }) => {
 
                                 style={{fontSize: '13px'}}
                             >
-                                <NavLink to='eventdetails' style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
+                                <NavLink to='/eventdetails' style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
                             </button>
 
                             <button disabled className='LagEvents-buyBtn' style={{fontSize: '12px'}}>

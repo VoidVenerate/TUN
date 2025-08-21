@@ -59,7 +59,7 @@ const ExploreLagos = () => {
                   }
                   onClick={() => handleClick(index, 'details')}
                 >
-                  View Details
+                  <NavLink to='/eventdetails' style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
                 </button>
                 <button disabled className="buy-tickets-btn">
                   Buy Tickets
