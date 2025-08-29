@@ -141,14 +141,14 @@ const UploadLocation = () => {
           case "hotel":
             navigate("/adminhotels");
             break;
-          case "food_spot":
+          case "foodspot":
             navigate("/adminfoodspots");
             break;
           case "beach":
             navigate("/adminbeaches");
             break;
           default:
-            navigate("/discoverlagos");
+            navigate("/discover");
         }
       }, 2000);
 

@@ -173,7 +173,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
             Yes, Delete
           </button>
           <button
-            className="modal-close-btn"
+            className="modal-cancel-btn"
             onClick={() => setModalFeedback((p) => ({ ...p, show: false }))}
           >
             Cancel
@@ -187,7 +187,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
   for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
 
   if (error) return <p>{error}</p>;
-  if (loading) return <p><Loader/>...</p>;
+  if (loading) return <Loader/>
 
   return (
     <div>
