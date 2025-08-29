@@ -6,7 +6,7 @@ const AdminBeaches = () => {
   return (
     <>
       <AdminNavbar/>
-      <ReusableSpots spotType='beaches' editPath='/editlocation'/>
+      <ReusableSpots spotType='beach' editPath='/editlocation'/>
     </>
   )
 }

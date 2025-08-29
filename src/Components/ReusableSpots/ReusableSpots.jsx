@@ -5,6 +5,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
 import api from "../api";
+import Loader from "../Loader/Loader";
 
 const ReusableSpots = ({ spotType, addPath, editPath }) => {
   const [spots, setSpots] = useState([]);
@@ -40,6 +41,8 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     }
     return url;
   };
+
+  const token = localStorage.getItem("token")
 
   const handleClick = (index, type, spotId) => {
     if (activeBtn.index === index && activeBtn.type === type) {
@@ -129,7 +132,9 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
             onClick={async () => {
               setDeleting(true);
               try {
-                await api.delete(`/event/spots/${spot_id}`);
+                await api.delete(`/event/spots/${spot_id}`, {
+                  headers: { Authorization: `Bearer ${token}` },
+                } );
                 setSpots((prev) => prev.filter((s) => s.spot_id !== spot_id));
                 setModalFeedback({
                   show: true,
@@ -182,7 +187,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
   for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
 
   if (error) return <p>{error}</p>;
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p><Loader/>...</p>;
 
   return (
     <div>
@@ -196,6 +201,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
       <div className="search-sort-bar">
         <input
           type="text"
+          className="search-input"
           placeholder={`Search ${spotType}s by name`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

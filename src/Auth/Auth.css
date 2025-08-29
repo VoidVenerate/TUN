@@ -283,6 +283,7 @@ body {
   right: 10px;
   cursor: pointer;
   color: #555;
+  top: 38px;
 }
 /* Row wrapper for side-by-side fields */
 .row {

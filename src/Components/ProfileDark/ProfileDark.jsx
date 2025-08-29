@@ -366,7 +366,7 @@ const ProfileDark = () => {
                   required={password || confirmPassword}
                   style={{padding:"20px 24px"}}
                 />
-                <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                <span onClick={() => setShowPassword(!showPassword)} className="toggle-dark-icon">
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </span>
               </div>
@@ -386,7 +386,7 @@ const ProfileDark = () => {
                   autoComplete="new-password"
                   style={{padding:"20px 24px"}}
                 />
-                <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                <span onClick={() => setShowPassword(!showPassword)} className="toggle-dark-icon">
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </span>
               </div>
@@ -404,7 +404,7 @@ const ProfileDark = () => {
                   autoComplete="new-password"
                   style={{padding:"20px 24px"}}
                 />
-                <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                <span onClick={() => setShowPassword(!showPassword)} className="toggle-dark-icon">
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </span>
               </div>

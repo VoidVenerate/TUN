@@ -320,7 +320,7 @@ const UploadLocation = () => {
                 required
                 value={locationData.additionalInformation}
                 onChange={handleChange}
-                maxLength={100}
+                maxLength={200}
               />
               <div className="word-info">
                 <span className={`word-count ${wordCount >= 20 ? 'valid' : ''}`}>
