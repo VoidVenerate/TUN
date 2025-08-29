@@ -1,0 +1,223 @@
+/* === Container === */
+.event-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  background-color: #0d0d0d; /* dark background */
+  color: #fff;
+  font-family: 'DM Sans';
+  min-height: 100vh;
+}
+
+/* === Header === */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-arrow {
+  cursor: pointer;
+  color: #fff;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* === Form Layout === */
+.form-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* === Upload Section === */
+.upload-section {
+  border: 2px dashed #333;
+  border-radius: 12px;
+  background-color: #111;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  height: 50vw;
+}
+.upload-sec {
+  border: 2px dashed #666;  /* dashed border for "upload" feel */
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  height: 30vw;
+  justify-content: center;
+}
+
+.upload-sec:hover {
+  border-color: #00bcd4; /* highlight on hover */
+}
+
+.upload-label {
+  font-size: 14px;
+  color: #aaa;
+}
+
+
+.upload-section.drag-active {
+  border-color: #6d28d9; /* purple accent when dragging */
+  background-color: #1a1a1a;
+}
+
+.upload-label {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.upload-flyer-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.upload-description {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.upload-sec {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: #888;
+}
+
+.upload-title {
+  font-weight: 600;
+}
+
+.upload-subtitle,
+.upload-format {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.flyer-preview {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* === Form Section === */
+.form {
+  background-color: #111;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #222;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.form-label span {
+  color: #e63946; /* red for required */
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  background-color: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #6d28d9; /* purple focus glow */
+}
+
+.form-textarea {
+  resize: none;
+  min-height: 300px;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.create-event-btn {
+  background-color: #6d28d9;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-event-btn:disabled {
+  background-color: #333;
+  cursor: not-allowed;
+}
+
+.create-event-btn:hover:not(:disabled) {
+  background-color: #5b21b6;
+}
+
+.word-info {
+  font-size: 0.875rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+.word-count {
+  font-weight: bold;
+}
+
+.word-count.valid {
+  color: #28a745; /* green when valid */
+}
+
+.word-error {
+  color: #ff4d4f;
+  font-size: 0.875rem;
+  margin-top: 2px;
+}

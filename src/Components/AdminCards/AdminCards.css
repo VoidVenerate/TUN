@@ -24,6 +24,8 @@
   font-size: 14px;
   margin-bottom: 8px;
   text-align: left;
+  display: flex;
+  justify-content: space-between;
 }
 
 .dashboard-card p {
@@ -48,4 +50,8 @@
 
 .trend.down {
   color: #d50000;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
 }

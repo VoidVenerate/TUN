@@ -2,7 +2,7 @@
 .adminEvents-header {
   display: flex;
   margin-top: 2vw;
-  margin-left: 2vw;
+  margin-left: 5vw;
   justify-content: space-between;
   align-items: center;
   text-align: center;
@@ -187,14 +187,30 @@
   display: flex;
   gap: 10px;
 }
-.search-sort-bar input {
-  flex-grow: 1;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #444;
-  background: #222;
-  color: white;
+/* ProfileDark.css or your relevant CSS file */
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: 1px solid #4b5563; /* Gray border */
+  border-radius: 8px;
+  background-color: #1f2937; /* Dark background */
+  color: #f9fafb; /* Light text */
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  margin-left: 5vw;
 }
+
+.search-input::placeholder {
+  color: #9ca3af; /* Lighter gray placeholder */
+}
+
+.search-input:focus {
+  border-color: #3b82f6; /* Blue border on focus */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); /* Subtle glow */
+}
+
 .search-sort-bar button {
   padding: 8px 12px;
   border-radius: 6px;

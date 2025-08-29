@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Lock } from "lucide-react";
+import { Lock, Eye, EyeOff } from "lucide-react";
 import "./ProfileDark.css";
 import api from "../api";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import defaultAvatar from '../../assets/defaultAvatar.png'
+import Loader from "../Loader/Loader";
 
 const ProfileDark = () => {
   const token = localStorage.getItem("token");
@@ -16,6 +19,9 @@ const ProfileDark = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
 
   // ====== FEEDBACK ======
   const [loading, setLoading] = useState(false);
@@ -34,6 +40,10 @@ const ProfileDark = () => {
     confirmAction: null,
   });
 
+  const isPasswordStrong = (password) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+  };
+
   // ====== FETCH USER ======
   useEffect(() => {
     if (!token) {
@@ -48,7 +58,9 @@ const ProfileDark = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(res.data);
-        setProfileImagePreview(res.data.profile_picture_url || null);
+        setProfileImagePreview(
+          normalizeUrl(res.data.profile_picture_url || res.data.profile_picture || null)
+        );
       } catch (err) {
         console.error(err);
         setError("Failed to load profile.");
@@ -82,19 +94,39 @@ const ProfileDark = () => {
     }
   };
 
+  const normalizeUrl = (path) => {
+    if (!path) return "/placeholder.png";
+
+    let url = path.trim();
+
+    // Fix broken domain+uploads (missing slash)
+    url = url.replace(/\.comuploads/, ".com/uploads");
+
+    // Handle relative paths (uploads/... or /uploads/...)
+    if (!url.startsWith("http")) {
+      url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
+    }
+
+    return url;
+  };
+
   // ====== IMAGE HANDLER ======
   // ====== IMAGE HANDLER ======
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const newPreview = URL.createObjectURL(file);
-      setProfileImageFile(file);
-      setProfileImagePreview(newPreview);
+    if (!file) return;
 
-      // Cleanup old blob URL to avoid memory leaks
-      return () => URL.revokeObjectURL(newPreview);
-    }
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      // event.target.result is the Base64 string
+      setProfileImageFile(file);               // Keep the original File object
+      setProfileImagePreview(event.target.result); // Set Base64 for preview
+    };
+
+    reader.readAsDataURL(file); // Converts file to Base64 string
   };
+
 
   // ====== SUBMIT FORM ======
   const handleSubmit = async (e) => {
@@ -174,7 +206,11 @@ const ProfileDark = () => {
 
       if (updatedProfile) {
         setUserData(updatedProfile.data);
-        setProfileImagePreview(updatedProfile.data.profile_picture_url); // permanent URL
+        setProfileImagePreview(
+          normalizeUrl(
+            updatedProfile.data.profile_picture_url || updatedProfile.data.profile_picture
+          )
+        );
         setProfileImageFile(null);
       }
 
@@ -242,7 +278,7 @@ const ProfileDark = () => {
 
   // ====== CONDITIONAL UI ======
   if (!token) return <p>Please log in to view your profile.</p>;
-  if (loading && !userData) return <p>Loading profile...</p>;
+  if (loading && !userData) return <Loader/>;
   if (error && !userData) return <p className="error">{error}</p>;
 
   return (
@@ -258,9 +294,11 @@ const ProfileDark = () => {
         <div className="profile-dark-left">
           <p className="profile-dark-label">Profile Image</p>
           <p className="profile-dark-subtext">Displayed on your profile.</p>
-          <img
+          <LazyLoadImage
             src={profileImagePreview}
             alt="Profile"
+            loading="lazy"
+            effect="blur"
             className="profile-dark-image"
             onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop
               e.currentTarget.src = defaultAvatar; }}
@@ -277,6 +315,7 @@ const ProfileDark = () => {
             type="button"
             className="profile-dark-btn"
             onClick={() => document.getElementById("profileImageInput").click()}
+            style={{marginTop:"5vw"}}
           >
             Change Profile Image
           </button>
@@ -317,14 +356,20 @@ const ProfileDark = () => {
             {/* Current Password */}
             <div className="profile-dark-input-group">
               <label>Current Password</label>
-              <input
-                type="password"
-                placeholder="Enter current password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                autoComplete="current-password"
-                required={password || confirmPassword}
-              />
+              <div className="password-dark-input">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required={password || confirmPassword}
+                  style={{padding:"20px 24px"}}
+                />
+                <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -332,25 +377,37 @@ const ProfileDark = () => {
             {/* New Password */}
             <div className="profile-dark-input-group">
               <label>New Password</label>
-              <input
-                type="password"
-                placeholder="New password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="new-password"
-              />
+              <div className="password-dark-input">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="New password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="new-password"
+                  style={{padding:"20px 24px"}}
+                />
+                <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </span>
+              </div>
             </div>
 
             {/* Confirm Password */}
             <div className="profile-dark-input-group">
               <label>Confirm New Password</label>
-              <input
-                type="password"
-                placeholder="Confirm new password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                autoComplete="new-password"
-              />
+              <div className="password-dark-input">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Confirm new password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  autoComplete="new-password"
+                  style={{padding:"20px 24px"}}
+                />
+                <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </span>
+              </div>
             </div>
           </div>
 

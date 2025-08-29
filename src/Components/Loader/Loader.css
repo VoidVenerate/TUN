@@ -1,22 +1,38 @@
-/* Loader.css */
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
+    /* Stairs Loader */
+    .stairs-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      background: #000000;
+      font-family: 'DM Sans';
+      color: #fff;
+      gap: 50px;
+      justify-content: center;
+    }
 
-.loader {
-  border: 5px solid #f3f3f3; /* Light gray */
-  border-top: 5px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-}
+    .stairs-loader {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
 
-/* Spin animation */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    .step {
+      width: 14px;
+      height: 14px;
+      background: #60a5fa;
+      border-radius: 3px;
+      opacity: 0.5;
+      transform: translateY(0);
+    }
+
+    @keyframes climb {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(-12px); opacity: 1; }
+    }
+
+    .stairs-label {
+      margin-top: 16px;
+      font-size: 14px;
+      opacity: 0.8;
+    }

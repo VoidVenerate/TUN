@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { TrendingUp, TrendingDown } from 'lucide-react'
+import { TrendingUp, TrendingDown, BarChart3 } from 'lucide-react'
 import './AdminCards.css'
 import axios from 'axios'
 import api from '../api'
+
 
 const AdminCards = () => {
   const [pendingEvents, setPendingEvents] = useState(0)
@@ -20,33 +21,34 @@ const AdminCards = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token')
-        if (!token) {
-          console.warn('No token found — user might not be logged in')
-          return
-        }
+        if (!token) return
 
-        // ✅ Pending events
         const pendingRes = await api.get(
           'https://lagos-turnup.onrender.com/event/events?pending=true',
-          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } }
         )
-        const pendingData = pendingRes.data
-        const newPending = pendingData.length
+        const newPending = pendingRes.data.length
 
-        if (prevPendingEvents !== null) {
-          const diff = newPending - prevPendingEvents
-          const percent =
-            prevPendingEvents > 0
-              ? Number(((diff / prevPendingEvents) * 100).toFixed(1)) // 👈 force number
-              : 0
+        // get yesterday’s stored count
+        const storedPrev = localStorage.getItem('prevPendingEvents')
+        const prev = storedPrev ? parseInt(storedPrev, 10) : null
+
+        // inside fetchData()
+        if (prev !== null) {
+          const diff = newPending - prev
+          const percent = prev > 0 ? Number(((diff / prev) * 100).toFixed(1)) : 0
           setPercentageChange(percent)
 
-          if (diff > 0) setTrend('up')
-          else if (diff < 0) setTrend('down')
-          else setTrend(null)
+          if (percent > 0) setTrend('up')
+          else setTrend('down')
+         // only when exactly 0%
         }
 
+
+        // update both state + localStorage
         setPrevPendingEvents(newPending)
+        localStorage.setItem('prevPendingEvents', newPending)
+
         setPendingEvents(newPending)
 
         // ✅ Total events
@@ -77,15 +79,17 @@ const AdminCards = () => {
       }
     }
     fetchData()
-  }, [prevPendingEvents])
+  }, [])
 
   // 👇 Animate displayedPercentage smoothly when percentageChange updates
-  useEffect(() => {
-    let startValue = displayedPercentage;
-    let endValue = percentageChange;
-    let startTime = null;
+  // 👇 Animate pendingEvents count itself
+  const [displayedPending, setDisplayedPending] = useState(0);
 
-    const duration = 800; // ms, you can tweak this
+  useEffect(() => {
+    let startValue = displayedPending;
+    let endValue = pendingEvents;
+    let startTime = null;
+    const duration = 800; // ms
 
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
@@ -93,7 +97,7 @@ const AdminCards = () => {
       const progress = Math.min(elapsed / duration, 1);
 
       const newValue = startValue + (endValue - startValue) * progress;
-      setDisplayedPercentage(Number(newValue.toFixed(1)));
+      setDisplayedPending(Math.round(newValue));
 
       if (progress < 1) {
         requestAnimationFrame(animate);
@@ -101,39 +105,44 @@ const AdminCards = () => {
     };
 
     requestAnimationFrame(animate);
-  }, [percentageChange]);
+  }, [pendingEvents]);
+
 
 
   return (
     <div className="dashboard-cards">
       <div className="dashboard-card">
-        <h3>Pending Events</h3>
-        <p>{pendingEvents}</p>
-        {trend && (
-          <div className={`trend ${trend}`}>
-            {trend === 'up' ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-            <span>{displayedPercentage}%</span>
-          </div>
-        )}
+        <h3>Pending Events <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
+        <div className="card-header">
+          <p>{pendingEvents}</p>
+          {trend && (
+            <div className={`trend ${trend}`}>
+              {trend === 'up' && <TrendingUp size={14} />}
+              {trend === 'down' && <TrendingDown size={14} />}
+              {trend === 'flat' && <BarChart3 size={14} />} {/* Neutral icon */}
+              <span>{displayedPending}%</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="dashboard-card">
-        <h3>Total Events</h3>
+        <h3>Total Events <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
         <p>{totalEvents}</p>
       </div>
 
       <div className="dashboard-card">
-        <h3>Pending Banners</h3>
+        <h3>Pending Banners <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
         <p>{pendingBanner}</p>
       </div>
 
       <div className="dashboard-card">
-        <h3>Total Banners</h3>
+        <h3>Total Banners <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
         <p>{totalBanner}</p>
       </div>
 
       <div className="dashboard-card">
-        <h3>Discover Lagos</h3>
+        <h3>Discover Lagos <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
         <p>{discoverCount}</p>
       </div>
     </div>

@@ -74,7 +74,7 @@
 
 .event-unique-upload-area {
   width: 100%;
-  min-height: 220px;
+  min-height: 650px;
   border: 1px dashed #444;
   border-radius: 8px;
   display: flex;
@@ -84,7 +84,7 @@
   cursor: pointer;
   transition: border-color 0.2s;
   overflow: hidden;
-  margin-top: 10vw;
+  margin-top: 3vw;
 }
 
 .event-unique-upload-area:hover {
@@ -93,7 +93,7 @@
 
 .event-unique-flyer-preview {
   max-width: 100%;
-  max-height: 250px;
+  max-height: 650px;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -180,6 +180,21 @@
 .event-unique-form-select{
   width: 100%;
 }
+/* Chrome, Safari, Edge */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(40%) sepia(100%) saturate(500%) hue-rotate(200deg);
+  cursor: pointer;
+}
+
+/* Firefox doesn’t support this pseudo-element */
+/* Chrome, Safari, Edge */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(40%) sepia(100%) saturate(500%) hue-rotate(200deg);
+  cursor: pointer;
+}
+
+/* Firefox doesn’t support this pseudo-element */
+
 
 .event-unique-form-input:focus,
 .event-unique-form-select:focus,
@@ -282,4 +297,23 @@
   outline: none;
   border-color: #7c3aed; /* neon purple focus */
   box-shadow: 0 0 8px rgba(124, 58, 237, 0.6);
+}
+.word-info {
+  font-size: 0.875rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+.word-count {
+  font-weight: bold;
+}
+
+.word-count.valid {
+  color: #28a745; /* green when valid */
+}
+
+.word-error {
+  color: #ff4d4f;
+  font-size: 0.875rem;
+  margin-top: 2px;
 }

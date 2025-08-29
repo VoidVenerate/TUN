@@ -1,73 +1,35 @@
-// src/Components/UploadProfileModal.jsx
+// src/Components/UploadProfileModal/UploadProfileModal.jsx
 import React, { useState } from "react";
 import { UploadCloud } from "lucide-react";
 import Modal from "../Modal/Modal";
 import "./UploadProfileModal.css";
-import axios from "axios";
 
-const UploadProfileModal = ({
-  show,
-  onClose,
-  token,
-  first_name,
-  last_name,
-  email,
-  password,
-  role
-}) => {
-  const [file, setFile] = useState(null);
+const UploadProfileModal = ({ show, onClose, onFileSelect }) => {
   const [previewUrl, setPreviewUrl] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
-    if (selected && selected.type.startsWith("image/")) {
-      setFile(selected);
-      setPreviewUrl(URL.createObjectURL(selected));
-      setError("");
-    } else {
-      setError("Please select a valid image file.");
-    }
-  };
+    if (!selected) return;
 
-  const handleUpload = async () => {
-    if (!file) {
-      setError("Please select an image before uploading.");
+    // ✅ Check if it's an image
+    if (!selected.type.startsWith("image/")) {
+      setError("Please select a valid image file.");
       return;
     }
 
-    setUploading(true);
-    setError("");
+    const reader = new FileReader();
 
-    try {
-      const formData = new FormData();
-      formData.append("first_name", first_name);
-      formData.append("last_name", last_name);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("role", role || "sub-admin");
-      formData.append("profile_picture", file);
+    reader.onload = (event) => {
+      // Base64 string for preview
+      setPreviewUrl(event.target.result);
+      setError("");
+      onFileSelect(selected); // hand file back to parent component
+    };
 
-      await axios.post(
-        "https://lagos-turnup.onrender.com/sub-admin-signup",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // only if required
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      onClose(); // close after success
-    } catch (err) {
-      setError("Failed to upload image. Please try again.");
-      console.error(err);
-    } finally {
-      setUploading(false);
-    }
+    reader.readAsDataURL(selected); // Converts file to Base64
   };
+
 
   return (
     <Modal
@@ -101,19 +63,11 @@ const UploadProfileModal = ({
       }
       footerButtons={
         <>
-          <button
-            className="modal-btn-secondary"
-            onClick={onClose}
-            disabled={uploading}
-          >
+          <button className="modal-btn-secondary" onClick={onClose}>
             Skip
           </button>
-          <button
-            className="modal-btn-primary"
-            onClick={handleUpload}
-            disabled={uploading}
-          >
-            {uploading ? "Uploading..." : "Upload & Finish Signup"}
+          <button className="modal-btn-primary" onClick={onClose}>
+            Continue
           </button>
         </>
       }

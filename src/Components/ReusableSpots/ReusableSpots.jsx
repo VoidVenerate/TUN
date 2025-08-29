@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Upload, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
 import api from "../api";
 
@@ -15,7 +17,6 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
 
   const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
   const [detailsSpot, setDetailsSpot] = useState(null);
-  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const [modalFeedback, setModalFeedback] = useState({
     show: false,
@@ -23,17 +24,17 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     title: "",
     message: "",
     footerButtons: null,
+    onConfirm: null, // 🔑 for confirmation modals
   });
 
+  const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
 
   // ✅ Centralized URL normalization
   const normalizeUrl = (path) => {
     if (!path) return "/placeholder.png";
-
     let url = path.trim();
     url = url.replace(/\.comuploads/, ".com/uploads");
-
     if (!url.startsWith("http")) {
       url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
     }
@@ -59,11 +60,6 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     return words.slice(0, maxWords).join(" ") + "...";
   };
 
-
-  const handleAddNew = () => {
-    navigate(addPath);
-  };
-
   useEffect(() => {
     const fetchSpots = async () => {
       setLoading(true);
@@ -77,14 +73,13 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         const fetched = res.data.spots || res.data[spotType] || res.data;
 
         const normalized = fetched.map((s) => ({
-            ...s,
-            spot_id: s.spot_id || s.id,
-            name: s.location_name,          // ✅ map to name
-            location: `${s.city}, ${s.state}`, // ✅ combine city + state
-            description: s.additional_info, // ✅ map to description
-            flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
+          ...s,
+          spot_id: s.spot_id || s.id,
+          name: s.location_name,
+          location: `${s.city}, ${s.state}`,
+          description: s.additional_info,
+          flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
         }));
-
 
         setSpots(normalized);
         setTotalPages(res.data.totalPages || 1);
@@ -105,48 +100,82 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     return sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
   });
 
-  const handleConfirmDelete = async () => {
-    if (!deleteTarget) return;
-    try {
-      await api.delete(`/${spotType}/${deleteTarget.spot_id}`);
+  // 🔑 Delete handler with confirmation + inline removal
+  const handleDelete = (spot_id) => {
+    if (!spot_id) {
       setModalFeedback({
         show: true,
-        type: "success",
-        title: "Success",
-        message: `${spotType} deleted successfully`,
+        title: "Error",
+        type: "error",
+        message: "No spot ID to delete.",
         footerButtons: (
+          <button className="modal-close-btn" onClick={() => setModalFeedback((p) => ({ ...p, show: false }))}>
+            Close
+          </button>
+        ),
+      });
+      return;
+    }
+
+    setModalFeedback({
+      show: true,
+      title: "Confirm Delete",
+      type: "warning",
+      message: "Are you sure you want to delete this spot?",
+      footerButtons: (
+        <>
           <button
-            className="modal-close-btn"
-            onClick={() => {
-              setModalFeedback((prev) => ({ ...prev, show: false }));
-              setDeleteTarget(null);
-              setCurrentPage(1);
+            className="modal-btn-danger"
+            onClick={async () => {
+              setDeleting(true);
+              try {
+                await api.delete(`/event/spots/${spot_id}`);
+                setSpots((prev) => prev.filter((s) => s.spot_id !== spot_id));
+                setModalFeedback({
+                  show: true,
+                  title: "Deleted",
+                  type: "success",
+                  message: "Spot deleted successfully.",
+                  footerButtons: (
+                    <button
+                      className="modal-close-btn"
+                      onClick={() => setModalFeedback((p) => ({ ...p, show: false }))}
+                    >
+                      Close
+                    </button>
+                  ),
+                });
+              } catch (err) {
+                setModalFeedback({
+                  show: true,
+                  title: "Error",
+                  type: "error",
+                  message: "Failed to delete spot.",
+                  footerButtons: (
+                    <button
+                      className="modal-close-btn"
+                      onClick={() => setModalFeedback((p) => ({ ...p, show: false }))}
+                    >
+                      Close
+                    </button>
+                  ),
+                });
+              } finally {
+                setDeleting(false);
+              }
             }}
           >
-            Close
+            Yes, Delete
           </button>
-        ),
-      });
-      setSpots(spots.filter((s) => s.spot_id !== deleteTarget.spot_id));
-    } catch (err) {
-      setModalFeedback({
-        show: true,
-        type: "error",
-        title: "Error",
-        message: `Failed to delete ${spotType}`,
-        footerButtons: (
           <button
             className="modal-close-btn"
-            onClick={() =>
-              setModalFeedback((prev) => ({ ...prev, show: false }))
-            }
+            onClick={() => setModalFeedback((p) => ({ ...p, show: false }))}
           >
-            Close
+            Cancel
           </button>
-        ),
-      });
-      console.error(err);
-    }
+        </>
+      ),
+    });
   };
 
   const pageNumbers = [];
@@ -161,9 +190,6 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         <p style={{ fontFamily: "Rushon Ground" }}>
           {spotType.charAt(0).toUpperCase() + spotType.slice(1)}s
         </p>
-        <button onClick={handleAddNew}>
-          <Upload size={16} /> Upload {spotType}
-        </button>
       </div>
 
       {/* Search and sort */}
@@ -185,52 +211,39 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
           <div key={spot.spot_id || index} className="event-card">
             <div className="events">
               {spot.flyerSrc ? (
-                <img
+                <LazyLoadImage
                   src={spot.flyerSrc}
                   alt={spot.name}
                   loading="lazy"
+                  effect="blur"
                   onError={(e) => {
                     e.currentTarget.src = "/placeholder.png";
                   }}
                 />
               ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    height: "150px",
-                    background: "#ccc",
-                  }}
-                >
-                  No image
-                </div>
+                <div style={{ width: "100%", height: "150px", background: "#ccc" }}>No image</div>
               )}
               <div className="event-txt">
                 <h3>{spot.name}</h3>
                 <p>{spot.location}</p>
               </div>
-              <p>{truncateWords(spot.description,17)}</p>
+              <p>{truncateWords(spot.description, 17)}</p>
               <div className="slider-btn">
                 <button
-                  className={
-                    activeBtn.index === index && activeBtn.type === "details"
-                      ? "active"
-                      : ""
-                  }
-                  onClick={() => handleClick(index, "details", spot.spot_id)}
+                  className={activeBtn.index === index && activeBtn.type === "details" ? "active" : ""}
+                  onClick={() => handleDelete(spot.spot_id)}
+                  style={{
+                    backgroundColor: "rgba(255, 60, 60, 0.1)",
+                    color: "#ff3b30",
+                    border: "0.5px solid rgba(255, 60, 60, 0.26)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  Edit {spotType}
+                  <Trash2 size="16" style={{ marginRight: "10px" }} />
+                  Delete {spotType}
                 </button>
-
-                {activeBtn.index === index && activeBtn.type === "details" && (
-                  <div className="actions-dropdown">
-                    <button onClick={() => setDetailsSpot(spot)}>
-                      View Details
-                    </button>
-                    <button onClick={() => setDeleteTarget(spot)}>
-                      <Trash2 size={14} /> Delete
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -239,10 +252,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
 
       {/* Pagination */}
       <div className="pagination-controls">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
+        <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
           Previous
         </button>
         {pageNumbers.map((num) => (
@@ -255,18 +265,14 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
           </button>
         ))}
         <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              totalPages ? Math.min(prev + 1, totalPages) : prev + 1
-            )
-          }
+          onClick={() => setCurrentPage((p) => (totalPages ? Math.min(p + 1, totalPages) : p + 1))}
           disabled={totalPages ? currentPage === totalPages : false}
         >
           Next
         </button>
       </div>
 
-      {/* Modals */}
+      {/* Spot details modal */}
       <Modal
         show={!!detailsSpot}
         title={detailsSpot?.name}
@@ -275,11 +281,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
           detailsSpot ? (
             <>
               {detailsSpot.flyerSrc && (
-                <img
-                  src={detailsSpot.flyerSrc}
-                  alt={detailsSpot.name}
-                  style={{ maxWidth: "100%", marginBottom: 10 }}
-                />
+                <img src={detailsSpot.flyerSrc} alt={detailsSpot.name} style={{ maxWidth: "100%", marginBottom: 10 }} />
               )}
               <p>
                 <strong>Location:</strong> {detailsSpot.location}
@@ -293,40 +295,16 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
           )
         }
         footerButtons={
-          <button
-            className="modal-close-btn"
-            onClick={() => setDetailsSpot(null)}
-          >
+          <button className="modal-close-btn" onClick={() => setDetailsSpot(null)}>
             Close
           </button>
         }
       />
 
-      <Modal
-        show={!!deleteTarget}
-        title="Confirm Delete"
-        onClose={() => setDeleteTarget(null)}
-        message={`Are you sure you want to delete the ${spotType} "${deleteTarget?.name}"?`}
-        footerButtons={
-          <>
-            <button className="modal-btn-danger" onClick={handleConfirmDelete}>
-              Yes, Delete
-            </button>
-            <button
-              className="modal-close-btn"
-              onClick={() => setDeleteTarget(null)}
-            >
-              Cancel
-            </button>
-          </>
-        }
-      />
-
+      {/* Delete + feedback modal */}
       <Modal
         show={modalFeedback.show}
-        onClose={() =>
-          setModalFeedback((prev) => ({ ...prev, show: false }))
-        }
+        onClose={() => setModalFeedback((p) => ({ ...p, show: false }))}
         title={modalFeedback.title}
         message={modalFeedback.message}
         type={modalFeedback.type}

@@ -85,28 +85,20 @@
 .event-actions button {
   flex: 1;
   margin: 0 5px;
-  padding: 10px;
+  padding: 20px 24px;
+  margin-top: -15px;
+  border-radius: 100px;
   border: none;
-  border-radius: 24px;
+  background-color: rgba(255, 255, 255, 0.070);
+  color: #fff;
+  cursor: pointer;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease;
 }
-.event-actions .approve-btn {
-  background: #fff;
-  color: #000;
-}
-.event-actions .approve-btn:hover {
-  background: #fff;
-  color: #1f1f1f;
-}
-.event-actions .reject-btn {
-  background-color: rgba(255, 60, 60, 0.1);
-  color: #ff3b30;
-  border: 0.5px solid rgba(255, 60, 60, 0.26);
-}
-.event-actions .reject-btn:hover {
-  background: rgba(255, 60, 60, 0.2);
+.event-actions button:hover {
+  background-color: #555;
+  transform: scale(1.05);
 }
 
 /* === Pagination === */
@@ -141,6 +133,7 @@
   width: 100%;
   max-width: 400px;
   margin: 2rem auto;
+  margin-left: 2vw;
 }
 .event-search input {
   width: 100%;

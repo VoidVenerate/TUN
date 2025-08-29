@@ -10,13 +10,13 @@ const PendingBannerCard = ({ banner, onAccept, onDelete }) => {
         <img
           src={
             banner.banner_image
-              ? `https://lagos-turnup.onrender.com${banner.banner_image}`
-              : '/assets/placeholder.jpg'
+              ? banner.banner_image.startsWith('http')
+                ? banner.banner_image   // absolute → use as-is
+                : `https://lagos-turnup.onrender.com${banner.banner_image}` // relative → prefix
+              : placeholder
           }
           alt={banner.name}
-          onError={(e) => {
-            e.currentTarget.src = placeholder;
-          }}
+          onError={(e) => { e.currentTarget.src = placeholder }}
         />
       </div>
 

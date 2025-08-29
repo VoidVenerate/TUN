@@ -1,0 +1,7 @@
+.approve-btn:hover {
+  background: #fff;
+  color: #1f1f1f;
+}
+.reject-btn:hover {
+  background: rgba(255, 60, 60, 0.2);
+}

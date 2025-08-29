@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ArrowLeft, Upload, CloudUpload, LockKeyhole } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, Upload, CloudUpload, LockKeyhole, ChevronLeft } from 'lucide-react';
 import Modal from '../Modal/Modal';
 import { useLocate } from '../LocationContext/LocationContext';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
+import './UploadLoacation.css';
 
 const MAX_FILE_SIZE_MB = 5; // limit file size (you can tweak this)
 
@@ -19,6 +20,10 @@ const UploadLocation = () => {
     subMessage: '',
     type: '',
   });
+  const [wordCount, setWordCount] = useState(0);
+  const [wordError, setWordError] = useState('');
+
+  const navigate = useNavigate();
 
   // Cleanup object URLs when component unmounts or new file selected
   useEffect(() => {
@@ -30,6 +35,16 @@ const UploadLocation = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLocationData((prev) => ({ ...prev, [name]: value }));
+
+    if (name === 'additionalInformation') {
+      const words = value.trim() === '' ? 0 : value.trim().split(/\s+/).length;
+      setWordCount(words);
+      if (words < 20) {
+        setWordError(`Please enter at least 20 words (currently ${words})`);
+      } else {
+        setWordError('');
+      }
+    }
   };
 
   const handleFileChange = (file) => {
@@ -55,7 +70,6 @@ const UploadLocation = () => {
     handleFileChange(file);
   };
 
-  // Drag and drop handlers
   const handleDragOver = (e) => {
     e.preventDefault();
     setDragActive(true);
@@ -74,10 +88,9 @@ const UploadLocation = () => {
     setModalInfo((prev) => ({ ...prev, show: false }));
   };
 
-  const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (wordCount < 20) return; // prevent submission if min words not met
     setIsSubmitting(true);
 
     try {
@@ -90,9 +103,20 @@ const UploadLocation = () => {
       if (locationData.flyer instanceof File) {
         formData.append("cover_image", locationData.flyer);
       }
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+      console.log("Submitting spot:", {
+        location_name: locationData.locationName,
+        city: locationData.city,
+        state: locationData.state,
+        spot_type: locationData.typeOfSpot,
+        additional_info: locationData.additionalInformation,
+        cover_image: locationData.flyer,
+      });
+
 
       const token = localStorage.getItem("token");
-      console.log([...formData]);
       const res = await api.post("/event/spots/create", formData, {
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -100,7 +124,6 @@ const UploadLocation = () => {
         },
       });
 
-      // ✅ Success modal
       setModalInfo({
         show: true,
         title: "Success!",
@@ -109,7 +132,6 @@ const UploadLocation = () => {
         type: "success",
       });
 
-      // ✅ Navigate to correct category page after 2s
       setTimeout(() => {
         setModalInfo((prev) => ({ ...prev, show: false }));
         switch (locationData.typeOfSpot) {
@@ -126,7 +148,7 @@ const UploadLocation = () => {
             navigate("/adminbeaches");
             break;
           default:
-            navigate("/discoverlagos"); // fallback
+            navigate("/discoverlagos");
         }
       }, 2000);
 
@@ -148,20 +170,20 @@ const UploadLocation = () => {
     }
   };
 
-
-  // Required fields validation
+  // Required fields validation including word count
   const isFormValid =
     locationData.locationName &&
     locationData.city &&
     locationData.state &&
     locationData.typeOfSpot &&
     locationData.additionalInformation &&
-    locationData.flyer;
+    locationData.flyer &&
+    wordCount >= 20;
 
   return (
     <div className="event-form-container">
       <div className="header">
-        <ArrowLeft className="back-arrow" />
+        <ChevronLeft className="back-arrow" />
         <h1 className="header-title">UPLOAD LOCATION</h1>
       </div>
 
@@ -178,9 +200,9 @@ const UploadLocation = () => {
               <CloudUpload size={16} />
               <p>Upload Cover Image</p>
             </span>
-            <div className="upload-description">
+            <span className="upload-description">
               Select or drag a visual for this spot
-            </div>
+            </span>
           </div>
           <label className="upload-area">
             {(flyerPreview || locationData.flyer) ? (
@@ -257,7 +279,7 @@ const UploadLocation = () => {
                     value={locationData.state}
                     onChange={handleChange}
                     readOnly
-                    style={{ paddingRight: '30px', width: '763px', color: "#fff" }} // space for icon inside input
+                    style={{ paddingRight: '30px', width: '763px', color: "#fff" }}
                   />
                   <LockKeyhole
                     style={{
@@ -283,8 +305,8 @@ const UploadLocation = () => {
                   <option value="">Select One</option>
                   <option value='club'>Clubs</option>
                   <option value='hotel'>Hotels</option>
-                  <option value='food_spot'>Food Spots</option>
-                  <option value='beache'>Beaches</option>
+                  <option value='foodspot'>Food Spots</option>
+                  <option value='beach'>Beaches</option>
                 </select>
               </div>
             </div>
@@ -293,13 +315,19 @@ const UploadLocation = () => {
               <label className="form-label">Additional Information <span>*</span></label>
               <textarea
                 className="form-textarea"
-                placeholder="Tell us what makes this place special (max. 100 characters)"
+                placeholder="Tell us what makes this place special (min. 20 words)"
                 name='additionalInformation'
                 required
                 value={locationData.additionalInformation}
                 onChange={handleChange}
                 maxLength={100}
               />
+              <div className="word-info">
+                <span className={`word-count ${wordCount >= 20 ? 'valid' : ''}`}>
+                  {wordCount} words
+                </span> / 20 required
+              </div>
+              {wordError && <p className="word-error">{wordError}</p>}
             </div>
 
             <div className="form-footer">

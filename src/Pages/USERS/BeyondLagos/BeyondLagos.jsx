@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserNavbar from '../../../Components/UserNavbar/UserNavbar';
 import Ble from '../../../assets/Ble';
 import Footer from '../../../Components/Footer/Footer';
+import { NavLink } from 'react-router-dom';
 import './BeyondLagos.css';
 
 const BeyondLagos = () => {

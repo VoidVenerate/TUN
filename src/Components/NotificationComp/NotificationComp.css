@@ -54,6 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 10px;
 }
 
 .notif-content {
@@ -123,4 +124,41 @@
   0% { transform: scale(0.8); opacity: 0.6; }
   50% { transform: scale(1.2); opacity: 1; }
   100% { transform: scale(0.8); opacity: 0.6; }
+}
+/* 🔹 Filter Controls */
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-controls select {
+  background-color: #1d1d1d;
+  border: 1px solid #2a2a2a;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.filter-controls select:focus {
+  border-color: #3a82f7;
+  box-shadow: 0 0 6px rgba(58, 130, 247, 0.5);
+}
+
+.filter-controls button {
+  background-color: #2a2a2a;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filter-controls button:hover {
+  background-color: #3a3a3a;
 }

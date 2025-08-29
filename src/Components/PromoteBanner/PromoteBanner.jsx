@@ -103,7 +103,7 @@ const PromoteBanner = () => {
         formData.append("is_approved", true);
       } else {
         // Normal users → pending storage
-        formData.append("pending_banner", bannerData.flyer);
+        formData.append("banner", bannerData.flyer);
         formData.append("is_approved", false);
       }
 
@@ -154,7 +154,15 @@ const PromoteBanner = () => {
   return (
     <div className="banner-form-container">
       <div className="banner-header">
-        <NavLink to='/promote' ><ArrowLeft className="event-unique-back" /></NavLink>
+        <NavLink
+          to={
+            ["admin", "sub-admin", "super-admin"].includes(role)
+              ? "/banner"   // 👈 or wherever you want admins to go
+              : "/promote"           // 👈 regular users go here
+          }
+        >
+          <ArrowLeft className="event-unique-back" />
+        </NavLink>
         <h2 className="banner-header-title" style={{ fontFamily: 'Rushon Ground' }}>
           PROMOTE A BANNER
         </h2>

@@ -1,6 +1,7 @@
 // src/Components/RoleContext/RoleContext.jsx
 import React, { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Loader from "../Loader/Loader";
 
 const AuthContext = createContext(null);
 
@@ -43,7 +44,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   if (loading) {
-    return <div>Loading user permissions...</div>;
+    return <Loader/> ;
   }
 
   return (

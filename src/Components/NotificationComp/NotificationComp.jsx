@@ -23,9 +23,19 @@ const NotificationComp = () => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
+  // Inside NotificationComp.jsx useEffect after fetching
+  useEffect(() => {
+    if (notifications.length > 0) {
+      const latestTime = notifications[0].created_at;
+      localStorage.setItem('lastSeenNotification', latestTime);
+    }
+  }, [notifications]);
+
+
   const fetchNotifications = async () => {
     try {
       const res = await api.get('https://lagos-turnup.onrender.com/event/notifications');
+      console.log("Notifications response:", res.data); 
       const sorted = res.data.sort(
         (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
@@ -43,20 +53,17 @@ const NotificationComp = () => {
     return `${Math.floor(diff / 86400)} days ago`;
   };
 
-  const getIcon = (title) => {
-    if (!title || typeof title !== 'string') {
-      return <Bell size={18} />; // fallback icon
-    }
-    const lowerTitle = title.toLowerCase();
-    if (lowerTitle.includes('banner uploaded')) return <ImagePlus size={18} />;
-    if (lowerTitle.includes('banner deleted')) return <ImageMinus size={18} />;
-    if (lowerTitle.includes('event submitted')) return <CalendarPlus size={18} />;
-    if (lowerTitle.includes('event edited')) return <Edit size={18} />;
-    if (lowerTitle.includes('event deleted')) return <Trash2 size={18} />;
-    if (lowerTitle.includes('featured request')) return <Star size={18} />;
-    if (lowerTitle.includes('newsletter sent')) return <Send size={18} />;
-    if (lowerTitle.includes('logged in')) return <LogIn size={18} />;
-    if (lowerTitle.includes('logged out')) return <LogOut size={18} />;
+  const getIcon = (message) => {
+    if (!message || typeof message !== 'string') return <Bell size={18} />;
+    const lower = message.toLowerCase();
+
+    if (lower.includes('created')) return <ImagePlus size={18} />;
+    if (lower.includes('deleted')) return <Trash2 size={18} />;
+    if (lower.includes('edited')) return <Edit size={18} />;
+    if (lower.includes('submitted')) return <CalendarPlus size={18} />;
+    if (lower.includes('featured')) return <Star size={18} />;
+    if (lower.includes('newsletter')) return <Send size={18} />;
+
     return <Bell size={18} />;
   };
 
@@ -69,10 +76,6 @@ const NotificationComp = () => {
     <div className="notifications-container">
       <div className="notifications-header">
         <h2>NOTIFICATIONS</h2>
-        <button className="filter-btn">
-          <Bell size={18} />
-          Filter
-        </button>
       </div>
 
       {notifications.length === 0 ? (
@@ -81,13 +84,16 @@ const NotificationComp = () => {
         <>
           <div className="notifications-list">
             {currentNotifications.map((notif) => (
-              <div key={notif.id} className="notification-card">
+              <div
+                key={notif.id}
+                className={`notification-card ${notif.status === 'unread' ? 'unread' : ''}`}
+              >
                 <div className="notif-icon">
-                  {getIcon(notif.title)}
+                  {getIcon(notif.message)}
                 </div>
                 <div className="notif-content">
-                  <h3 className="notif-title">{notif.title}</h3>
-                  <p className="notif-message">{notif.message}</p>
+                  <h3 className="notif-title">{notif.message}</h3>
+                  <p className="notif-message">{notif.type}</p>
                 </div>
                 <span className="notif-time">{formatTimeAgo(notif.created_at)}</span>
               </div>

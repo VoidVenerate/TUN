@@ -5,7 +5,7 @@ const AdminFood = () => {
   return (
     <>
       <AdminNavbar/>
-      <ReusableSpots spotType="food_spot" addPath="/adminaddfoodspot" editPath="/editlocation" />
+      <ReusableSpots spotType="foodspot" editPath="/editlocation" />
     </>
   )
 }

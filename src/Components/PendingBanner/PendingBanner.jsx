@@ -90,7 +90,6 @@ const PendingBanner = () => {
         message: "Banner successfully rejected.",
         type: "success",
       });
-
       fetchPendingBanners();
     } catch (err) {
       console.error(err);

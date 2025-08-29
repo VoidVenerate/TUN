@@ -1,8 +1,12 @@
+body{
+  background: #000;
+}
 .profile-dark-container {
-  max-width: 900px;
-  margin: 30px auto;
+  width: 87%;
+  max-width: 100%;
+  margin: 3px auto;
   padding: 20px;
-  background-color: #121214;
+  background-color: #000000;
   color: #eee;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-radius: 12px;
@@ -27,6 +31,17 @@
   flex: 1;
   max-width: 250px;
   text-align: center;
+  background: #000; /* optional, gives it a card feel */
+  border: 1px solid #333; /* thin, dark border */
+  border-radius: 12px;    /* rounded corners, makes it smooth */
+  padding: 16px;          /* add breathing room */
+  height: 500px;
+  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.4); 
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.profile-dark-left:hover {
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
+  border-color: var(--accent-color, #4f8cff);
 }
 
 .profile-dark-label {
@@ -42,14 +57,16 @@
 }
 
 .profile-dark-image {
-  width: 140px;
-  height: 140px;
+  width: 240px;
+  height: 240px;
   object-fit: cover;
   border-radius: 50%;
   border: 2px solid #5423d2;
   margin-bottom: 15px;
   background-color: #222;
+  margin-top: 2vw;
 }
+
 
 .profile-dark-btn {
   background-color: #5423d2;
@@ -69,6 +86,17 @@
 /* Right side */
 .profile-dark-right {
   flex: 2.3;
+  background: #000; /* optional, gives it a card feel */
+  border: 1px solid #333; /* thin, dark border */
+  border-radius: 12px;    /* rounded corners, makes it smooth */
+  padding: 16px;          /* add breathing room */
+  height: 500px;
+  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.4); 
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.profile-dark-right:hover {
+  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
+  border-color: var(--accent-color, #4f8cff);
 }
 
 /* Each row contains two inputs side by side except single row */
@@ -87,6 +115,34 @@
   display: flex;
   flex-direction: column;
 }
+.profile-dark-input-group input {
+  margin-top: 10px;
+}
+
+.profile-dark-input-group-abled{
+  margin-top: 10px;
+  padding: 20px 24px;
+}
+.profile-dark-input-group input[type="password"],
+.profile-dark-input-group input[type="text"],
+.profile-dark-input-group input[type="email"] {
+  background-color: #1e1e23;
+  border-radius: 8px;
+  border: none;
+  padding: 6px 14px;
+  color: #ccc;
+  font-size: 1rem;
+  outline: none;
+  font-weight: 500;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile-dark-input-group input[type="password"]::placeholder,
+.profile-dark-input-group input[type="text"]::placeholder,
+.profile-dark-input-group input[type="email"]::placeholder {
+  color: #666;
+}
 
 .profile-dark-input-group.full-width {
   flex: 1 1 100%;
@@ -100,6 +156,7 @@
   background-color: #1e1e23;
   border-radius: 8px;
   padding: 10px 14px;
+  margin-top: 10px;
 }
 
 .profile-dark-input-disabled input {
@@ -116,6 +173,20 @@
 .profile-dark-input-disabled svg {
   margin-left: 10px;
   color: #666;
+}
+.password-dark-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+.password-dark-input .toggle-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #555;
+  top: 30px;
 }
 
 /* Password input is masked by default */

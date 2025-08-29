@@ -16,6 +16,7 @@ import { BannerProvider } from './Components/BannerContext/BannerContext'
 import Review from './Pages/USERS/Review/Review'
 import Banner from './Pages/USERS/Banner/Banner'
 import IntroAnimation from './Pages/USERS/IntroAnimation/IntroAnimation'
+import ProtectedAuth from  './Components/ProtectedAuth/ProtectedAuth'
 import Auth from './Auth/Auth'
 import AdminBanner from './Pages/ADMIN/AdminBanner/Banner'
 import AdminDiscover from './Pages/ADMIN/AdminDiscover/AdminDiscover'
@@ -40,6 +41,7 @@ import AdminBeaches from './Pages/ADMIN/AdminBeaches/AdminBeaches'
 import EditSpot from './Pages/ADMIN/EditSpot/EditSpot'
 import AdminPendingBanner from './Pages/ADMIN/AdminPendingBanner/AdminPendingBanner'
 import UserEventDetails from './Pages/USERS/UserEventDetails/UserEventDetails'
+import AdminAction from './Pages/ADMIN/AdminAction/AdminAction'
 
 function App() {
 
@@ -61,7 +63,7 @@ function App() {
         <Route path='/eventdetails' element = {<UserEventDetails/>} />
         <Route path='/viewdetails/:id' element = {<ViewEventDetails/>} />
         <Route path='/promotebanner' element = {<Banner/>} />
-        <Route path='/auth' element = {<Auth/>} />
+        <Route path='/auth' element = {<ProtectedAuth/>} />
         <Route path='/adminhome' element = {<AdminPendingEvents/>} />
         <Route path='/adminevents' element = {<AdminEventsPage/>} />
         <Route path='/banner' element = {<AdminBanner/>} />
@@ -83,6 +85,7 @@ function App() {
         <Route path='/adminbeaches' element = {<AdminBeaches/>} />
         <Route path='/editlocation/:spot_id' element = {<EditSpot/>} />
         <Route path='/pendingbanner' element = {<AdminPendingBanner/>} />
+        <Route path='/takeaction/:event_id' element = {<AdminAction/>} />
       </Routes>
     </div>
   )

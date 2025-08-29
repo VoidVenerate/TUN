@@ -99,7 +99,6 @@ const EditableLocationRHF = () => {
       await api.put(`/event/spots/edit/${spot_id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 

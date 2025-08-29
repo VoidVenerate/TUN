@@ -5,6 +5,8 @@ import './AdminNavbar.css';
 import { Bell, LogOut } from 'lucide-react';
 import axios from 'axios';
 import Modal from '../Modal/Modal';
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import defaultAvatar from '../../assets/defaultAvatar.png'
 
 const AdminNavbar = () => {
@@ -30,13 +32,23 @@ const AdminNavbar = () => {
     const fetchNotifications = async () => {
       try {
         const res = await axios.get('https://lagos-turnup.onrender.com/event/notifications');
-        setHasUnread(res.data.some(notif => !notif.read));
+        if (res.data.length > 0) {
+          const latestNotification = res.data[0].created_at;
+
+          const lastSeen = localStorage.getItem('lastSeenNotification');
+          if (!lastSeen || new Date(latestNotification) > new Date(lastSeen)) {
+            setHasUnread(true); // show red dot
+          } else {
+            setHasUnread(false);
+          }
+        }
       } catch (error) {
         console.error("Error loading notification", error);
       }
     };
     fetchNotifications();
   }, []);
+
 
   // Fetch profile image & name
   useEffect(() => {
@@ -140,9 +152,11 @@ const AdminNavbar = () => {
         <div className="navbar-button">
           <div className="profile-container">
             {profileImage ? (
-              <img
+              <LazyLoadImage
                 src={profileImage}
                 alt="Profile"
+                loading='lazy'
+                effect='blur'
                 className="profile-avatar"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop

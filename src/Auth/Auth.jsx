@@ -8,7 +8,7 @@ import Modal from '../Components/Modal/Modal';
 import UploadProfileModal from '../Components/UploadProfileModal/UploadProfileModal';
 import './Auth.css';
 
-const Auth = () => {
+const Auth = ({signUpKey}) => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [boost, setBoost] = useState(false);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const Auth = () => {
     password: '',
     confirmPassword: '',
     role: 'sub-admin',
-    profile_picture: null
+    profile_picture: null,
   });
 
   const [error, setError] = useState('');
@@ -54,14 +54,9 @@ const Auth = () => {
 
   // Upload modal
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [newUserId, setNewUserId] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, profile_picture: e.target.files[0] });
   };
 
   const isPasswordStrong = (password) => {
@@ -92,57 +87,70 @@ const Auth = () => {
         setError(validationError);
         return;
       }
+      // 👉 Show profile upload modal before final signup
+      setShowUploadModal(true);
+      return;
     }
 
+    // Sign In flow
+    try {
+      setLoading(true);
+      const res = await axios.post(
+        "https://lagos-turnup.onrender.com/sub-admin-login",
+        { email: formData.email, password: formData.password }
+      );
+
+      localStorage.setItem("token", res.data.access_token);
+      setModalMessage("Login successful! Redirecting...");
+      setShowSuccessModal(true);
+
+      setTimeout(() => {
+        if (res.data.role === "super-admin") {
+          navigate("/super-admin-dashboard");
+        } else {
+          navigate("/adminhome");
+        }
+      }, 1500);
+    } catch (err) {
+      const backendError = err.response?.data;
+      setError(backendError?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFinalSignup = async () => {
+    setShowUploadModal(false);
     setLoading(true);
     try {
-      if (isSignUp) {
-        const signupData = new FormData();
-        signupData.append("first_name", formData.first_name);
-        signupData.append("last_name", formData.last_name);
-        signupData.append("email", formData.email);
-        signupData.append("password", formData.password);
-        signupData.append("role", formData.role);
-        if (formData.profile_picture) {
-          signupData.append("profile_picture", formData.profile_picture);
-        }
-
-        const res = await axios.post(
-          "https://lagos-turnup.onrender.com/sub-admin-signup",
-          signupData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-
-        setNewUserId(res.data.user?.id || null);
-        setShowUploadModal(true);
-
-      } else {
-        const res = await axios.post(
-          "https://lagos-turnup.onrender.com/sub-admin-login",
-          { email: formData.email, password: formData.password }
-        );
-
-        localStorage.setItem("token", res.data.access_token);
-        console.log(res.data); // See the exact structure from backend
-        setModalMessage("Login successful! Redirecting...");
-        setShowSuccessModal(true);
-
-        setTimeout(() => {
-          if (res.data.role === "super-admin") {
-            navigate("/super-admin-dashboard");
-          } else {
-            navigate("/adminhome");
-          }
-        }, 1500);
+      const signupData = new FormData();
+      signupData.append("first_name", formData.first_name);
+      signupData.append("last_name", formData.last_name);
+      signupData.append("email", formData.email);
+      signupData.append("password", formData.password);
+      signupData.append("role", formData.role);
+      // Added the signUpKey to FormData
+      signupData.append("secret_key", signUpKey);
+      if (formData.profile_picture) {
+        signupData.append("profile_picture", formData.profile_picture);
       }
+
+      const res = await axios.post(
+        "https://lagos-turnup.onrender.com/sub-admin-signup",
+        signupData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      console.log("Signup response:", res.data);
+      setModalMessage("Signup successful! Please log in.");
+      setShowSuccessModal(true);
+      setTimeout(() => {
+        setIsSignUp(false); // 🔄 show login panel
+        setShowSuccessModal(false); // close modal
+      }, 1500);
     } catch (err) {
-      console.error("Auth Error:", err.response?.data || err.message);
-      const backendError = err.response?.data;
-      if (backendError?.detail && Array.isArray(backendError.detail)) {
-        setError(backendError.detail[0]?.msg || "Validation error");
-      } else {
-        setError(backendError?.message || `${isSignUp ? "Signup" : "Login"} failed`);
-      }
+      console.error("Signup Error:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
     }
@@ -176,7 +184,6 @@ const Auth = () => {
       setShowForgotModal(false);
       setShowResetModal(true);
     } catch (err) {
-      console.error("Forgot Password Error:", err.response?.data || err.message);
       setModalMessage(err.response?.data?.message || "Failed to send reset email");
       setShowSuccessModal(true);
     } finally {
@@ -199,7 +206,6 @@ const Auth = () => {
     }
     setResetLoading(true);
     try {
-      // Step 1: Verify OTP
       const verifyRes = await axios.post("/email/verify-otp", {
         email: forgotEmail,
         otp: resetOTP,
@@ -211,7 +217,6 @@ const Auth = () => {
         return;
       }
 
-      // Step 2: Actually reset password
       await axios.post("/reset-password", {
         email: forgotEmail,
         new_password: newPassword,
@@ -222,17 +227,11 @@ const Auth = () => {
       setModalMessage("Password has been reset! Please log in.");
       setShowSuccessModal(true);
     } catch (err) {
-      console.error("Reset Password Error:", err.response?.data || err.message);
       setModalMessage(err.response?.data?.message || "Password reset failed");
       setShowSuccessModal(true);
     } finally {
       setResetLoading(false);
     }
-  };
-
-  const handleUploadComplete = () => {
-    setShowUploadModal(false);
-    navigate('/adminhome');
   };
 
   return (
@@ -243,99 +242,121 @@ const Auth = () => {
         <div className="auth-face auth-front">
           <div className="logo-panel">
             <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
+            <p>Discover The Best of Lagos</p>
           </div>
-          <div className="form-panel">
-            <h2>SIGN UP (Sub-Admins Only)</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="google-btn">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setError("Google sign up failed")}
-                />
-              </div>
-              <div className="form-fields">
-                <div className="row">
-                  <div className="form-row">
-                    <label>First Name <span>*</span></label>
-                    <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required />
-                  </div>
-                  <div className="form-row">
-                    <label>Last Name <span>*</span></label>
-                    <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required />
-                  </div>
-                </div>
-                <label>Email <span>*</span></label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-
-                <label>Password <span>*</span></label>
-                <div className="password-input">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
+          <div className="form-panel-container" style={{marginTop:"-25px"}}>
+            <div className="form-panel">
+              <h2>Sign Up</h2>
+              <p>Sign up to manage events, banners, and more on TurnupLagos.</p>
+              <form onSubmit={handleSubmit}>
+                <div className="google-btn">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setError("Google sign up failed")}
+                    theme="filled_black"   // this gives the dark button
+                    size="large"           // optional: small | medium | large
+                    shape="rect"           // optional: rect | pill | circle
+                    text="signin_with"     
                   />
-                  <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </span>
                 </div>
+                <div className="or-span" style={{marginTop:'15px'}}>
+                  <span></span><p style={{margin:'0px'}}>or</p> <span></span> 
+                </div>
+                <div className="form-fields">
+                  <div className="row">
+                    <div className="form-row">
+                      <label>First Name <span>*</span></label>
+                      <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required placeholder='Enter your first name' />
+                    </div>
+                    <div className="form-row">
+                      <label>Last Name <span>*</span></label>
+                      <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required placeholder='Enter your last name' />
+                    </div>
+                  </div>
+                  <label>Email <span>*</span></label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} required placeholder='mail@simmmple.com' />
 
-                <label>Confirm Password <span>*</span></label>
-                <div className="password-input">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                  <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="toggle-icon">
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </span>
+                  <label>Password <span>*</span></label>
+                  <div className="password-input">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required placeholder='Enter password'
+                    />
+                    <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </span>
+                  </div>
+
+                  <label>Confirm Password <span>*</span></label>
+                  <div className="password-input">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      placeholder='Confirm your password'
+                    />
+                    <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="toggle-icon">
+                      {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              {error && <p className="error">{error}</p>}
-              <button type="submit" disabled={loading}>{loading ? 'Signing up...' : 'Sign Up'}</button>
-            </form>
-            <p onClick={toggleMode} className="toggle-link">Already have an account? Sign In</p>
+                {error && <p className="error">{error}</p>}
+                <button type="submit" disabled={loading}>{loading ? 'Signing up...' : 'Sign Up'}</button>
+              </form>
+              <p onClick={toggleMode} className="toggle-link" style={{width:"100%"}}><span style={{color:'#fff', textDecoration:"none"}}>Already have an account?</span> Sign In</p>
+            </div>
           </div>
-        </div>
-
+          </div>
         {/* Sign In */}
         <div className="auth-face auth-back">
           <div className="logo-panel">
             <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
+            <p>Discover The Best of Lagos</p>
           </div>
-          <div className="form-panel">
-            <h2>SIGN IN</h2>
-            <form onSubmit={handleSubmit}>
+          <div className="form-panel-container">
+            <div className="form-panel" style={{marginTop:"40px"}}>
+              <h2>Sign In</h2>
+              <p>Enter your email and password to sign in!.</p>
+              <form onSubmit={handleSubmit}>
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={() => setError("Google sign in failed")}
-                />
-              <div className="form-fields">
-                <label>Email <span>*</span></label>
-                <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                <label>Password <span>*</span></label>
-                <div className="password-input">
-                  <input
-                    type={showLoginPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
+                  theme="filled_black"   // this gives the dark button
+                      size="large"           // optional: small | medium | large
+                      shape="rect"           // optional: rect | pill | circle
+                      text="signin_with"
                   />
-                  <span onClick={() => setShowLoginPassword(!showLoginPassword)} className="toggle-icon">
-                    {showLoginPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </span>
+                  <div className="or-span" style={{marginTop:'25px'}}>
+                    <span></span><p style={{margin:'0px'}}>or</p> <span></span> 
+                  </div>
+                <div className="form-fields">
+                  <label style={{marginTop:"24px"}}>Email <span>*</span></label>
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                  <label>Password <span>*</span></label>
+                  <div className="password-input">
+                    <input
+                      type={showLoginPassword ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                    />
+                    <span onClick={() => setShowLoginPassword(!showLoginPassword)} className="toggle-icon">
+                      {showLoginPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              {error && <p className="error">{error}</p>}
-              <button type="submit" disabled={loading}>{loading ? 'Signing in...' : 'Sign In'}</button>
-            </form>
-            <p className="toggle-link" onClick={() => setShowForgotModal(true)}>Forgot Password?</p>
-            <p onClick={toggleMode} className="toggle-link">Don’t have an account? Sign Up</p>
+                <p className="toggle-link" onClick={() => setShowForgotModal(true)} style={{width:"100%", color:'#0084FF'}}>Forgot Password?</p>
+                {error && <p className="error">{error}</p>}
+                <button type="submit" disabled={loading} style={{marginTop:'0px'}}>{loading ? 'Signing in...' : 'Sign In'}</button>
+              </form>
+              <p onClick={toggleMode} className="toggle-link" style={{width:"100%"}}><span style={{color:'#fff', textDecoration:"none"}}>Don't have an account?</span> Sign Up</p>
+            </div>
           </div>
         </div>
       </div>
@@ -403,16 +424,9 @@ const Auth = () => {
       {/* Upload Profile Modal */}
       <UploadProfileModal
         show={showUploadModal}
-        onClose={() => setShowUploadModal(false)}
-        onUploaded={handleUploadComplete}
-        userId={newUserId}
-        first_name={formData.first_name}
-        last_name={formData.last_name}
-        email={formData.email}
-        password={formData.password}
-        role="sub-admin"
+        onClose={handleFinalSignup}
+        onFileSelect={(file) => setFormData({ ...formData, profile_picture: file })}
       />
-
 
       {/* Success Modal */}
       <Modal

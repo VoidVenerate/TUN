@@ -6,6 +6,9 @@ import api from "../api";
 import "./AdminEvents.css";
 import { useEvent } from "../EventContext/EventContext";
 import placeholder from '../../assets/placeholder.png'
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import Loader from "../Loader/Loader";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -151,7 +154,7 @@ const AdminEvents = () => {
             Close
           </button>
         ),
-      });
+      }); 
       console.error(err);
     }
   };
@@ -160,7 +163,7 @@ const AdminEvents = () => {
   for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
 
   if (error) return <p>{error}</p>;
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader/>;
 
   return (
     <div>
@@ -176,6 +179,7 @@ const AdminEvents = () => {
         <input
           type="text"
           placeholder="Search events by title"
+          className="search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -190,10 +194,11 @@ const AdminEvents = () => {
           <div key={event.event_id || index} className="event-card">
             <div className="events">
               {event.flyerSrc ? (
-                <img
+                <LazyLoadImage
                   src={event.flyerSrc}
                   alt={event.event_name}
                   loading="lazy"
+                  effect="blur"
                   onError={(e) => { e.currentTarget.src = placeholder }}
                 />
 

@@ -319,3 +319,11 @@
     max-width: 430px;
   }
 }
+@media (min-width: 768px) and (max-width: 979px) {
+  .BlEvents-list {
+    margin-left: 0vw;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+}
