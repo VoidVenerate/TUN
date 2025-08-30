@@ -159,7 +159,7 @@ const EditableEventReviewRHF = ({ role }) => {
 
       let updated;
       if (typeof updateEvent === 'function') {
-        updated = await updateEvent(eventData.event_id, fd);
+        updated = await updateEvent(eventData.id, fd);
       } else {
         const res = await api.put(`/event/events/${eventData.event_id}`, fd, {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -208,7 +208,7 @@ const EditableEventReviewRHF = ({ role }) => {
         setDeleting(true);
         try {
           if (typeof deleteEvent === 'function') {
-            await deleteEvent(eventData.event_id);
+            await deleteEvent(eventData.id);
           } else {
             await api.delete(`/event/events/${eventData.event_id}`);
           }
