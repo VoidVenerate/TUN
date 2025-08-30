@@ -7,7 +7,7 @@ const AdminDiscover = () => {
   return (
     <div>
         <AdminNavbar/>
-        <DiscoverLagos/><br /><br /><br /><br /><br /><br />
+        <DiscoverLagos/>
         <LagEventsFooter/>
     </div>
   )
