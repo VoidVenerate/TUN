@@ -326,9 +326,12 @@
   }
   .sub-form-area textarea {
     min-height: 220px;
+    width: 90% !important;
   }
+  .upload-container {
+    width: 87%;
+}
   .check-submit {
-    flex-direction: column;
     gap: 1rem;
   }
   .sub-form-btn {
