@@ -6,6 +6,7 @@ import api from '../api';
 import Modal from '../Modal/Modal';
 import FeatureDuration from '../FeatureDuration/FeatureDuration';
 import './EditEvent.css'
+import { ChevronLeft } from 'lucide-react';
 
 const EditableEventReviewRHF = ({ role }) => {
   const { eventData, updateEvent, setEventData, deleteEvent } = useEvent(); 
@@ -245,7 +246,7 @@ const EditableEventReviewRHF = ({ role }) => {
     <div className="review-container">
       <header className="review-header">
         <h1 className="review-header-title" style={{ fontFamily: 'Rushon Ground' }}>
-          <button onClick={() => navigate(-1)} className="review-back-btn">←</button>
+          <button onClick={() => navigate(-1)} className="review-back-btn"><ChevronLeft/></button>
           EDIT EVENT
         </h1>
       </header>

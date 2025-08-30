@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { UploadCloud } from 'lucide-react';
+import { UploadCloud, ChevronLeft } from 'lucide-react';
 import api from '../api';
 import Modal from '../Modal/Modal';
+import './BannerForm.css'
 
 const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
   const [name, setName] = useState('');
@@ -9,7 +10,7 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  const [loading, setLoading] = useState(false); // NEW: track loading state
+  const [loading, setLoading] = useState(false);
 
   const [modalInfo, setModalInfo] = useState({
     show: false,
@@ -17,18 +18,26 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
     message: '',
     type: '' // "success", "error", "loading"
   });
-  const token = localStorage.getItem('token')
+
+  const token = localStorage.getItem('token');
+
   useEffect(() => {
     if (editingBanner) {
       setName(editingBanner.name || '');
       setLink(editingBanner.link || '');
       setPreview(editingBanner.image || null);
       setImage(null);
+    } else {
+      // reset when not editing
+      setName('');
+      setLink('');
+      setImage(null);
+      setPreview(null);
     }
   }, [editingBanner]);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (file) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
@@ -39,7 +48,6 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
     e.preventDefault();
     setLoading(true);
 
-    // Show loading modal
     setModalInfo({
       show: true,
       title: editingBanner ? 'Updating...' : 'Adding...',
@@ -53,31 +61,42 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
     if (image) formData.append('banner', image);
 
     try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: token ? `Bearer ${token}` : ''
+        }
+      };
+
       if (editingBanner) {
         await api.put(
-          `https://lagos-turnup.onrender.com/event/banners/${editingBanner.id}`,formData, {
-            headers: {'Content-Type': 'multipart/form-data' , Authorization: `Bearer ${token}`}
-          }
+          `https://lagos-turnup.onrender.com/event/banners/${editingBanner.id}`,
+          formData,
+          config
         );
       } else {
-        await api.post('https://lagos-turnup.onrender.com/event/banners', formData);
+        await api.post(
+          'https://lagos-turnup.onrender.com/event/banners',
+          formData,
+          config
+        );
       }
 
       setLoading(false);
       setModalInfo({
         show: true,
         title: 'Success!',
-        message: editingBanner
-          ? 'Banner updated successfully.'
-          : 'Banner added successfully.',
+        message: editingBanner ? 'Banner updated successfully.' : 'Banner added successfully.',
         type: 'success'
       });
 
-      onRefresh();
+      if (typeof onRefresh === 'function') onRefresh();
+
+      // close after a short delay (keeps UX smooth)
       setTimeout(() => {
         setModalInfo((prev) => ({ ...prev, show: false }));
-        onClose();
-      }, 2000);
+        if (typeof onClose === 'function') onClose();
+      }, 1600);
 
     } catch (error) {
       console.error(error);
@@ -92,47 +111,56 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
   };
 
   return (
-    <div className="banner-form-container">
-      <div className="banner-header">
-        <h1 className="banner-header-title">
+    <div className="bf-container">
+      <div className="bf-header">
+        <button
+          onClick={() => (typeof onClose === 'function' ? onClose() : null)}
+          className="bf-back-btn"
+          aria-label="go back"
+          type="button"
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        <h1 className="bf-head-title">
           {editingBanner ? 'Edit Banner' : 'Add New Banner'}
         </h1>
       </div>
 
-      <form className="banner-form" onSubmit={handleSubmit}>
-        <div className="banner-form-content">
-          <div className="banner-upload-section">
-            <label htmlFor="banner-image-upload" className="banner-upload-area">
+      <form className="bf-form" onSubmit={handleSubmit}>
+        <div className="bf-content">
+          <div className="bf-upload-section">
+            <label htmlFor="bf-image-upload" className="bf-upload-area">
               {preview ? (
-                <img src={preview} alt="Banner Preview" className="banner-flyer-preview" />
+                <img src={preview} alt="Banner Preview" className="bf-preview" />
               ) : (
                 <>
-                  <UploadCloud className="banner-upload-icon" />
-                  <div className="banner-upload-title">Click or drag to upload</div>
-                  <div className="banner-upload-subtitle">PNG, JPG, GIF up to 10MB</div>
-                  <div className="banner-upload-format">Supported formats: PNG, JPG, GIF</div>
+                  <UploadCloud className="bf-upload-icon" />
+                  <div className="bf-upload-title">Click or drag to upload</div>
+                  <div className="bf-upload-subtitle">PNG, JPG, GIF up to 10MB</div>
+                  <div className="bf-upload-format">Supported formats: PNG, JPG, GIF</div>
                 </>
               )}
               <input
-                id="banner-image-upload"
+                id="bf-image-upload"
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg, image/gif"
                 onChange={handleImageChange}
                 style={{ display: 'none' }}
               />
             </label>
           </div>
 
-          <div className="banner-form-fields">
-            <div className="banner-form-row">
-              <div className="banner-form-group">
-                <label className="banner-form-label" htmlFor="banner-name">
+          <div className="bf-fields">
+            <div className="bf-row">
+              <div className="bf-group">
+                <label className="bf-label" htmlFor="bf-name">
                   Banner Name *
                 </label>
                 <input
-                  id="banner-name"
+                  id="bf-name"
                   type="text"
-                  className="banner-form-input"
+                  className="bf-input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -140,14 +168,14 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
                 />
               </div>
 
-              <div className="banner-form-group">
-                <label className="banner-form-label" htmlFor="banner-link">
+              <div className="bf-group">
+                <label className="bf-label" htmlFor="bf-link">
                   Banner Link (optional)
                 </label>
                 <input
-                  id="banner-link"
+                  id="bf-link"
                   type="url"
-                  className="banner-form-input"
+                  className="bf-input"
                   value={link}
                   onChange={(e) => setLink(e.target.value)}
                   placeholder="Enter URL (optional)"
@@ -155,19 +183,19 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
               </div>
             </div>
 
-            <div className="banner-form-footer">
+            <div className="bf-footer">
               <button
                 type="submit"
-                className="banner-submit-btn"
-                disabled={loading} // Disable button while loading
+                className="bf-submit-btn"
+                disabled={loading}
               >
-                {loading ? 'Saving...' : editingBanner ? 'Update Banner' : 'Add Banner'}
+                {loading ? 'Saving...' : (editingBanner ? 'Update Banner' : 'Add Banner')}
               </button>
+
               <button
                 type="button"
-                onClick={onClose}
-                className="banner-submit-btn"
-                style={{ marginLeft: '16px', background: '#555' }}
+                onClick={() => (typeof onClose === 'function' ? onClose() : null)}
+                className="bf-cancel-btn"
                 disabled={loading}
               >
                 Cancel

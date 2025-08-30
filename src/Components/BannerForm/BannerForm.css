@@ -1,140 +1,165 @@
-/* Container and Header */
-.banner-form-container {
-  background-color: #0a0a0a;
+/* Promote-banner top helpers (kept from your original file, mapped to bf- scope) */
+.bf-container {
+  margin-left: 2vw;
+  background-color: #000000;
   color: #ffffff;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   padding: 0;
   margin: 0;
 }
 
-.banner-header {
+/* Header */
+.bf-header {
   display: flex;
   align-items: center;
   padding: 20px 24px;
   border-bottom: 1px solid #2a2a2a;
+  gap: 12px;
+  color: #fff;
+  margin-left: 3vw;
 }
 
-.banner-header-title {
-  font-size: 16px;
+.bf-back-btn {
+  margin-right: 16px;
+  cursor: pointer;
+  color: #ffffff;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+
+.bf-head-title {
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  margin: 0;
+  margin: -25px;
   color: #fff;
 }
 
-/* Form layout */
-.banner-form {
+/* Form content */
+.bf-form {
   width: 1400px;
   max-width: 95%;
   margin: 0 auto;
 }
 
-.banner-form-content {
+.bf-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column; /* stack vertically */
   gap: 32px;
   padding: 32px 24px;
-  max-width: 1400px;
+  max-width: 1400px; /* narrower since stacked */
   margin: 0 auto;
-  align-items: flex-start;
-  justify-content: center;
-  flex-wrap: wrap;
+  align-items: center; /* center horizontally */
 }
 
-/* Upload Section */
-.banner-upload-section {
+/* Upload section */
+.bf-upload-section {
+  width: 100%;
   flex: 0 0 280px;
-  width: 100%;
 }
 
-.banner-upload-area {
+/* Container for upload area */
+.bf-upload-area {
   width: 100%;
-  max-width: 280px;
+  max-width: 1400px;
   height: 220px;
+  overflow: hidden;
   border: 2px dashed #bbb;
   border-radius: 8px;
+  padding: 0px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  background: rgba(255,255,255,0.01);
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
 
-.banner-upload-area:hover {
+.bf-upload-area:hover {
   border-color: #444444;
 }
 
-.banner-upload-icon {
-  width: 48px;
-  height: 48px;
-  color: #666666;
-  margin-bottom: 16px;
+/* Preview & icons */
+.bf-preview {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.banner-upload-title,
-.banner-upload-subtitle,
-.banner-upload-format {
+.bf-upload-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: #666666;
+}
+
+.bf-upload-title,
+.bf-upload-subtitle,
+.bf-upload-format {
   text-align: center;
 }
 
-.banner-upload-title {
+.bf-upload-title {
   color: #ffffff;
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 4px;
 }
 
-.banner-upload-subtitle {
+.bf-upload-subtitle {
   color: #888888;
   font-size: 16px;
   margin-bottom: 8px;
 }
 
-.banner-upload-format {
+.bf-upload-format {
   color: #666666;
   font-size: 12px;
   line-height: 1.4;
 }
 
-.banner-flyer-preview {
-  max-width: 100%;
-  max-height: 200px;
-  object-fit: contain;
-  display: block;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+.bf-error-text {
+  color: #ff5555;
+  font-size: 12px;
+  margin-top: 8px;
 }
 
-/* Form Fields */
-.banner-form-fields {
+/* Form fields */
+.bf-fields {
   flex: 1;
   border: 1.5px solid #444;
   border-radius: 12px;
   padding: 20px;
   background: rgba(255,255,255,0.02);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   width: 100%;
+  box-sizing: border-box;
 }
 
-.banner-form-row {
+.bf-row {
   display: flex;
-  gap: 60px;
+  gap: 16px;
   margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
-.banner-form-group {
+.bf-group {
   flex: 1;
+  min-width: 200px;
   display: flex;
   flex-direction: column;
-  min-width: 200px;
 }
 
-.banner-form-label {
+.bf-label {
   display: block;
   color: #ffffff;
   font-size: 14px;
@@ -142,35 +167,41 @@
   margin-bottom: 8px;
 }
 
-.banner-form-input {
-  width: 100%;
+.bf-input {
+  width: 95%;
   background-color: #1a1a1a;
-  border: 0;
+  border: 0px solid #333333;
   border-radius: 6px;
   padding: 20px 16px;
   font-size: 14px;
   color: #ffffff;
   font-family: inherit;
   transition: border-color 0.2s ease;
+  box-sizing: border-box;
 }
 
-.banner-form-input:focus {
+.bf-input:focus {
   outline: none;
   border-color: #555555;
 }
 
-.banner-form-input::placeholder {
+.bf-input::placeholder {
   color: #666666;
 }
 
-/* Buttons */
-.banner-form-footer {
+/* Footer / Buttons */
+.bf-footer {
   text-align: right;
   padding-top: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.banner-submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.bf-submit-btn {
+  background: #5423D2;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -181,110 +212,148 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.banner-submit-btn:hover {
+.bf-submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102,126,234,0.25);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
 }
 
-.banner-submit-btn:active {
+.bf-submit-btn:active {
   transform: translateY(0);
 }
 
-/* ========================= */
-/* 📱 RESPONSIVENESS */
-/* ========================= */
+.bf-cancel-btn {
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
 
-/* Tablets (≤ 1024px) */
+/* Responsive Design */
 @media (max-width: 1024px) {
-  .banner-form-content {
+  .bf-content {
     flex-direction: column;
     padding: 24px 16px;
     align-items: center;
   }
 
-  .banner-upload-area {
+  .bf-upload-area {
     max-width: 90%;
     height: auto;
     padding: 10px 0;
   }
 
-  .banner-flyer-preview {
+  .bf-preview {
     max-height: 250px;
   }
 
-  .banner-form-row {
+  .bf-row {
     gap: 16px;
   }
 
-  .banner-form-input {
+  .bf-input {
     width: 100%;
   }
 
-  .banner-form-footer {
+  .bf-footer {
     text-align: center;
+    justify-content: center;
   }
 
-  .banner-submit-btn {
+  .bf-submit-btn {
     width: 100%;
   }
 }
 
-/* Phones (≤ 768px) */
+/* Tablets and below (max-width 768px) */
 @media (max-width: 768px) {
-  .banner-header {
+  .bf-content {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 16px;
+    padding: 24px 16px;
   }
 
-  .banner-header-title {
+  .bf-upload-section {
+    width: 100% !important;
+    margin-bottom: 24px;
+  }
+
+  .bf-upload-area {
+    width: 90% !important;
+    height: auto !important;
+    padding: 10px 0px;
+    margin-left: 17px;
+  }
+
+  .bf-preview {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  .bf-form {
+    width: 100% !important;
+  }
+
+  .bf-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .bf-input {
+    width: 93% !important;
+  }
+
+  .bf-footer {
+    padding: 24px 0 0 0;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .bf-submit-btn {
+    width: 100%;
+  }
+}
+
+/* Small phones (max-width 480px) */
+@media (max-width: 480px) {
+  .bf-head-title {
     font-size: 18px;
   }
 
-  .banner-upload-area {
-    width: 95%;
-    margin: 0 auto 20px auto;
-  }
-
-  .banner-form-content {
-    padding: 16px;
-  }
-}
-
-/* Small phones (≤ 480px) */
-@media (max-width: 480px) {
-  .banner-header-title {
-    font-size: 16px;
-  }
-
-  .banner-form-label {
+  .bf-label {
     font-size: 13px;
   }
 
-  .banner-submit-btn {
+  .bf-submit-btn {
     font-size: 14px;
-    padding: 12px 20px;
+    padding: 14px 20px;
   }
 
-  .banner-upload-icon {
+  .bf-upload-area {
+    width: 90%;
+    padding: 10px 0px;
+  }
+
+  .bf-upload-icon {
     width: 40px;
     height: 40px;
   }
 }
 
-/* Extra small phones (≤ 360px) */
+/* Extra small phones (max-width 360px) */
 @media (max-width: 360px) {
-  .banner-header-title {
-    font-size: 14px;
+  .bf-head-title {
+    font-size: 16px;
   }
 
-  .banner-form-label {
+  .bf-label {
     font-size: 12px;
   }
 
-  .banner-submit-btn {
+  .bf-submit-btn {
     font-size: 13px;
-    padding: 10px 16px;
+    padding: 12px 16px;
   }
 }
