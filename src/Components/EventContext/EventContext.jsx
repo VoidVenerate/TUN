@@ -77,14 +77,33 @@ export const EventProvider = ({ children }) => {
   };
 
   // ✅ Update event (API + context state)
+  // ✅ Update event (API + context state)
   const updateEvent = async (id, formData) => {
     if (!id) throw new Error('updateEvent requires an event ID');
     setLoading(true);
     setError(null);
     try {
-      const res = await api.put(`/event/events/${id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}`  },
+      // 👉 Wrap the provided formData so we can map featureChoice → is_featured
+      const mappedFormData = new FormData();
+
+      // Copy original formData entries
+      for (let [key, value] of formData.entries()) {
+        mappedFormData.append(key, value);
+      }
+
+      // Inject is_featured (true/false) from featureChoice
+      mappedFormData.set(
+        "is_featured",
+        eventData.featureChoice === "yes-feature"
+      );
+
+      const res = await api.put(`/event/events/${id}`, mappedFormData, {
+        headers: { 
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`  
+        },
       });
+
       const updated = res.data;
 
       const mappedData = {
@@ -93,6 +112,7 @@ export const EventProvider = ({ children }) => {
         id: updated.id || id,
         flyer: null,
         flyerPreview: updated.flyer_url || eventData.flyerPreview,
+        featureChoice: updated.is_featured ? "yes-feature" : "no-feature", // ← sync back
       };
 
       setEventData(mappedData);
@@ -104,6 +124,7 @@ export const EventProvider = ({ children }) => {
       throw err;
     }
   };
+
 
   // ✅ Delete event
   const deleteEvent = async (id) => {

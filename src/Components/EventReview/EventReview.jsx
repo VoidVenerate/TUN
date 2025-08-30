@@ -35,7 +35,7 @@ const EventReview = () => {
       formData.append('time', eventData.time);
       formData.append('dress_code', eventData.dresscode || '');
       formData.append('event_description', eventData.description || '');
-      formData.append('is_featured', eventData.featureChoice === 'feature'); // ✅ match context
+      formData.append('is_featured', eventData.featureChoice === 'yes-feature'); // ✅ match context
 
       // ✅ Only append if user selected a flyer
       if (eventData.flyer) {

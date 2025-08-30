@@ -207,7 +207,4 @@
   .event-card { width: 45%; }
 }
 
-/* Large desktops >1024px */
-@media (min-width: 1025px) {
-  .event-card { width: 30%; }
-}
+

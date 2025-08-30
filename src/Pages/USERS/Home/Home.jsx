@@ -4,10 +4,11 @@ import Billboard from '../../../Components/Billboard/Billboard'
 import './Home.css'
 import FtEvents from '../../../Components/FtEvents/FtEvents'
 import Visit from '../../../Components/Visit/Visit'
-import LagEvents from '../../../Components/LagEvents/LagEvents'
+import LagEvents from '../../../Components/AllEvents/AllEvents'
 import BlEvents from '../../../Components/BlEvents/BlEvents'
 import EventsPromoBanner from '../../../Components/EventsPromoBanner/EventsPromoBanner'
 import Footer from '../../../Components/Footer/Footer'
+import AllEvents from '../../../Components/AllEvents/AllEvents'
 
 const Home = () => {
   return (
@@ -16,8 +17,8 @@ const Home = () => {
         <Billboard />
         <FtEvents />
         <Visit />
-        <LagEvents />
-        <BlEvents />
+        <AllEvents stateFilter="Lagos" limit = {9} />
+        <AllEvents stateFilter="Outside Lagos" limit = {9} />
         <EventsPromoBanner />
         <Footer />
     </div>

@@ -51,7 +51,7 @@ const PromoteBanner = () => {
       const previewUrl = URL.createObjectURL(file);
       const img = new Image();
       img.onload = () => {
-        if (img.width <= 1400 && img.height <= 300) {
+        if (img.width <= 1700 && img.height <= 350) {
           setBannerData((prev) => ({
             ...prev,
             flyer: file,

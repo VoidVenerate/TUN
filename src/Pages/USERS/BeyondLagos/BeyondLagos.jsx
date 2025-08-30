@@ -1,93 +1,41 @@
-import React, { useState } from 'react';
-import UserNavbar from '../../../Components/UserNavbar/UserNavbar';
-import Ble from '../../../assets/Ble';
-import Footer from '../../../Components/Footer/Footer';
-import { NavLink } from 'react-router-dom';
-import './BeyondLagos.css';
+import React, { useState } from 'react'
+import UserNavbar from '../../../Components/UserNavbar/UserNavbar'
+import Footer from '../../../Components/Footer/Footer'
+import AllEvents from '../../../Components/AllEvents/AllEvents'
 
 const BeyondLagos = () => {
-  const cardsPerPage = 9; // events per page
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(Ble.length / cardsPerPage); // use Ble
+  const cardsPerPage = 18
+  const [currentPage, setCurrentPage] = useState(1)
 
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
+  const handleNext = (totalEvents) => {
+    const totalPages = Math.ceil(totalEvents / cardsPerPage)
+    if (currentPage < totalPages) setCurrentPage(p => p + 1)
+  }
 
   const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  // Slice Ble for current page
-  const currentEvents = Ble.slice(
-    (currentPage - 1) * cardsPerPage,
-    currentPage * cardsPerPage
-  );
-
-  const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
-  const handleClick = (index, type) => {
-    if (activeBtn.index === index && activeBtn.type === type) {
-      setActiveBtn({ index: null, type: null });
-    } else {
-      setActiveBtn({ index, type });
-    }
-  };
+    if (currentPage > 1) setCurrentPage(p => p - 1)
+  }
 
   return (
     <div>
       <UserNavbar />
-      <div className="BlEvents-header">
-        <p style={{ fontFamily: 'Rushon Ground', marginLeft: '20px' }}>
-          Beyond Lagos
-        </p>
-      </div>
 
-      <div className="Bl-Events more-bl-events">
-        {currentEvents.map((event, index) => (
-          <div key={event.id} className="event-card">
-            <div className="events">
-              <img src={event.image} alt={event.title} />
-              <div className="event-txt">
-                <h3>{event.title}</h3>
-                <p>{event.location}</p>
-              </div>
-              <p>{event.desciption}</p>
-              <div className="slider-btn">
-                <button
-                  className={
-                    activeBtn.index === index && activeBtn.type === 'details'
-                      ? 'active'
-                      : ''
-                  }
-                  onClick={() => handleClick(index, 'details')}
-                >
-                  <NavLink to='/eventdetails' style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
-                </button>
+      <AllEvents stateFilter="Outside Lagos" page={currentPage} limit={cardsPerPage} />
 
-                <button disabled className="buy-tickets-btn">
-                  Buy Tickets
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
+      {/* controls — parent can know total events if you lift state, 
+          or just leave here as "dumb" prev/next */}
       <div className="pagination-controls">
         <button onClick={handlePrev} disabled={currentPage === 1}>
           Prev
         </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button onClick={handleNext} disabled={currentPage === totalPages}>
-          Next
-        </button>
+        <span>Page {currentPage}</span>
+        {/* we’ll need total count if you want “disable on last page” */}
+        <button onClick={() => handleNext(9999)}>Next</button>
       </div>
 
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default BeyondLagos;
+export default BeyondLagos

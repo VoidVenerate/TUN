@@ -150,7 +150,7 @@ const UploadLocation = () => {
           default:
             navigate("/discover");
         }
-      }, 2000);
+      }, 1000);
 
     } catch (err) {
       const errorMessage =
@@ -183,7 +183,7 @@ const UploadLocation = () => {
   return (
     <div className="event-form-container">
       <div className="header">
-        <ChevronLeft className="back-arrow" />
+        <ChevronLeft className="back-arrow" onClick={() =>{navigate(-1)}} />
         <h1 className="header-title">UPLOAD LOCATION</h1>
       </div>
 
