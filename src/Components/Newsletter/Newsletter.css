@@ -31,7 +31,7 @@
   border-radius: 16px;
   font-family: inherit;
   transition: border-color 0.3s ease;
-  background-color: #ffffff0d;
+  background-color: rgba(255, 255, 255, 0.081);
   outline: none;
   width: 100%;
   max-width: 634px;
@@ -54,14 +54,12 @@
   resize: none;
   font-family: inherit;
   transition: border-color 0.3s ease;
-  background: #ffffff0d;
+  background: rgba(255, 255, 255, 0.081);
   color: #fff;
+  outline: none;
 }
 .sub-form-area label, .sub-form-area span {
   color: #fff;
-}
-.sub-form-area textarea:focus {
-  border-color: #5423D2;
 }
 
 .sub-form-group {
@@ -122,9 +120,10 @@
 /* Agreement checkbox */
 .check-submit {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   margin-top: 2vw;
   flex-wrap: wrap;
+  margin-right: 3vw;
 }
 
 .agreement {
@@ -146,7 +145,7 @@
 .sub-form-btn {
   background-color: #5423D2;
   color: white;
-  font-weight: 700;
+  font-weight: 500;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -155,7 +154,7 @@
   width: 100%;
   max-width: 135px;
   height: 58px;
-  font-size: 1rem;
+  font-size: 13px;
   margin-right: 2vw;
 }
 
@@ -192,11 +191,25 @@
   font-family: inherit;
   color: #222;
 }
-.subscription-header h2 { margin-bottom: 0.2rem; color: #fff; }
-.subscription-header p { font-size: 1rem; color: #555; margin-bottom: 1.8rem; }
+.subscription-form {
+  margin-left: 4vw;
+  margin-right: 5vw;
+}
+.subscription-form {
+  background: #000;
+  border: 2px solid #343434; 
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 12px rgba(84, 35, 210, 0.4); /* subtle glow */
+}
+
+
+.subscription-header h2 { margin-bottom: 0.2rem; color: #fff; margin-left: 4vw; }
+.subscription-header p { font-size: 1rem; color: #555; margin-bottom: 1.8rem; margin-left: 4vw; }
 
 /* Subscription cards */
-.subscription-cards { margin-bottom: 2rem; width: 265px; }
+.subscription-cards { margin-bottom: 2rem; width: 265px; margin-left: 2vw; }
 .subscription-card {
   background-color: #ffffff0d;
   padding: 1rem 1.5rem;
@@ -262,4 +275,83 @@
   .sub-form-area textarea { min-height: 180px; font-size: 0.85rem; }
   .sub-form-btn { height: 45px; font-size: 0.85rem; }
   .subscription-cards { width: 100%; margin: 0 auto 1rem auto; }
+}
+/* Kill fixed widths on smaller screens */
+.sub-form-row {
+  width: 100%;
+  height: auto; /* let it grow naturally */
+  margin-bottom: 1rem;
+}
+
+/* Make inputs and textarea always take full width on mobile */
+.sub-form-row input[type="text"] {
+  width: 95% !important;
+  max-width: 100%;
+}
+.sub-form-area textarea {
+  width: 94% !important;
+  max-width: 100%;
+}
+
+/* Upload container full width */
+.upload-container {
+  width: 92%;
+}
+
+/* Subscription container alignment */
+.subscription-container {
+  margin-left: 0;
+  padding: 1rem;
+}
+
+
+/* ====== TABLETS (≤ 1024px) ====== */
+@media (max-width: 1024px) {
+  .subscription-header p {
+    font-size: 0.95rem;
+  }
+  .sub-form-row input[type="text"],
+  .sub-form-area textarea {
+    font-size: 0.95rem;
+  }
+}
+
+/* ====== PHONES (≤ 768px) ====== */
+@media (max-width: 768px) {
+  .subscription-header h2 {
+    font-size: 1.4rem;
+  }
+  .subscription-header p {
+    font-size: 0.9rem;
+  }
+  .sub-form-area textarea {
+    min-height: 220px;
+  }
+  .check-submit {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .sub-form-btn {
+    width: 100%;
+    height: 48px;
+  }
+}
+
+/* ====== SMALL PHONES (≤ 480px) ====== */
+@media (max-width: 480px) {
+  .subscription-header h2 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .subscription-header p {
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  .agreement {
+    font-size: 0.85rem;
+    gap: 6px;
+  }
+  .sub-form-btn {
+    font-size: 0.9rem;
+  }
 }

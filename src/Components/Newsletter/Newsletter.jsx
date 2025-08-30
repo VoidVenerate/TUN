@@ -266,21 +266,12 @@ const Newsletter = () => {
                             />
                         </div>
                     </div>
-
-                    <div className="check-submit">
-                        <div className="agreement">
-                            <input 
-                                type="checkbox" 
-                                checked={agreed} 
-                                onChange={(e) => setAgreed(e.target.checked)} 
-                            />
-                            <p>I agree to receive other communication messages from TUL</p>
-                        </div>
-                        <button disabled={!agreed || loading} className='sub-form-btn'>
-                            {loading ? "Sending..." : "Send Newsletter"}
-                        </button>
-                    </div>
                 </form>
+            </div>
+            <div className="check-submit">
+                <button disabled={!agreed || loading} className='sub-form-btn'>
+                    {loading ? "Sending..." : "Send Newsletter"}
+                </button>
             </div>
 
             {/* Confirm Modal */}

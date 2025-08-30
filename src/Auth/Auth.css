@@ -297,3 +297,212 @@ body {
   display: flex;
   flex-direction: column;
 }
+/* Make sure the active face is on top & can receive pointer events */
+.auth-front, .auth-back {
+  z-index: 1;                /* baseline */
+  pointer-events: none;      /* disable by default, we'll enable the active one */
+}
+
+/* When card is NOT flipped: front should be interactive */
+.auth-card:not(.flipped) .auth-front {
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* When card IS flipped: back should be interactive */
+.auth-card.flipped .auth-back {
+  z-index: 3;
+  pointer-events: auto;
+}
+/* =========================
+   RESPONSIVE OVERRIDES
+   Put at the end of Auth.css
+   ========================= */
+
+/* Prevent the large background-image from loading on small screens */
+@media (max-width: 900px) {
+  .logo-panel {
+    background-image: none;
+  }
+}
+
+/* Very large / desktop tweaks */
+@media (min-width: 1201px) {
+  .form-panel-container { width: 50%; }
+  .form-panel { width: 73%; padding-left: 90px; }
+}
+
+/* Tablet / small desktop */
+@media (max-width: 1200px) and (min-width: 901px) {
+  .auth-card { width: 100%; max-width: 1100px; margin: 0 auto; }
+  .form-panel-container { width: 55%; }
+  .logo-panel { display: flex; flex: 1; }
+  .form-panel { width: 70%; padding-left: 48px; padding-right: 24px; }
+}
+
+/* Main breakpoint: hide picture and stack layout on tablets/phones <= 900px */
+@media (max-width: 900px) {
+  /* Allow content to scroll on mobile instead of rigid 100vh */
+  .auth-card {
+    position: relative;
+    height: 100vh;            /* full viewport so faces overlap properly */
+    min-height: 100vh;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease;
+    perspective: 1500px;
+  }
+
+  /* Make faces flow in document (no absolute overlay) */
+  .auth-face {
+    position: absolute;
+    inset: 0;                 /* top:0; right:0; bottom:0; left:0; */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    backface-visibility: hidden;
+  }
+
+  /* Hide picture panel visually (React also conditionally removes it; this ensures CSS fallback) */
+  .logo-panel {
+    display: none !important;
+    width: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+
+  /* Make form area stretch full width */
+  .form-panel-container {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 0 16px;
+    overflow: auto;
+  }
+
+  .form-panel {
+    width: 100% !important;
+    padding: 28px 20px !important;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    display: block;
+    margin: 0 auto;
+    overflow: auto;
+  }
+  .or-span p {
+    padding-top: 0px;
+  }
+  .or-span span {
+    display: none;
+  }
+
+  /* Stack row fields vertically and use full width */
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .form-row { width: 100%; }
+
+  /* Input sizing & spacing */
+  .form-panel input {
+    width: 92% !important;
+    margin-top: 12px;
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .form-panel label { font-size: 14px; }
+
+  .form-panel p { width: 100%; font-size: 14px; margin-bottom: 12px; }
+
+  /* Google / other buttons */
+  .google-btn { width: 100%; display: block; margin-bottom: 10px; }
+
+  /* Or divider line sizes */
+  .or-span { gap: 8px; margin: 14px 0; align-items: center; }
+  .or-span span { width: 20%; height: 1px; }
+  .or-span p { font-size: 13px; margin: 0; }
+
+  /* Button sizing for thumbs */
+  .form-panel button {
+    padding: 12px 0;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+  .form-panel p {
+    width: 100%;
+  }
+  .form-fields {
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: -40px;
+  }
+
+  /* Toggle icon positioning inside password inputs */
+  .password-input .toggle-icon {
+    top: 24px;
+    right: 10px;
+  }
+
+  .password-input { margin-bottom: 6px; }
+
+  /* Error and helper text */
+  .error { font-size: 13px; margin-top: 8px; }
+
+  /* Flip links spacing */
+  .toggle-link { margin-top: 12px; font-size: 14px; }
+}
+/* Re-enable flipping and keep responsive behavior */
+@media (max-width: 900px) {
+  /* Keep card 3D settings so flip works */
+  
+
+  /* Faces must be absolute and full-size for 3D flip */
+  
+
+  /* Front/Back transforms */
+  .auth-front { transform: rotateY(0deg); }
+  .auth-back { transform: rotateY(180deg); }
+
+  /* Flipped state */
+  .auth-card.flipped { transform: rotateY(180deg); }
+
+  /* Hide the logo visually (React already removes it on small screens) */
+  .logo-panel { display: none; }
+
+  /* Make form panels scrollable inside the face so controls are reachable */
+ 
+
+  /* Stacked inputs and touch-friendly spacing */
+  .row { flex-direction: column; gap: 12px; width: 100%; }
+  .form-panel input { width: 100%; margin-top: 12px; }
+  .password-input .toggle-icon { top: 18px; right: 10px; }
+}
+
+/* Small phones / compact (<= 420px) */
+@media (max-width: 420px) {
+  .form-panel { padding: 18px 12px !important; }
+  .form-panel h2 { font-size: 1.25rem; }
+  .form-panel p { font-size: 13px; }
+  .or-span span { width: 16%; }
+  .password-input .toggle-icon { top: 18px; right: 8px; }
+  .form-panel input { font-size: 14px; padding: 10px 12px; }
+  .form-panel button { font-size: 14px; padding: 11px 0; }
+}
+
+/* Accessibility & visual polish */
+.auth-scene { padding: 12px; }
+.form-panel { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* Ensure flip animation still works on wider screens but doesn't break mobile */
+@media (min-width: 901px) {
+  .auth-card { transition: transform 0.8s ease; transform-style: preserve-3d; }
+  .auth-face { backface-visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; }
+  .auth-front { flex-direction: row; }
+  .auth-back { transform: rotateY(180deg); flex-direction: row-reverse; }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
@@ -233,6 +233,14 @@ const Auth = ({signUpKey}) => {
       setResetLoading(false);
     }
   };
+  const [showLogoPanel, setShowLogoPanel] = useState(() => window.innerWidth > 900);
+
+  useEffect(() => {
+    const onResize = () => setShowLogoPanel(window.innerWidth > 900);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
 
   return (
     <div className="auth-scene">
@@ -240,10 +248,13 @@ const Auth = ({signUpKey}) => {
         
         {/* Sign Up */}
         <div className="auth-face auth-front">
-          <div className="logo-panel">
-            <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
-            <p>Discover The Best of Lagos</p>
-          </div>
+          {/* only render logo panel on wide screens */}
+          {showLogoPanel && (
+            <div className="logo-panel">
+              <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
+              <p>Discover The Best of Lagos</p>
+            </div>
+          )}
           <div className="form-panel-container" style={{marginTop:"-25px"}}>
             <div className="form-panel">
               <h2>Sign Up</h2>
@@ -314,10 +325,14 @@ const Auth = ({signUpKey}) => {
           </div>
         {/* Sign In */}
         <div className="auth-face auth-back">
-          <div className="logo-panel">
-            <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
-            <p>Discover The Best of Lagos</p>
-          </div>
+          {/* only render logo panel on wide screens */}
+          {showLogoPanel && (
+            <div className="logo-panel">
+              <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
+              <p>Discover The Best of Lagos</p>
+            </div>
+          )}
+
           <div className="form-panel-container">
             <div className="form-panel" style={{marginTop:"40px"}}>
               <h2>Sign In</h2>

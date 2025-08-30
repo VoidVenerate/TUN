@@ -41,7 +41,7 @@ body{
 }
 .profile-dark-left:hover {
   box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
-  border-color: var(--accent-color, #4f8cff);
+  border-color: var(--accent-color, #5423D2);
 }
 
 .profile-dark-label {
@@ -96,7 +96,7 @@ body{
 }
 .profile-dark-right:hover {
   box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
-  border-color: var(--accent-color, #4f8cff);
+  border-color: var(--accent-color, #5423D2);
 }
 
 /* Each row contains two inputs side by side except single row */
