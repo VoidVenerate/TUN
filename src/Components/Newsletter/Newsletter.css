@@ -357,4 +357,11 @@
   .sub-form-btn {
     font-size: 0.9rem;
   }
+  .sub-form-area textarea {
+    min-height: 220px;
+    width: 87% !important;
+  }
+  .upload-container {
+    width: 83%;
+}
 }
