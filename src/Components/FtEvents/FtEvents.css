@@ -155,3 +155,43 @@
     height: 520px;
   }
 }
+
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  gap: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #aaa;
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.dot.active {
+  background: #fff;
+  transform: scale(1.2);
+}
+/* Default slider */
+.slider {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Mobile swipe */
+.mobile-slider {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-slider ul {
+  scroll-snap-type: x mandatory;
+}
+
+.mobile-slider li {
+  scroll-snap-align: center;
+}

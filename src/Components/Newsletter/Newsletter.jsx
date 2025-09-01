@@ -268,6 +268,7 @@ const Newsletter = () => {
                     </div>
                 </form>
             </div>
+            
             <div className="check-submit">
                 <button disabled={!agreed || loading} className='sub-form-btn'>
                     {loading ? "Sending..." : "Send Newsletter"}

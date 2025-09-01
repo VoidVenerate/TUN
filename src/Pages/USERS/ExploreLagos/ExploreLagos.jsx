@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import Visit from '../../../Components/Visit/Visit';
-import { NavLink } from 'react-router-dom';
-import Le from '../../../assets/Le';
 import UserNavbar from '../../../Components/UserNavbar/UserNavbar';
 import Footer from '../../../Components/Footer/Footer';
 import AllEvents from '../../../Components/AllEvents/AllEvents';
