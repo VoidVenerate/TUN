@@ -279,12 +279,12 @@ const UploadLocation = () => {
                     value={locationData.state}
                     onChange={handleChange}
                     readOnly
-                    style={{ paddingRight: '30px', width: '763px', color: "#fff" }}
+                    style={{ paddingRight: '30px', width: '94%', color: "#fff" }}
                   />
                   <LockKeyhole
                     style={{
                       position: 'absolute',
-                      right: '8px',
+                      right: '25px',
                       top: '50%',
                       transform: 'translateY(-50%)',
                       pointerEvents: 'none',

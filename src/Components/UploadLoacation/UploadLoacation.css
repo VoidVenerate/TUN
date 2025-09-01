@@ -8,6 +8,7 @@
   color: #fff;
   font-family: 'DM Sans';
   min-height: 100vh;
+  margin-left: 3vw;
 }
 
 /* === Header === */
@@ -43,7 +44,8 @@
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  height: 50vw;
+  min-height: 50vw;
+  height: auto;
 }
 .upload-sec {
   border: 2px dashed #666;  /* dashed border for "upload" feel */
@@ -124,6 +126,7 @@
   padding: 2rem;
   border-radius: 12px;
   border: 1px solid #222;
+  width: 85%;
 }
 
 .form-fields {
@@ -220,4 +223,84 @@
   color: #ff4d4f;
   font-size: 0.875rem;
   margin-top: 2px;
+}
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 1rem;
+  }
+
+  .upload-section {
+    padding: 1rem;
+  }
+
+  .upload-flyer-text p {
+    font-size: 0.85rem;
+  }
+
+  .upload-description {
+    font-size: 0.75rem;
+  }
+
+  .form-label {
+    font-size: 0.8rem;
+  }
+
+  .form-textarea {
+    min-height: 200px; /* reduce height for smaller screens */
+  }
+
+  .word-info,
+  .word-error {
+    font-size: 0.75rem;
+  }
+}
+@media (max-width: 768px) {
+  .event-form-container {
+    padding: 1rem;
+  }
+
+  .header-title {
+    font-size: 1.25rem;
+  }
+
+  .form {
+    padding: 1rem;
+    width: 90%;
+  }
+
+  .form-row {
+    flex-direction: column; /* stack inputs */
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.9rem;
+  }
+
+  .create-event-btn {
+    width: 100%; /* full-width button for mobile */
+  }
+}
+/* Tablets and down (<= 1024px) */
+@media (max-width: 1024px) {
+  .form-content {
+    grid-template-columns: 1fr; /* stack upload + form */
+  }
+
+  .upload-section {
+    height: auto; /* don’t force huge height on smaller screens */
+    min-height: 250px;
+  }
+
+  .upload-sec {
+    height: auto;
+    min-height: 180px;
+  }
+}
+.flyer-preview {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
 }
