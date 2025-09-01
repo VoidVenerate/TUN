@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 import './AllEvents.css'
 
-const AllEvents = ({ stateFilter, limit, page }) => {
+const AllEvents = ({ stateFilter, limit, page = 1 }) => {
   const [allEvents, setAllEvents] = useState([])
   const [loading, setLoading] = useState(true)
 
