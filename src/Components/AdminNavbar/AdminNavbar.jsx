@@ -64,15 +64,7 @@ const AdminNavbar = () => {
         setUserName(user.first_name || '');
 
         const pic = user.profile_picture_url || user.profile_picture;
-        if (pic) {
-          setProfileImage(
-            pic.startsWith('http')
-              ? pic
-              : `https://lagos-turnup.onrender.com${pic}`
-          );
-        } else {
-          setProfileImage(null);
-        }
+        setProfileImage(pic || null);
       } catch (error) {
         console.error('Unable to fetch profile picture', error);
         setProfileImage(null);

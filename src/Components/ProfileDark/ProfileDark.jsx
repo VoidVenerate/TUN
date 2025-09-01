@@ -103,9 +103,7 @@ const ProfileDark = () => {
     url = url.replace(/\.comuploads/, ".com/uploads");
 
     // Handle relative paths (uploads/... or /uploads/...)
-    if (!url.startsWith("http")) {
-      url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
-    }
+    if (url.startsWith("http")) return url;
 
     return url;
   };
