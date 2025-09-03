@@ -77,7 +77,6 @@ body {
   background-repeat: no-repeat;
 
   position: relative;
-  border-bottom-left-radius: 130px;
   overflow: hidden;
   flex-direction: column;
 }
