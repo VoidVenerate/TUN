@@ -119,6 +119,7 @@ const PendingBanner = () => {
         <h2 style={{ color: "white", fontFamily: "Rushon Ground" }}>
           Pending Banners
         </h2>
+        <h4 onClick={() => navigate("/pendingBanner")}>Pending Events</h4>
       </div>
 
       {/* Search */}
@@ -158,13 +159,13 @@ const PendingBanner = () => {
             />
           ))
         ) : (
-          <p style={{ color: "#ccc" }}>No pending banners found.</p>
+          <p style={{ color: "#ccc", marginLeft:"3vw" }}>No pending banners found.</p>
         )}
       </div>
 
       {/* Pagination */}
       {filteredBanners.length > bannersPerPage && (
-        <div className="banner-pagination-controls">
+        <div className="pagination-controls">
           <button
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}

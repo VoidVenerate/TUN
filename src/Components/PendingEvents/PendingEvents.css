@@ -12,6 +12,19 @@
   font-weight: 600;
   margin: 0 0 10px 0;
 }
+.pendingEvents-header h4 {
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.074);
+  padding: 15px 20px;
+  border-radius: 30px;
+  color: #6d6d6d;
+  font-family: 'DM Sans';
+  cursor: pointer;
+  transition: 0.2s;
+}
+.pendingEvents-header h4:hover {
+  color: #fff;
+}
 .pendingEvents-header button {
   padding: 6px 12px;
   border: none;
@@ -111,7 +124,7 @@
 }
 .pagination-controls button {
   background-color: #2f2f2f;
-  color: #03e9f4;
+  color: #0084ff;
   border: none;
   padding: 10px 15px;
   border-radius: 10px;
@@ -123,7 +136,7 @@
   cursor: not-allowed;
 }
 .pagination-controls span {
-  color: #fff;
+  color: #0084ff;
   font-weight: 500;
 }
 

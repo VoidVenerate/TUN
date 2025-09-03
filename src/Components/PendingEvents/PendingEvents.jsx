@@ -57,7 +57,8 @@ const PendingEvents = () => {
     <div className="pending-events-manager">
       {/* Header */}
       <div className="pendingEvents-header">
-        <p>Pending Events</p>
+        <p style={{fontFamily:"Rushon Ground"}}>Pending Events</p>
+         <h4 onClick={() => navigate("/pendingBanner")}>Pending Banner</h4>
       </div>
 
       {/* Search */}

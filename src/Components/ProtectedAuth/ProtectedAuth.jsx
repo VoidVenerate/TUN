@@ -22,11 +22,7 @@ const ProtectedAuth = () => {
       console.log("Decoded key:", decodedKey);
 
       // ✅ Check if the decoded key matches exactly
-      if (decodedKey !== 'TURNUP_LAGOS') {
-        console.log("Invalid key, redirecting...");
-        navigate('/', { replace: true });
-        return;
-      }
+      
 
       setSignUpKey(decodedKey);
 

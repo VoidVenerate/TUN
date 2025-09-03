@@ -134,14 +134,13 @@ const AdminNavbar = () => {
         <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
           <li><NavLink to="/adminhome" exact="true" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Home</NavLink></li>
           <li><NavLink to="/adminevents" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Events</NavLink></li>
-          <li><NavLink to="/pendingbanner" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Pending Banner</NavLink></li>
           <li><NavLink to="/banner" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Banner</NavLink></li>
           <li><NavLink to="/discover" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Discover Lagos</NavLink></li>
           <li><NavLink to="/subscriptions" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Subscriptions</NavLink></li>
           
         </ul>
 
-        <div className="navbar-button">
+        <div className="admin-navbar-button">
           <div className="profile-container">
             {profileImage ? (
               <LazyLoadImage
@@ -160,7 +159,6 @@ const AdminNavbar = () => {
             {dropdownOpen && (
               <div className="profile-dropdown">
                 <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
-                <NavLink to="/settings" className="dropdown-item">Settings</NavLink>
               </div>
             )}
           </div>

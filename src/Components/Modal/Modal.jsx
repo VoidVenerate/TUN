@@ -3,7 +3,7 @@ import React from 'react';
 import { CheckCircle, XCircle } from 'lucide-react'; // ✅ Icons
 import './Modal.css';
 
-const Modal = ({ show, onClose, title, message, subMessage, type, footerButtons }) => {
+const Modal = ({ show, onClose, title, message, subMessage, type, footerButtons,titleAlign = "center" }) => {
   if (!show) return null;
 
   return (
@@ -16,7 +16,7 @@ const Modal = ({ show, onClose, title, message, subMessage, type, footerButtons 
         <div className="modal-title-row">
           {type === 'success' && <CheckCircle className="modal-icon success-icon" />}
           {type === 'error' && <XCircle className="modal-icon error-icon" />}
-          <h2 className="modal-title">{title}</h2>
+          <h2 className={`modal-title ${titleAlign}`}>{title}</h2>
         </div>
 
         {/* === Message Content === */}

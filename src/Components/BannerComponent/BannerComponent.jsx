@@ -137,14 +137,14 @@ const BannerComponent = () => {
           </div>
 
           {/* Pagination controls */}
-          <div className="banner-pagination-controls">
+          <div className="pagination-controls">
             <button
               onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} // Prev page, min 1
               disabled={currentPage === 1}
             >
               Previous
             </button>
-            <span style={{ color: '#fff' }}>Page {currentPage}</span>
+            <span>Page {currentPage}</span>
             <button
               onClick={() => setCurrentPage(p => (indexOfLast < banners.length ? p + 1 : p))} // Next page only if more banners exist
               disabled={indexOfLast >= banners.length}

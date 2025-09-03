@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import Modal from '../Components/Modal/Modal';
 import UploadProfileModal from '../Components/UploadProfileModal/UploadProfileModal';
 import './Auth.css';
+import Logo from '../assets/Logo.svg'
 
 const Auth = ({signUpKey}) => {
   const [isSignUp, setIsSignUp] = useState(true);
@@ -251,7 +252,7 @@ const Auth = ({signUpKey}) => {
           {/* only render logo panel on wide screens */}
           {showLogoPanel && (
             <div className="logo-panel">
-              <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
+              <h1 style={{ fontFamily: 'Rushon Ground' }}> <img src={Logo} width="250" /> </h1>
               <p>Discover The Best of Lagos</p>
             </div>
           )}
@@ -277,11 +278,11 @@ const Auth = ({signUpKey}) => {
                   <div className="row">
                     <div className="form-row">
                       <label>First Name <span>*</span></label>
-                      <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required placeholder='Enter your first name' />
+                      <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required placeholder='Enter your first name' style={{marginTop:"10px"}} />
                     </div>
                     <div className="form-row">
-                      <label>Last Name <span>*</span></label>
-                      <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required placeholder='Enter your last name' />
+                      <label >Last Name <span>*</span></label>
+                      <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required placeholder='Enter your last name' style={{marginTop:"10px"}} />
                     </div>
                   </div>
                   <label>Email <span>*</span></label>
@@ -328,7 +329,7 @@ const Auth = ({signUpKey}) => {
           {/* only render logo panel on wide screens */}
           {showLogoPanel && (
             <div className="logo-panel">
-              <h1 style={{ fontFamily: 'Rushon Ground' }}>TurnUp Lagos</h1>
+              <h1 style={{ fontFamily: 'Rushon Ground' }}><img src={Logo} width="250" /></h1>
               <p>Discover The Best of Lagos</p>
             </div>
           )}

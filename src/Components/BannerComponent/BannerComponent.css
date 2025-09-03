@@ -57,7 +57,7 @@ body {
 .banner-list {
   width: 90%;
   max-width: 1400px;
-  margin-left: 2vw;
+  margin-left: 4vw;
 }
 .banner-grid {
   display: grid;
@@ -121,7 +121,7 @@ body {
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
 .btn-group button:first-child:hover {
-  background: #03e9f4;
+  background: #ffffff10;
   color: #050801;
   box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 75px #03e9f4, 0 0 200px #03e9f4;
 }
@@ -172,7 +172,7 @@ body {
 .banner-pagination-controls span {
   font-size: 1rem;
   font-weight: bold;
-  color: #fff;
+  color:#0084ff
 }
 
 /* ========================= */

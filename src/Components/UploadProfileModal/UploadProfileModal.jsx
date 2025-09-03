@@ -34,9 +34,13 @@ const UploadProfileModal = ({ show, onClose, onFileSelect }) => {
   return (
     <Modal
       show={show}
-      title="Upload Profile Picture"
+      title= "Add a Profile Image"
+      titleAlign="left"
       onClose={onClose}
       message={
+        <p style={{textAlign:"left"}}>Upload a clear image to personalize your admin profile. This helps other team members recognize you.</p>
+      }
+      subMessage={
         <div className="upload-profile-container">
           <label className="upload-box">
             {previewUrl ? (

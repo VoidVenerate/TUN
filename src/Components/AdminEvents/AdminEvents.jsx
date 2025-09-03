@@ -260,7 +260,7 @@ const AdminEvents = () => {
             onClick={() => setCurrentPage(num)}
             className={num === currentPage ? "active-page" : ""}
           >
-            {num}
+            Page{num}
           </button>
         ))}
         <button

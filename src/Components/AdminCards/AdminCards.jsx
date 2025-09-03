@@ -134,6 +134,7 @@ const AdminCards = () => {
       <div className="dashboard-card">
         <h3>Pending Banners <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
         <p>{pendingBanner}</p>
+        
       </div>
 
       <div className="dashboard-card">

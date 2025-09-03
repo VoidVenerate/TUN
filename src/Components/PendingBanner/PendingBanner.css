@@ -3,13 +3,14 @@
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  margin-left: 5vw;
 }
 
 .banner-search input {
   width: 100%;
   padding: 10px 40px 10px 35px; /* space for icon (left) & clear btn (right) */
   border-radius: 10px;
-  border: none;
+  border: 1px solid #333;
   background: #1f1f1f;
   color: #fff;
   font-size: 14px;
@@ -23,7 +24,8 @@
 
 .banner-search input:focus {
   background: #2a2a2a;
-  box-shadow: 0 0 0 2px #7c3aed; /* purple focus glow */
+  border-color: #5423D2;
+  box-shadow: 0 0 8px #5423D2;
 }
 
 /* search icon */
@@ -51,5 +53,19 @@
 }
 
 .clear-btn:hover {
+  color: #fff;
+}
+.banner-manager-header h4 {
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.074);
+  padding: 15px 20px;
+  border-radius: 30px;
+  color: #6d6d6d;
+  font-family: 'DM Sans';
+  cursor: pointer;
+  transition: 0.2s;
+  margin-right: 4vw;
+}
+.banner-manager-header h4:hover {
   color: #fff;
 }

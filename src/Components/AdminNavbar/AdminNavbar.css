@@ -7,10 +7,12 @@
   width: 24px;
   height: 24px;
   color: white;
+  margin-left: -25px;
+  margin-top: 10px;
 }
 .notification-dot {
   position: absolute;
-  top: 0px;
+  top: 6px;
   right: 0px;
   width: 8px;
   height: 8px;
@@ -87,7 +89,8 @@
   color: red;
   border: 1px solid rgba(255, 0, 0, 0.3);
   border-radius: 9999px; /* Pill shape */
-  padding: 8px 16px;
+  padding: 10px 20px;
+  margin-top: 5px;
   font-size: 14px;
   font-weight: 500;
   display: flex;
@@ -113,4 +116,10 @@
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
+}
+.admin-navbar-button {
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  gap: 1rem;
 }
