@@ -2,21 +2,31 @@ import React, { useState } from 'react';
 import logodark from '../../assets/LogoDark.svg';
 import { NavLink } from 'react-router-dom';
 import './Footer.css';
-import fb from '../../assets/fb.svg'
-import x from '../../assets/x.svg'
-import ig from '../../assets/ig.svg'
+import fb from '../../assets/fb.svg';
+import x from '../../assets/x.svg';
+import ig from '../../assets/ig.svg';
+import api from '../api'; // make sure your axios instance is exported from ../api
 
 const Footer = () => {
-  const [isActive, setIsActive] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsActive(true);
+    setIsLoading(true);
+    setMessage('');
 
-    // Simulate async (e.g., API call)
-    setTimeout(() => {
-      setIsActive(false);
-    }, 2000);
+    try {
+      const res = await api.post('/event/newsletter', { email });
+      setMessage('✅ You have been subscribed successfully!');
+      setEmail('');
+    } catch (err) {
+      console.error(err);
+      setMessage('❌ Subscription failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,22 +51,30 @@ const Footer = () => {
 
         <div className="footer-pt3">
           <h4>Stay In The Loop</h4>
-          <p>Join our mailing list to stay in the loop with our newest for Event and concert</p>
+          <p>Join our mailing list to stay in the loop with our newest events and concerts</p>
           <div className="footer-input">
-            <form onSubmit={handleSubmit} className='subscribe'>
-              <input type="email" placeholder="Enter email address" className={isActive ? 'active' : 'email-ftinput'} />
-              <button type="submit" className={isActive ? 'active' : ''}>
-                {isActive ? 'Subscribing...' : 'Subscribe now'}
+            <form onSubmit={handleSubmit} className="subscribe">
+              <input
+                type="email"
+                placeholder="Enter email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="email-ftinput"
+              />
+              <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Subscribing...' : 'Subscribe now'}
               </button>
             </form>
+            {message && <p className="subscribe-message">{message}</p>}
           </div>
         </div>
       </div>
       <hr />
       <div className="footer-logo">
-        <img src={fb} />
-        <img src={x} />
-        <img src={ig} />
+        <img src={fb} alt="Facebook" />
+        <img src={x} alt="X (Twitter)" />
+        <img src={ig} alt="Instagram" />
       </div>
       <div className="footer-copyright">
         <p>Copyright &copy; TurnupLagos | All right reserved</p>
