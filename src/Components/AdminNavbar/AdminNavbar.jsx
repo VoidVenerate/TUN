@@ -112,7 +112,7 @@ const AdminNavbar = () => {
 
     // Delay navigation for smooth UI
     setTimeout(() => {
-      navigate('/auth');
+      navigate('/auth?key=VFVSTlVQX0xBR09T');
     }, 300);
   };
 
@@ -141,28 +141,6 @@ const AdminNavbar = () => {
         </ul>
 
         <div className="admin-navbar-button">
-          <div className="profile-container">
-            {profileImage ? (
-              <LazyLoadImage
-                src={profileImage}
-                alt="Profile"
-                loading='lazy'
-                effect='blur'
-                className="profile-avatar"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop
-                              e.currentTarget.src = defaultAvatar; }}
-              />
-            ) : (
-              renderLetterAvatar()
-            )}
-            {dropdownOpen && (
-              <div className="profile-dropdown">
-                <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
-              </div>
-            )}
-          </div>
-
           <NavLink
             to="/notification"
             className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'}
@@ -174,6 +152,29 @@ const AdminNavbar = () => {
             </div>
           </NavLink>
 
+          <div className="profile-container">
+            {profileImage ? (
+              <LazyLoadImage
+                src={profileImage}
+                alt="Profile"
+                loading='lazy'
+                effect='blur'
+                className="profile-avatar"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop
+                              e.currentTarget.src = defaultAvatar; }}
+                style={{marginRight:"12px", marginTop:"8px"}}              
+              />
+            ) : (
+              renderLetterAvatar()
+            )}
+            {dropdownOpen && (
+              <div className="profile-dropdown">
+                <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
+              </div>
+            )}
+          </div>
+
           <button className="logout-btn" onClick={() => setShowLogoutModal(true)}>
             <LogOut size={16} /> Logout
           </button>
@@ -184,18 +185,17 @@ const AdminNavbar = () => {
       <Modal
         show={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}
-        title="Confirm Logout"
+        title=""
         message="Are you sure you want to log out?"
-        subMessage="You’ll need to log in again to access admin features."
-        type="error"
+        subMessage="You'll be signed out of your admin session. You can log back in at any time."
+        type="logout"
         footerButtons={
           <>
             <button className="modal-close-btn" onClick={() => setShowLogoutModal(false)}>
-              Cancel
+              Stay Logged In
             </button>
             <button
               className="modal-close-btn"
-              style={{ marginLeft: '10px' }}
               onClick={handleConfirmLogout}
             >
               Yes, log me out

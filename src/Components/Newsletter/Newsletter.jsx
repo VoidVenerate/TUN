@@ -183,13 +183,22 @@ const Newsletter = () => {
                 <div className="subscription-card">
                     <h3>Newsletter Subscribers <Mail size={16} /></h3>
                     <p>{subscriptions}</p>
-                    {trend && (
-                        <div className={`trend ${trend}`}>
-                            {trend === 'up' ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                            <span>{displayedPercentage}%</span>
-                            <p>from yesterday</p>
-                        </div>
-                    )}
+                    <div className="subscription-data">
+                        {trend ? (
+                            <div className={`trend ${trend}`}>
+                                {trend === 'up' ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+                                <span>{displayedPercentage}%</span>
+                            </div>
+                            ) : (
+                                <div className="trend flat">
+                                <span>0%</span>
+                            </div>
+                        )}
+                        <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.7)", marginTop: "24px" }}>
+                            from yesterday
+                        </p>
+                    </div>
+
                 </div>
             </div>
 

@@ -6,9 +6,10 @@ import FeatureDuration from '../FeatureDuration/FeatureDuration';
 import { useAuth } from '../RoleContext/RoleContext';
 import axios from 'axios';
 import './EventReview.css';
+import { ChevronLeft } from 'lucide-react';
 
 const EventReview = () => {
-  const { eventData } = useEvent();
+  const { eventData, setEventData } = useEvent(); // ✅ include setEventData
   const navigate = useNavigate();
   const { rules } = useAuth();
 
@@ -25,6 +26,10 @@ const EventReview = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+      if (eventData.featureChoice === "yes-feature" && !eventData.featureDuration) {
+        setShowFeatureDuration(true);
+        return;
+      }
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -35,9 +40,9 @@ const EventReview = () => {
       formData.append('time', eventData.time);
       formData.append('dress_code', eventData.dresscode || '');
       formData.append('event_description', eventData.description || '');
-      formData.append('is_featured', eventData.featureChoice === 'yes-feature'); // ✅ match context
+      formData.append('is_featured', eventData.featureChoice === 'yes-feature');
+      formData.append('feature_duration', eventData.featureDuration || ''); // ✅ include duration
 
-      // ✅ Only append if user selected a flyer
       if (eventData.flyer) {
         formData.append('event_flyer', eventData.flyer);
       }
@@ -45,9 +50,11 @@ const EventReview = () => {
       const token = localStorage.getItem('token');
       const headers = { 'Content-Type': 'multipart/form-data' };
       if (token) headers.Authorization = `Bearer ${token}`;
+
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
       }
+
       const response = await axios.post(
         'https://lagos-turnup.onrender.com/event/events/create',
         formData,
@@ -106,7 +113,6 @@ const EventReview = () => {
     }
   };
 
-
   const closeModal = () => {
     setModalInfo(prev => ({ ...prev, show: false }));
   };
@@ -115,7 +121,7 @@ const EventReview = () => {
     <div className="review-container">
       <header className="review-header">
         <h1 className="review-header-title" style={{ fontFamily: 'Rushon Ground' }}>
-          EVENT REVIEW
+          <ChevronLeft size={24} onClick={() => navigate(-1)} /> EVENT REVIEW
         </h1>
       </header>
 
@@ -173,7 +179,7 @@ const EventReview = () => {
 
             <div className="review-group review-full">
               <label className="review-label">Event Description</label>
-              <p className="review-value">{eventData.description}</p>
+              <p className="review-value" style={{height:"280px"}}>{eventData.description}</p>
             </div>
           </div>
         </div>
@@ -201,15 +207,6 @@ const EventReview = () => {
                 <label className="review-label">Contact Value</label>
                 <p className="review-value">{eventData.contactValue}</p>
               </div>
-
-              {(rules.role === 'sub-admin' || rules.role === 'super-admin') && (
-                <button
-                  className="open-feature-duration-btn"
-                  onClick={() => setShowFeatureDuration(true)}
-                >
-                  Set Feature Duration
-                </button>
-              )}
             </>
           )}
 
@@ -231,6 +228,7 @@ const EventReview = () => {
                 : '/promoteevent'
             )
           }
+          style={{ fontSize: '14px' }}
         >
           ← Back to Details
         </button>
@@ -244,6 +242,7 @@ const EventReview = () => {
                 : '/featureevent'
             )
           }
+          style={{ fontSize: '14px' }}
         >
           ← Back to Feature
         </button>
@@ -266,8 +265,20 @@ const EventReview = () => {
 
       {/* Feature Duration Modal */}
       {showFeatureDuration && (
-        <FeatureDuration role={rules.role} onClose={() => setShowFeatureDuration(false)} />
+        <FeatureDuration
+          role={rules.role}
+          show={showFeatureDuration}
+          onClose={() => setShowFeatureDuration(false)}
+          onConfirm={(duration) => {
+            console.log("Feature duration selected:", duration);
+            setEventData(prev => ({ ...prev, featureDuration: duration })); // ✅ save it
+            setShowFeatureDuration(false);
+            handleSubmit(); // ✅ submit right after choosing
+          }}
+        />
       )}
+
+
     </div>
   );
 };

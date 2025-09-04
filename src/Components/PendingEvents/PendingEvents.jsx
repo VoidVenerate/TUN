@@ -22,6 +22,12 @@ const PendingEvents = () => {
   });
 
   const navigate = useNavigate();
+  const truncateWords = (text, maxWords = 20) => {
+    if (!text) return "";
+    const words = text.split(" ");
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(" ") + "...";
+  };
 
   // 🚀 Fetch only pending events
   const fetchPendingEvents = async () => {
@@ -108,7 +114,7 @@ const PendingEvents = () => {
                     {event.state} 
                   </p>
                 </div>
-                <p>{event.event_description}</p>
+                <p>{truncateWords(event.event_description,15)}</p>
               </div>
 
               {/* ✅ Single Edit Button */}

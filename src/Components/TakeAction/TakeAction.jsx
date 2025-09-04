@@ -7,7 +7,7 @@ import api from '../api';
 import './TakeAction.css'
 import Modal from '../Modal/Modal';
 import FeatureDuration from '../FeatureDuration/FeatureDuration';
-import { Check, Trash2 } from 'lucide-react'; // ⬅️ icons used in PendingEvents
+import { Check, Trash2, ChevronLeft } from 'lucide-react'; // ⬅️ icons used in PendingEvents
 
 const TakeAction = ({ role }) => {
   const { eventData, updateEvent, setEventData, deleteEvent } = useEvent(); 
@@ -163,9 +163,9 @@ const TakeAction = ({ role }) => {
 
       if (featureChoice === 'yes-feature') {
         setShowFeatureDuration(true);
+      }else{
+        navigate('/adminevents');
       }
-
-      navigate('/adminevents');
     } catch (err) {
       setModalInfo({ show: true, title: 'Error', message: 'Failed to save event. Try again.', subMessage: err?.message || '' });
     } finally {
@@ -184,24 +184,59 @@ const TakeAction = ({ role }) => {
       title: 'Confirm Delete',
       message: 'Are you sure you want to delete this event? This action cannot be undone.',
       subMessage: '',
-      onConfirm: async () => {
-        setDeleting(true);
-        try {
-          if (typeof deleteEvent === 'function') {
-            await deleteEvent(event_id);
-          } else {
-            const token = localStorage.getItem('token');
-            await api.delete(`/event/events/${event_id}`, { headers: { Authorization: `Bearer ${token}` } });
-          }
+      footerButtons: (
+        <div className="modal-btn-group">
+          <button
+            className="modal-close-btn"
+            onClick={() => setModalInfo({ show: false })} // cancel just closes
+          >
+            Cancel
+          </button>
+          <button
+            className="modal-btn-danger"
+            onClick={async () => {
+              setDeleting(true);
+              try {
+                if (typeof deleteEvent === 'function') {
+                  await deleteEvent(eventData.id);
+                } else {
+                  await api.delete(`/event/events/${eventData.event_id}`);
+                }
 
-          setModalInfo({ show: true, title: 'Deleted', message: 'Event deleted successfully.', subMessage: '' });
-          navigate('/adminevents');
-        } catch (err) {
-          setModalInfo({ show: true, title: 'Error', message: 'Failed to delete event. Please try again.', subMessage: err?.message || '' });
-        } finally {
-          setDeleting(false);
-        }
-      }
+                setModalInfo({
+                  show: true,
+                  type: 'success',
+                  title: 'Deleted',
+                  message: 'Event deleted successfully.',
+                  subMessage: '',
+                  footerButtons: (
+                    <button
+                      className="modal-close-btn"
+                      onClick={() => {
+                        closeModal();
+                        navigate('/adminevents'); // ✅ only navigate after closing
+                      }}
+                    >
+                      Continue
+                    </button>
+                  ),
+                });
+              } catch (err) {
+                setModalInfo({
+                  show: true,
+                  title: 'Error',
+                  message: 'Failed to delete event. Please try again.',
+                  subMessage: err?.message || '',
+                });
+              } finally {
+                setDeleting(false);
+              }
+            }}
+          >
+            Yes, Delete
+          </button>
+        </div>
+      )
     });
   };
 
@@ -302,8 +337,7 @@ const TakeAction = ({ role }) => {
     <div className="review-container">
       <header className="review-header">
         <h1 className="review-header-title" style={{ fontFamily: 'Rushon Ground' }}>
-          <button onClick={() => navigate(-1)} className="review-back-btn">←</button>
-          EDIT EVENT
+          <ChevronLeft size = {24} onClick={() => navigate(-1)} /> EDIT EVENT
         </h1>
       </header>
 
@@ -404,15 +438,15 @@ const TakeAction = ({ role }) => {
                   backgroundColor: 'rgba(255, 60, 60, 0.06)',
                   color: '#ff3b30',
                   border: '1px solid rgba(255, 60, 60, 0.18)',
-                  padding: '10px 20px',
-                  borderRadius: "24px",
+                  padding: '20px 24px',
+                  borderRadius: "100px",
                   cursor: deleting ? 'not-allowed' : 'pointer',
                   opacity: deleting ? 0.6 : 1,
                 }}
                 aria-label="Reject Event"
               >
                 <Trash2 size={16} />
-                <span>{deleting ? 'Rejecting...' : 'Reject'}</span>
+                <span>{deleting ? 'Rejecting Event...' : 'Reject Event'}</span>
               </button>
 
               <button
@@ -424,18 +458,18 @@ const TakeAction = ({ role }) => {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 8,
-                  backgroundColor: '#e9f9f0',
-                  color: '#127a3a',
-                  border: '1px solid rgba(18, 122, 58, 0.14)',
-                  padding: '10px 20px',
-                  borderRadius: "24px",
+                  backgroundColor: 'transparent',
+                  color: '#fff',
+                  border: '1px solid #292929',
+                  padding: '20px 24px',
+                  borderRadius: "100px",
                   cursor: saving ? 'not-allowed' : 'pointer',
                   opacity: saving ? 0.6 : 1,
                 }}
                 aria-label="Approve Event"
               >
                 <Check size={16} />
-                <span>{saving ? 'Publishing...' : 'Approve'}</span>
+                <span>{saving ? 'Publishing Event...' : 'Approve Event'}</span>
               </button>
             </div>
           </footer>

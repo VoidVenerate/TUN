@@ -20,14 +20,14 @@
   justify-content: center;
   gap: 8px;   
   background: rgba(0, 132, 255, 0.101);
-  padding: 10px 15px;
+  padding: 20px 24px;
   font-weight: bold;
   color: #0084ff;
-  border-radius: 22px;
+  border-radius: 100px;
   margin-bottom: 1.5rem;
   cursor: pointer;
   transition: background 0.3s ease;
-  margin-right: 2vw;
+  margin-right: 4vw;
   border: 0.5px solid rgba(0, 132, 255, 0.204);
   margin-top: 27px;
 }

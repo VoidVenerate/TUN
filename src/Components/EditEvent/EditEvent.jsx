@@ -6,7 +6,7 @@ import api from '../api';
 import Modal from '../Modal/Modal';
 import FeatureDuration from '../FeatureDuration/FeatureDuration';
 import './EditEvent.css'
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Trash2, Pencil } from 'lucide-react';
 
 const EditableEventReviewRHF = ({ role }) => {
   const { eventData, updateEvent, setEventData, deleteEvent } = useEvent(); 
@@ -174,8 +174,9 @@ const EditableEventReviewRHF = ({ role }) => {
 
       if (featureChoice === 'yes-feature') {
         setShowFeatureDuration(true);
+      }else {
+        navigate('/adminevents');
       }
-      navigate('/adminevents');
     } catch (err) {
       setModalInfo({
         show: true,
@@ -202,44 +203,78 @@ const EditableEventReviewRHF = ({ role }) => {
 
     setModalInfo({
       show: true,
-      title: 'Confirm Delete',
-      message: 'Are you sure you want to delete this event? This action cannot be undone.',
+      type: 'duration',
+      title: 'Are you sure you want to delete this event?',
+      message: 'This action is permanent. The event will be removed from TurnUpLagos and will no longer be visible to users. You won’t be able to recover it later.',
       subMessage: '',
-      onConfirm: async () => {
-        setDeleting(true);
-        try {
-          if (typeof deleteEvent === 'function') {
-            await deleteEvent(eventData.id);
-          } else {
-            await api.delete(`/event/events/${eventData.event_id}`);
-          }
+      footerButtons: (
+        <div className="modal-btn-group">
+          <button
+            className="modal-close-btn"
+            onClick={() => setModalInfo({ show: false })} // cancel just closes
+          >
+            Cancel
+          </button>
+          <button
+            className="modal-btn-danger"
+            onClick={async () => {
+              setDeleting(true);
+              try {
+                if (typeof deleteEvent === 'function') {
+                  await deleteEvent(eventData.id);
+                } else {
+                  await api.delete(`/event/events/${eventData.event_id}`);
+                }
 
-          setModalInfo({
-            show: true,
-            title: 'Deleted',
-            message: 'Event deleted successfully.',
-            subMessage: '',
-          });
-          navigate('/adminevents');
-        } catch (err) {
-          setModalInfo({
-            show: true,
-            title: 'Error',
-            message: 'Failed to delete event. Please try again.',
-            subMessage: err?.message || '',
-          });
-        } finally {
-          setDeleting(false);
-        }
-      },
+                setModalInfo({
+                  show: true,
+                  type: 'success',
+                  title: 'Deleted',
+                  message: 'Event deleted successfully.',
+                  subMessage: '',
+                  footerButtons: (
+                    <button
+                      className="modal-close-btn"
+                      onClick={() => {
+                        closeModal();
+                        navigate('/adminevents'); // ✅ only navigate after closing
+                      }}
+                    >
+                      Continue
+                    </button>
+                  ),
+                });
+              } catch (err) {
+                setModalInfo({
+                  show: true,
+                  title: 'Error',
+                  message: 'Failed to delete event. Please try again.',
+                  subMessage: err?.message || '',
+                });
+              } finally {
+                setDeleting(false);
+              }
+            }}
+          >
+            Yes, Delete
+          </button>
+        </div>
+      )
     });
+
   };
 
 
   const closeModal = () => setModalInfo(prev => ({ ...prev, show: false }));
   const handleFeatureConfirm = (selectedDuration) => {
     setShowFeatureDuration(false);
-    setModalInfo({ show: true, title: 'Success', message: `Event featured for ${selectedDuration}.`, subMessage: '' });
+    setModalInfo({
+      show: true,
+      title: "Success",
+      message: `Event featured for ${selectedDuration}.`,
+      subMessage: "",
+    });
+    navigate("/adminevents");
   };
 
   return (
@@ -374,11 +409,11 @@ const EditableEventReviewRHF = ({ role }) => {
           </div>
 
           <footer className="review-footer">
-            <button type="submit" className="review-submit-btn" disabled={saving} form="eventForm">
-              {saving ? 'Saving…' : 'Save'}
+            <button type="submit" className="review-submit-btn review-submit-btn--save" disabled={saving} form="eventForm">
+              <Pencil size={16}/>{saving ? 'Saving Event...' : 'Save Event'}
             </button>
-            <button type="button" className="review-submit-btn" disabled={deleting} onClick={handleDelete}>
-              {deleting ? 'Deleting...' : 'Delete'}
+            <button type="button" className="review-submit-btn review-submit-btn--delete" disabled={deleting} onClick={handleDelete}>
+              <Trash2 size={16}/>{deleting ? 'Deleting Event...' : 'Delete Event'}
             </button>
           </footer>
         </div>
@@ -397,22 +432,13 @@ const EditableEventReviewRHF = ({ role }) => {
       <Modal
         show={modalInfo.show}
         onClose={closeModal}
+        type='duration'
         title={modalInfo.title}
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
         footerButtons={
-          modalInfo.onConfirm ? (
-            <>
-              <button onClick={closeModal}>Cancel</button>
-              <button
-                onClick={() => {
-                  modalInfo.onConfirm();
-                  closeModal();
-                }}
-              >
-                Confirm
-              </button>
-            </>
+          modalInfo.footerButtons ? (
+            modalInfo.footerButtons
           ) : (
             <button onClick={closeModal}>Close</button>
           )

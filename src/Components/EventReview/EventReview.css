@@ -16,7 +16,7 @@
 .review-header {
   text-align: center;
   padding: 10px 0;
-  display: flex;e
+  display: flex;
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid #222;
@@ -40,7 +40,7 @@
 /* ===== UPLOAD SECTION ===== */
 .review-upload-section {
   flex: 1;
-  background: #1a1a1a;
+  background: #000000;
   border: 1px solid #2a2a2a;
   border-radius: 10px;
   padding: 15px;
@@ -63,7 +63,7 @@
 }
 
 .review-upload-area {
-  background: #111;
+  background: #000000;
   border: 1px dashed #6d28d9;
   border-radius: 8px;
   padding: 10px;
@@ -83,7 +83,7 @@
 /* ===== FORM SECTION ===== */
 .review-form {
   flex: 2;
-  background: #1a1a1a;
+  background: #000000;
   border: 1px solid #2a2a2a;
   border-radius: 10px;
   padding: 15px;
@@ -119,10 +119,10 @@
 }
 
 .review-value {
-  background: #111;
+  background: rgba(255, 255, 255, 0.056);
   border: 1px solid #2a2a2a;
   border-radius: 6px;
-  padding: 8px;
+  padding: 20px 24px;
   font-size: 0.9rem;
   color: #fff;
   word-break: break-word; /* ✅ prevents overflow */
@@ -174,10 +174,6 @@
   font-size: 0.9rem;
 }
 
-.review-back-btn:hover {
-  background: #6d28d9;
-  color: #fff;
-}
 
 .review-submit-btn {
   background: #6d28d9;

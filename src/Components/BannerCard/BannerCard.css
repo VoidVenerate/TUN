@@ -62,8 +62,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 10px 15px;
-  border-radius: 25px;
+  padding: 20px 24px;
+  border-radius: 100px;
   border: none;
   cursor: pointer;
   font-size: 0.9rem;

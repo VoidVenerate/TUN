@@ -12,6 +12,8 @@
   text-align: center;
   border: 1px solid #333;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-card:hover {

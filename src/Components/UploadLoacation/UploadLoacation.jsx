@@ -279,7 +279,7 @@ const UploadLocation = () => {
                     value={locationData.state}
                     onChange={handleChange}
                     readOnly
-                    style={{ paddingRight: '30px', width: '94%', color: "#fff" }}
+                    style={{ paddingRight: '30px', width: '93%', color: "#fff" }}
                   />
                   <LockKeyhole
                     style={{
@@ -311,7 +311,7 @@ const UploadLocation = () => {
               </div>
             </div>
 
-            <div className="form-group full-width">
+            <div className="form-group full-width" style={{gap:"10px",  marginTop:"10px"}}>
               <label className="form-label">Additional Information <span>*</span></label>
               <textarea
                 className="form-textarea"

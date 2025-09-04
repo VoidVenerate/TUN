@@ -44,7 +44,7 @@
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  min-height: 50vw;
+  min-height: 61vw;
   height: auto;
 }
 .upload-sec {
@@ -59,7 +59,7 @@
 }
 
 .upload-sec:hover {
-  border-color: #00bcd4; /* highlight on hover */
+  border-color: #5423D2; /* highlight on hover */
 }
 
 .upload-label {
@@ -97,6 +97,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
+  margin-top: 4vw;
 }
 
 .upload-icon {
@@ -167,6 +168,9 @@
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.3s ease;
+}
+.form-select {
+  background: #161616;
 }
 
 .form-input:focus,

@@ -85,6 +85,8 @@
 
 .contact-form {
   width: 100%;
+  display: flex;
+  gap: 1rem;
 }
 
 .contact-row {
@@ -98,7 +100,7 @@
 
 .contact-select,
 .contact-input {
-  width: 100%;
+ flex: 1;
   background: #262626;
   border: 1px solid #444;
   border-radius: 6px;
@@ -107,14 +109,8 @@
   font-size: 14px;
   box-sizing: border-box;
 }
-
-.contact-select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23888' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 12px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  padding-right: 40px;
-  appearance: none;
+.contact-select{
+  width: 100%;
 }
 
 .contact-input::placeholder {

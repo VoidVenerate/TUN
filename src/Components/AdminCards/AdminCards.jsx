@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { TrendingUp, TrendingDown, BarChart3 } from 'lucide-react'
 import './AdminCards.css'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import api from '../api'
 
@@ -11,11 +12,14 @@ const AdminCards = () => {
   const [trend, setTrend] = useState(null)
   const [percentageChange, setPercentageChange] = useState(0)
   const [displayedPercentage, setDisplayedPercentage] = useState(0) // 👈 Animated value
+  
 
   const [totalEvents, setTotalEvents] = useState(0)
   const [totalBanner, setTotalBanner] = useState(0)
   const [pendingBanner, setPendingBanner] = useState(0)
   const [discoverCount, setDiscoverCount] = useState(0)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,38 +117,41 @@ const AdminCards = () => {
     <div className="dashboard-cards">
       <div className="dashboard-card">
         <h3>Pending Events <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
-        <div className="card-header">
           <p>{pendingEvents}</p>
-          {trend && (
-            <div className={`trend ${trend}`}>
-              {trend === 'up' && <TrendingUp size={14} />}
-              {trend === 'down' && <TrendingDown size={14} />}
-              {trend === 'flat' && <BarChart3 size={14} />} {/* Neutral icon */}
-              <span>{displayedPending}%</span>
-            </div>
-          )}
+          <div className="card-header">
+            {trend && (
+              <div className={`trend ${trend}`}>
+                {trend === 'up' && <TrendingUp size={14} />}
+                {trend === 'down' && <TrendingDown size={14} />}
+                {trend === 'flat' && <BarChart3 size={14} />} {/* Neutral icon */}
+                <span>{displayedPending}%</span>
+              </div>
+            )}
+            <p style={{fontSize:"14px", color:"rgba(255, 255, 255, 0.7)"}}>from yesterday</p>
         </div>
-      </div>
-
-      <div className="dashboard-card">
-        <h3>Total Events <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
-        <p>{totalEvents}</p>
       </div>
 
       <div className="dashboard-card">
         <h3>Pending Banners <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
         <p>{pendingBanner}</p>
-        
       </div>
 
       <div className="dashboard-card">
-        <h3>Total Banners <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
+        <h3>Total Events <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
+        <p>{totalEvents}</p>
+        <p onClick={() => navigate("/adminpromoteevent")} style={{color:"#0084FF", cursor:"pointer", fontSize:"14px"}}>Upload Events</p>
+      </div>
+
+      <div className="dashboard-card">
+        <h3>Total Banners <BarChart3 size={16} style={{ marginRight: '6px'}} /></h3>
         <p>{totalBanner}</p>
+        <p onClick={() => navigate("/newbanner")} style={{color:"#0084FF", fontSize:"14px", cursor:"pointer"}}>Upload Banner</p>
       </div>
 
       <div className="dashboard-card">
-        <h3>Discover Lagos <BarChart3 size={16} style={{ marginRight: '6px' }} /></h3>
+        <h3>Discover Lagos <BarChart3 size={16} style={{ marginRight: '6px'}} /></h3>
         <p>{discoverCount}</p>
+        <p onClick={() => navigate("/adminspots")} style={{color:"#0084FF", fontSize:"14px", cursor:"pointer"}}>Upload Events</p>
       </div>
     </div>
   )
