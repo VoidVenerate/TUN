@@ -195,7 +195,7 @@ const AdminNavbar = () => {
               Stay Logged In
             </button>
             <button
-              className="modal-close-btn"
+              className="modal-close-btn acitvated"
               onClick={handleConfirmLogout}
             >
               Yes, log me out

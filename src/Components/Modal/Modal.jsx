@@ -1,6 +1,6 @@
 // Modal.jsx
 import React from 'react';
-import { CheckCircle, LogOut, MessageSquareWarning, XCircle } from 'lucide-react'; // ✅ Icons
+import { BookImage, CheckCircle, LogOut, MessageSquareWarning, XCircle } from 'lucide-react'; // ✅ Icons
 import './Modal.css';
 
 const Modal = ({ show, onClose, title, message, subMessage, type, footerButtons,titleAlign = "center" }) => {
@@ -13,6 +13,11 @@ const Modal = ({ show, onClose, title, message, subMessage, type, footerButtons,
         onClick={e => e.stopPropagation()}
       >
         {/* === Title Row with Icon === */}
+        {type === 'image' && (
+          <div className="circle-wrapper">
+            <BookImage className="modal-icon image-icon" />
+          </div>
+        )}
         <div className="modal-title-row">
           {type === 'success' && <CheckCircle className="modal-icon success-icon" />}
           {type === 'error' && <XCircle className="modal-icon error-icon" />}

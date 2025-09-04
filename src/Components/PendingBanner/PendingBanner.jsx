@@ -119,7 +119,7 @@ const PendingBanner = () => {
         <h2 style={{ color: "white", fontFamily: "Rushon Ground" }}>
           Pending Banners
         </h2>
-        <h4 onClick={() => navigate("/pendingBanner")}>Pending Events</h4>
+        <h4 onClick={() => navigate(-1)}>Pending Events</h4>
       </div>
 
       {/* Search */}

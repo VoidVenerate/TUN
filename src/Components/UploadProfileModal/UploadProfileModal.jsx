@@ -34,15 +34,18 @@ const UploadProfileModal = ({ show, onClose, onFileSelect }) => {
   return (
     <Modal
       show={show}
-      title= "Add a Profile Image"
+      type= 'image'
+      title= {<div style={{marginBottom:"-30px"}}>
+            Add a Profile Image
+      </div>}
       titleAlign="left"
       onClose={onClose}
       message={
-        <p style={{textAlign:"left"}}>Upload a clear image to personalize your admin profile. This helps other team members recognize you.</p>
+        <p style={{textAlign:"left", fontSize: '14px'}}>Upload a clear image to personalize your admin profile. This helps other team members recognize you.</p>
       }
       subMessage={
         <div className="upload-profile-container">
-          <label className="upload-box">
+          <label className={`upload-box ${previewUrl ? "uploaded" : ""}`}>
             {previewUrl ? (
               <img
                 src={previewUrl}
@@ -62,14 +65,12 @@ const UploadProfileModal = ({ show, onClose, onFileSelect }) => {
               hidden
             />
           </label>
+
           {error && <p className="error-text">{error}</p>}
         </div>
       }
       footerButtons={
         <>
-          <button className="modal-btn-secondary" onClick={onClose}>
-            Skip
-          </button>
           <button className="modal-btn-primary" onClick={onClose}>
             Continue
           </button>
