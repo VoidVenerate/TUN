@@ -30,8 +30,9 @@ const FeatureDuration = ({ role, show, onClose, onConfirm }) => {
       show={show}
       onClose={onClose}
       type='duration'
-      title="Choose Feature Duration"
-      message={
+      title=''
+      message="Choose Feature Duration"
+      subMessage={
         <div className="fd-container">
           <p className="fd-description">
             This event has been submitted as a featured event. Before approving, select how long it should stay featured. Once the duration ends, it will automatically revert to regular status.

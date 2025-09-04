@@ -216,7 +216,6 @@
 }
 
 .review-submit-btn:disabled {
-  background-color: #555;
   cursor: not-allowed;
 }
 

@@ -12,12 +12,12 @@ const Modal = ({ show, onClose, title, message, subMessage, type, footerButtons,
         className={`modal-container ${type}`}
         onClick={e => e.stopPropagation()}
       >
-        {type === 'duration' && <MessageSquareWarning className='modal-icon duration-icon'/>}
         {/* === Title Row with Icon === */}
         <div className="modal-title-row">
           {type === 'success' && <CheckCircle className="modal-icon success-icon" />}
           {type === 'error' && <XCircle className="modal-icon error-icon" />}
           {type === 'logout' && <LogOut className='modal-icon logout-icon'/>}
+          {type === 'duration' && <MessageSquareWarning className='modal-icon duration-icon'/>}
           <h2 className={`modal-title ${titleAlign}`}>{title}</h2>
         </div>
 
