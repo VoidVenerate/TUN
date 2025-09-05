@@ -102,16 +102,15 @@ const Auth = ({signUpKey}) => {
       );
 
       localStorage.setItem("token", res.data.access_token);
-      setModalMessage("Login successful! Redirecting...");
+      setModalMessage("Login successful!");
       setShowSuccessModal(true);
-
-      setTimeout(() => {
-        if (res.data.role === "super-admin") {
-          navigate("/super-admin-dashboard");
-        } else {
-          navigate("/adminhome");
-        }
-      }, 1500);
+        setTimeout(() => {
+          if (res.data.role === "super-admin") {
+            navigate("/super-admin-dashboard");
+          } else {
+            navigate("/adminhome");
+          }
+        }, 1500);
     } catch (err) {
       const backendError = err.response?.data;
       setError(backendError?.message || "Login failed");
@@ -448,9 +447,10 @@ const Auth = ({signUpKey}) => {
       <Modal
         show={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
-        title="Notice"
+        title=""
         message={modalMessage}
         type="success"
+        subMessage= 'Redirecting...'
       />
     </div>
   );

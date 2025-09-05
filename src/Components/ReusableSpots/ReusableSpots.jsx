@@ -122,13 +122,14 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
 
     setModalFeedback({
       show: true,
-      title: "Confirm Delete",
-      type: "warning",
+      title: "",
+      type: "duration",
       message: "Are you sure you want to delete this spot?",
+      subMessage: 'This location will be permanently removed from Discover Lagos and will no longer be visible to users. This action cannot be undone.',
       footerButtons: (
         <>
           <button
-            className="modal-btn-danger"
+            className="modal-btn-primary"
             onClick={async () => {
               setDeleting(true);
               try {
@@ -173,7 +174,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
             Yes, Delete
           </button>
           <button
-            className="modal-cancel-btn"
+            className="modal-close-btn"
             onClick={() => setModalFeedback((p) => ({ ...p, show: false }))}
           >
             Cancel
@@ -313,6 +314,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         onClose={() => setModalFeedback((p) => ({ ...p, show: false }))}
         title={modalFeedback.title}
         message={modalFeedback.message}
+        subMessage={modalFeedback.subMessage}
         type={modalFeedback.type}
         footerButtons={modalFeedback.footerButtons}
       />

@@ -146,8 +146,8 @@
 }
 
 .form-input:focus, .form-textarea:focus, select:focus {
-  border-color: #7a5af8;
-  box-shadow: 0 0 6px #7a5af8aa;
+  border-color: #5423D2;
+  box-shadow: 0 0 6px #5423D2aa;
 }
 
 .form-textarea {

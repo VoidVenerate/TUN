@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './PromoteBanner.css';
 import { useBanner } from '../BannerContext/BannerContext';
-import { Upload } from 'lucide-react';
+import { ChevronLeft, Upload } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 import axios from 'axios';
@@ -160,8 +160,9 @@ const PromoteBanner = () => {
               ? "/banner"   // 👈 or wherever you want admins to go
               : "/promote"           // 👈 regular users go here
           }
+          style={{marginTop:"5px"}}
         >
-          <ArrowLeft className="event-unique-back" />
+          <ChevronLeft className="event-unique-back" />
         </NavLink>
         <h2 className="banner-header-title" style={{ fontFamily: 'Rushon Ground' }}>
           PROMOTE A BANNER

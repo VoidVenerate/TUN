@@ -88,7 +88,9 @@
 }
 
 .event-unique-upload-area:hover {
-  border-color: #777;
+  border: 1px solid;
+  border-color: #5423D2;
+  box-shadow: 0 0 8px #5423D2;
 }
 
 .event-unique-flyer-preview {
@@ -202,6 +204,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .event-unique-form-textarea:focus {
   outline: none;
   border-color: #666;
+}
+.event-unique-form-input:focus,
+.event-unique-form-select:focus,
+.event-unique-form-textarea:focus{
+  border: 1px solid;
+  border-color: #5423D2;
+  box-shadow: 0 0 8px #5423D2;
 }
 
 .event-unique-form-textarea {

@@ -181,9 +181,10 @@ const TakeAction = ({ role }) => {
 
     setModalInfo({
       show: true,
-      title: 'Confirm Delete',
-      message: 'Are you sure you want to delete this event? This action cannot be undone.',
-      subMessage: '',
+      type: 'duration',
+      title: '',
+      message: 'Are you sure you want to reject this event?',
+      subMessage: 'The event will not be published. Optionally, you may contact the organizer to provide feedback or a reason for rejection.',
       footerButtons: (
         <div className="modal-btn-group">
           <button
@@ -206,9 +207,9 @@ const TakeAction = ({ role }) => {
                 setModalInfo({
                   show: true,
                   type: 'success',
-                  title: 'Deleted',
+                  title: '',
                   message: 'Event deleted successfully.',
-                  subMessage: '',
+                  subMessage: 'This event has been rejected and will not be shown on TurnUpLagos.',
                   footerButtons: (
                     <button
                       className="modal-close-btn"
@@ -480,7 +481,8 @@ const TakeAction = ({ role }) => {
       <Modal
         show={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
-        title="Confirm"
+        title=""
+        type='duration'
         message="Are you sure you want to upload this event?"
         subMessage="Once published, the event will go live on TurnUpLagos and be visible to all users. You will not be able to undo this action."
         footerButtons={
@@ -503,12 +505,13 @@ const TakeAction = ({ role }) => {
       <Modal
         show={showConfirmRejectModal}
         onClose={() => setShowConfirmRejectModal(false)}
-        title="Confirm Reject"
+        title=""
+        type='duration'
         message="Are you sure you want to reject this event?"
         subMessage="The event will not be published. Optionally, you may contact the organizer to provide feedback or a reason for rejection."
         footerButtons={
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button style={closeBtnStyle} onClick={() => setShowConfirmRejectModal(false)} type="button">Cancel</button>
+            <button onClick={() => setShowConfirmRejectModal(false)} type="button" className='modal-close-btn'>Cancel</button>
             <button
               style={publishBtnStyle(isPublishHover)}
               onClick={confirmReject}

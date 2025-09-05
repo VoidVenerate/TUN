@@ -11,14 +11,14 @@ const AdminCards = () => {
   const [prevPendingEvents, setPrevPendingEvents] = useState(null)
   const [eventTrend, setEventTrend] = useState(null)
   const [eventPercentage, setEventPercentage] = useState(0)
-  const [displayedPendingEvents, setDisplayedPendingEvents] = useState(0)
+  const [displayedEventPercentage, setDisplayedEventPercentage] = useState(0)
 
   // ====== Pending Banners ======
   const [pendingBanner, setPendingBanner] = useState(0)
   const [prevPendingBanners, setPrevPendingBanners] = useState(null)
   const [bannerTrend, setBannerTrend] = useState(null)
   const [bannerPercentage, setBannerPercentage] = useState(0)
-  const [displayedPendingBanners, setDisplayedPendingBanners] = useState(0)
+  const [displayedBannerPercentage, setDisplayedBannerPercentage] = useState(0)
 
   // ====== Other counts ======
   const [totalEvents, setTotalEvents] = useState(0)
@@ -30,82 +30,88 @@ const AdminCards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem("token")
         if (!token) return
 
         // ✅ Pending Events
         const pendingRes = await api.get(
-          'https://lagos-turnup.onrender.com/event/events?pending=true',
+          "https://lagos-turnup.onrender.com/event/events?pending=true",
           { headers: { Authorization: `Bearer ${token}` } }
         )
         const newPendingEvents = pendingRes.data.length
-        const storedPrevEvents = localStorage.getItem('prevPendingEvents')
-        const prevEvents = storedPrevEvents ? parseInt(storedPrevEvents, 10) : null
+        const oldPendingEvents = Number(localStorage.getItem("prevPendingEvents")) || 0
 
-        if (prevEvents !== null) {
-          const diff = newPendingEvents - prevEvents
-          const percent = prevEvents > 0 ? Number(((diff / prevEvents) * 100).toFixed(1)) : 0
+        if (oldPendingEvents > 0) {
+          const diff = newPendingEvents - oldPendingEvents
+          let percent = Number(((diff / oldPendingEvents) * 100).toFixed(1))
+
+          if (percent > 0) setEventTrend("up")
+          else if (percent < 0) setEventTrend("down")
+          else setEventTrend("flat")
+
           setEventPercentage(percent)
-          if (percent > 0) setEventTrend('up')
-          else if (percent < 0) setEventTrend('down')
-          else setEventTrend('flat')
+        } else if (oldPendingEvents === 0 && newPendingEvents > 0) {
+          setEventPercentage(100)
+          setEventTrend("up")
         }
 
-        setPrevPendingEvents(newPendingEvents)
-        localStorage.setItem('prevPendingEvents', newPendingEvents)
         setPendingEvents(newPendingEvents)
+        localStorage.setItem("prevPendingEvents", newPendingEvents)
 
         // ✅ Events (non-pending)
         const eventRes = await axios.get(
-          'https://lagos-turnup.onrender.com/event/events?pending=false',
-          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+          "https://lagos-turnup.onrender.com/event/events?pending=false",
+          { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
         setTotalEvents(eventRes.data.length)
 
         // ✅ Banners
         const bannerRes = await axios.get(
-          'https://lagos-turnup.onrender.com/event/banners',
-          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+          "https://lagos-turnup.onrender.com/event/banners",
+          { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
-        const bannerData = bannerRes.data.filter(banner => banner.is_approved)
+        const bannerData = bannerRes.data.filter((banner) => banner.is_approved)
         setTotalBanner(bannerData.length)
 
         // ✅ Pending Banners
-        const pendingBannerData = bannerRes.data.filter(banner => !banner.is_approved)
+        const pendingBannerData = bannerRes.data.filter((banner) => !banner.is_approved)
         const newPendingBanners = pendingBannerData.length
-        const storedPrevBanners = localStorage.getItem('prevPendingBanners')
-        const prevBanners = storedPrevBanners ? parseInt(storedPrevBanners, 10) : null
+        const oldPendingBanners = Number(localStorage.getItem("prevPendingBanners")) || 0
 
-        if (prevBanners !== null) {
-          const diff = newPendingBanners - prevBanners
-          const percent = prevBanners > 0 ? Number(((diff / prevBanners) * 100).toFixed(1)) : 0
+        if (oldPendingBanners > 0) {
+          const diff = newPendingBanners - oldPendingBanners
+          let percent = Number(((diff / oldPendingBanners) * 100).toFixed(1))
+
+          if (percent > 0) setBannerTrend("up")
+          else if (percent < 0) setBannerTrend("down")
+          else setBannerTrend("flat")
+
           setBannerPercentage(percent)
-          if (percent > 0) setBannerTrend('up')
-          else if (percent < 0) setBannerTrend('down')
-          else setBannerTrend('flat')
+        } else if (oldPendingBanners === 0 && newPendingBanners > 0) {
+          setBannerPercentage(100)
+          setBannerTrend("up")
         }
 
-        setPrevPendingBanners(newPendingBanners)
-        localStorage.setItem('prevPendingBanners', newPendingBanners)
         setPendingBanner(newPendingBanners)
+        localStorage.setItem("prevPendingBanners", newPendingBanners)
 
         // ✅ Discover Lagos
         const discoverRes = await axios.get(
-          'https://lagos-turnup.onrender.com/event/spots',
-          { headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } }
+          "https://lagos-turnup.onrender.com/event/spots",
+          { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
         setDiscoverCount(discoverRes.data.length)
       } catch (error) {
-        console.error('Error fetching Data', error)
+        console.error("Error fetching Data", error)
       }
     }
     fetchData()
   }, [])
 
-  // ====== Animate Pending Events ======
+  // ====== Animate Event Percentage ======
   useEffect(() => {
-    let startValue = displayedPendingEvents
-    const endValue = pendingEvents
+    let startValue = displayedEventPercentage
+    const endValue = eventPercentage
     let startTime = null
     const duration = 800
 
@@ -114,17 +120,17 @@ const AdminCards = () => {
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
       const newValue = startValue + (endValue - startValue) * progress
-      setDisplayedPendingEvents(Math.round(newValue))
+      setDisplayedEventPercentage(Number(newValue.toFixed(1)))
       if (progress < 1) requestAnimationFrame(animate)
     }
 
     requestAnimationFrame(animate)
-  }, [pendingEvents])
+  }, [eventPercentage])
 
-  // ====== Animate Pending Banners ======
+  // ====== Animate Banner Percentage ======
   useEffect(() => {
-    let startValue = displayedPendingBanners
-    const endValue = pendingBanner
+    let startValue = displayedBannerPercentage
+    const endValue = bannerPercentage
     let startTime = null
     const duration = 800
 
@@ -133,12 +139,12 @@ const AdminCards = () => {
       const elapsed = timestamp - startTime
       const progress = Math.min(elapsed / duration, 1)
       const newValue = startValue + (endValue - startValue) * progress
-      setDisplayedPendingBanners(Math.round(newValue))
+      setDisplayedBannerPercentage(Number(newValue.toFixed(1)))
       if (progress < 1) requestAnimationFrame(animate)
     }
 
     requestAnimationFrame(animate)
-  }, [pendingBanner])
+  }, [bannerPercentage])
 
   return (
     <div className="dashboard-cards">
@@ -155,7 +161,9 @@ const AdminCards = () => {
               <span>{eventPercentage}%</span>
             </div>
           )}
-          <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.7)" }}>from yesterday</p>
+          <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.7)" }}>
+            from yesterday
+          </p>
         </div>
       </div>
 
@@ -172,7 +180,9 @@ const AdminCards = () => {
               <span>{bannerPercentage}%</span>
             </div>
           )}
-          <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.7)" }}>from yesterday</p>
+          <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.7)" }}>
+            from yesterday
+          </p>
         </div>
       </div>
 

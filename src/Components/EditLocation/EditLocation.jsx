@@ -125,10 +125,16 @@ const EditableLocationRHF = () => {
   };
 
 
-  // ✅ Delete spot
+    // ✅ Delete spot
   const handleDelete = () => {
     if (!spot_id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No spot ID to delete.', subMessage: '' });
+      setModalInfo({
+        show: true,
+        title: 'Error',
+        message: 'No spot ID to delete.',
+        subMessage: '',
+        footerButtons: <button onClick={closeModal}>Close</button>,
+      });
       return;
     }
 
@@ -136,25 +142,43 @@ const EditableLocationRHF = () => {
       show: true,
       title: 'Confirm Delete',
       message: 'Are you sure you want to delete this spot?',
-      onConfirm: async () => {
-        setDeleting(true);
-        try {
-          await api.delete(`/event/spots/${spot_id}`);
-          setModalInfo({ show: true, title: 'Deleted', message: 'Spot deleted successfully.', subMessage: '' });
-          navigate('/discoverlagos');
-        } catch (err) {
-          setModalInfo({
-            show: true,
-            title: 'Error',
-            message: 'Failed to delete spot.',
-            subMessage: err?.message || '',
-          });
-        } finally {
-          setDeleting(false);
-        }
-      },
+      subMessage: '',
+      footerButtons: (
+        <>
+          <button onClick={closeModal} className='modal-close-btn'>Cancel</button>
+          <button
+            onClick={async () => {
+              setDeleting(true);
+              try {
+                await api.delete(`/event/spots/${spot_id}`);
+                setModalInfo({
+                  show: true,
+                  title: 'Deleted',
+                  message: 'Spot deleted successfully.',
+                  subMessage: '',
+                  footerButtons: <button onClick={closeModal}>Close</button>,
+                });
+                navigate('/discoverlagos');
+              } catch (err) {
+                setModalInfo({
+                  show: true,
+                  title: 'Error',
+                  message: 'Failed to delete spot.',
+                  subMessage: err?.message || '',
+                  footerButtons: <button onClick={closeModal}>Close</button>,
+                });
+              } finally {
+                setDeleting(false);
+              }
+            }}
+          >
+            Confirm
+          </button>
+        </>
+      ),
     });
   };
+
 
   const closeModal = () => setModalInfo(prev => ({ ...prev, show: false }));
 
@@ -237,24 +261,9 @@ const EditableLocationRHF = () => {
         title={modalInfo.title}
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
-        footerButtons={
-          modalInfo.onConfirm ? (
-            <>
-              <button onClick={closeModal}>Cancel</button>
-              <button
-                onClick={() => {
-                  modalInfo.onConfirm();
-                  closeModal();
-                }}
-              >
-                Confirm
-              </button>
-            </>
-          ) : (
-            <button onClick={closeModal}>Close</button>
-          )
-        }
+        footerButtons={modalInfo.footerButtons}
       />
+
     </div>
   );
 };

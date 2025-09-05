@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Upload, CloudUpload } from 'lucide-react';
+import { ArrowLeft, Upload, CloudUpload, ChevronLeft } from 'lucide-react';
 import './Event.css';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useEvent } from '../EventContext/EventContext';
@@ -87,8 +87,9 @@ const Event = () => {
             ? "/adminevents"
             : "/promote"
           }
+          style={{marginTop:"5px"}}
         >
-          <ArrowLeft className="event-unique-back" />
+          <ChevronLeft className="event-unique-back" />
         </NavLink>
         <h1 className="event-unique-title">PROMOTE AN EVENT</h1>
       </div>

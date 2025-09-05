@@ -102,7 +102,8 @@
 }
 
 .banner-upload-area:hover {
-  border-color: #444444;
+  border-color: #5423D2;
+  box-shadow: 0 0 8px #5423D2;
 }
 
 .banner-upload-icon {
@@ -180,8 +181,10 @@
 }
 
 .banner-form-input:focus {
-  outline: none;
-  border-color: #555555;
+  border: 1px solid;
+  border-color: #5423D2;
+  box-shadow: 0 0 8px #5423D2;
+  outline: #5423D2;
 }
 
 .banner-form-input::placeholder {
