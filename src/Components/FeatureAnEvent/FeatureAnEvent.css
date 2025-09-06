@@ -3,6 +3,7 @@
   align-items: center; /* vertically center items */
   gap: 12px;           /* space between button and title */
   padding: 10px 0;
+  margin-left: 4vw;
 }
 
 .back-event-btn {

@@ -72,7 +72,7 @@ const Event = () => {
     e.preventDefault();
     if (wordCount < 20) return;
     setIsSubmitting(true);
-    if (role === 'sub-admin' || role === 'super-admin') {
+    if (["admin", "sub-admin", "super-admin"].includes(role)) {
       navigate('/adminfeatureevent');
     } else {
       navigate('/featureevent');

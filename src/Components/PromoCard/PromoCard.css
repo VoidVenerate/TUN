@@ -1,5 +1,5 @@
 .promo-card {
-    width: 96%;
+    width: 90%;
     height: 350px;
     background: rgba(84, 35, 210, 0.25); /* Transparent purple */
     backdrop-filter: blur(15px); /* Glass blur */
@@ -12,7 +12,7 @@
     align-items: center; /* center horizontally */
     text-align: center; /* center text inside children */
     margin-top: 2vw;
-    margin-left: 2vw;
+    margin-left: 5vw;
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(84, 35, 210, 0.4);
@@ -55,7 +55,7 @@
     font-size: 16px;
     border-radius: 22px;
     background-color: rgba(255, 255, 255, 0.08);
-    width: 150px;
+    width: 350px;
     height: 40px;
     display: flex;
     align-items: center;
