@@ -487,13 +487,13 @@ const TakeAction = ({ role }) => {
         subMessage="Once published, the event will go live on TurnUpLagos and be visible to all users. You will not be able to undo this action."
         footerButtons={
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button style={closeBtnStyle} onClick={() => setShowConfirmModal(false)} type="button">Cancel</button>
+            <button className='modal-close-btn' onClick={() => setShowConfirmModal(false)} type="button">Cancel</button>
             <button
-              style={publishBtnStyle(isPublishHover)}
               onClick={handleConfirmUpload}
               onMouseEnter={handlePublishMouseEnter}
               onMouseLeave={handlePublishMouseLeave}
               type="button"
+              className='modal-close-btn-primary'
             >
               Yes, Publish
             </button>
@@ -513,11 +513,11 @@ const TakeAction = ({ role }) => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <button onClick={() => setShowConfirmRejectModal(false)} type="button" className='modal-close-btn'>Cancel</button>
             <button
-              style={publishBtnStyle(isPublishHover)}
               onClick={confirmReject}
               onMouseEnter={handlePublishMouseEnter}
               onMouseLeave={handlePublishMouseLeave}
               type="button"
+              className='modal-close-btn-primary'
             >
               Yes, Reject
             </button>

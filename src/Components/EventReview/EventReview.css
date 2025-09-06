@@ -175,7 +175,7 @@
 }
 
 
-.review-submit-btn {
+.review-submit-button {
   background: #6d28d9;
   color: #fff;
   border: none;
@@ -186,7 +186,7 @@
   font-size: 0.9rem;
 }
 
-.review-submit-btn:hover {
+.review-submit-button:hover {
   background: #5a21b5;
 }
 

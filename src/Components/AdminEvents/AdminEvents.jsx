@@ -9,6 +9,7 @@ import placeholder from '../../assets/placeholder.png'
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Loader from "../Loader/Loader";
+import SearchBar from "../SearchBar/SearchBar";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -169,22 +170,16 @@ const AdminEvents = () => {
     <div>
       <div className="adminEvents-header">
         <p style={{ fontFamily: "Rushon Ground" }}>Events</p>
-        <button onClick={handleAddNew}>
+        <div className="pending-events-controls">
+            <SearchBar
+              onSearch={(query) => {
+                setSearchTerm(query);
+                setCurrentPage(1);
+              }}
+            />
+        </div>
+        <button onClick={handleAddNew} className="button">
           <Upload size={16} /> Upload Events
-        </button>
-      </div>
-
-      {/* Search and sort */}
-      <div className="search-sort-bar">
-        <input
-          type="text"
-          placeholder="Search events by title"
-          className="search-input"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={() => setSortAsc((prev) => !prev)}>
-          Sort Title {sortAsc ? "↑" : "↓"}
         </button>
       </div>
 

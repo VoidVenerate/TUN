@@ -5,6 +5,7 @@ import api from "../api";
 import PendingBannerCard from "../PendingBannerCard/PendingBannerCard";
 import { Search } from "lucide-react";
 import './PendingBanner.css'
+import SearchBar from "../SearchBar/SearchBar";
 
 const PendingBanner = () => {
   const [banners, setBanners] = useState([]);
@@ -115,36 +116,24 @@ const PendingBanner = () => {
   return (
     <div className="banner-manager">
       {/* Header */}
-      <div className="banner-manager-header">
-        <h2 style={{ color: "white", fontFamily: "Rushon Ground" }}>
-          Pending Banners
-        </h2>
-        <h4 onClick={() => navigate(-1)}>Pending Events</h4>
-      </div>
+       <div className="pending-banner-header">
+          <h2 className="pending-banner-title" style={{fontFamily:"Rushon Ground"}}>Pending Banners</h2>
 
-      {/* Search */}
-      <div className="banner-controls">
-        <div className="banner-search">
-            <Search size={18} className="search-icon" />
-            <input
-            type="text"
-            placeholder="Search banners..."
-            value={searchTerm}
-            onChange={(e) => {
-                setSearchTerm(e.target.value);
+          <div className="pending-events-controls">
+            <SearchBar
+              onSearch={(query) => {
+                setSearchTerm(query);
                 setCurrentPage(1);
-            }}
+              }}
             />
-            {searchTerm && (
-            <button
-                type="button"
-                className="clear-btn"
-                onClick={() => setSearchTerm("")}
-            >
-                ✕
-            </button>
-            )}
-        </div>
+          </div>
+
+          <h4
+            className=""
+            onClick={() => navigate(-1)}
+          >
+            Pending Events
+          </h4>
       </div>
 
       {/* Banner list */}
@@ -156,6 +145,7 @@ const PendingBanner = () => {
               banner={banner}
               onAccept={() => handleAccept(banner.id)}
               onDelete={() => handleReject(banner.id)}
+              style={{width:'98%'}}
             />
           ))
         ) : (

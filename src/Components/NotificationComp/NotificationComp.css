@@ -1,9 +1,10 @@
 .notifications-container {
-  background-color: #0f0f0f;
   padding: 20px;
   color: #fff;
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
+  width: 89%;
+  margin-left: 4vw;
 }
 
 .notifications-header {
@@ -45,6 +46,7 @@
   background-color: #1a1a1a;
   border-radius: 10px;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.20);
 }
 
 .notif-icon {

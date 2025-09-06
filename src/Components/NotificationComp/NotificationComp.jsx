@@ -75,7 +75,7 @@ const NotificationComp = () => {
   return (
     <div className="notifications-container">
       <div className="notifications-header">
-        <h2>NOTIFICATIONS</h2>
+        <h2 style={{fontFamily:"Rushon Ground"}}>NOTIFICATIONS</h2>
       </div>
 
       {notifications.length === 0 ? (

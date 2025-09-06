@@ -31,7 +31,7 @@ const PendingBannerCard = ({ banner, onAccept, onDelete }) => {
         <div className="banner-card__actions">
           <button
             onClick={onAccept}
-            className="banner-card__btn banner-card__btn--accept"
+            className="banner-card__btn banner-card__btn--edit"
           >
             <Check size={16} /> Accept Banner
           </button>

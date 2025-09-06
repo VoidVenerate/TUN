@@ -313,7 +313,7 @@ const ProfileDark = () => {
             type="button"
             className="profile-dark-btn"
             onClick={() => document.getElementById("profileImageInput").click()}
-            style={{marginTop:"5vw"}}
+            style={{marginTop:"5vw", width:"100%", border:"1px", borderColor: 'rgba(255, 255, 255, 0.2)', background: 'rgba(255, 255, 255, 0.1)', borderRadius:'5px', }}
           >
             Change Profile Image
           </button>

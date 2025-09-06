@@ -11,7 +11,7 @@ import { ChevronLeft, Trash2, Pencil } from 'lucide-react';
 const EditableEventReviewRHF = ({ role }) => {
   const { eventData, updateEvent, setEventData, deleteEvent } = useEvent(); 
   const navigate = useNavigate();
-  const { event_id } = useParams(); // 👈 grab event_id from URL
+  const { event_id } = useParams();
 
   const { register, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: {
@@ -36,32 +36,28 @@ const EditableEventReviewRHF = ({ role }) => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [featureChoice, setFeatureChoice] = useState('no-feature');
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false); // 👈 new state
 
   const previewUrlRef = useRef(null);
-  // Inside your component
   const flyerFile = watch('flyerFile');
 
   useEffect(() => {
     if (flyerFile && flyerFile.length > 0) {
       const file = flyerFile[0];
-
-      // ✅ Validate file type
       const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
       if (!allowedTypes.includes(file.type)) {
         alert('Invalid file type. Only PNG and JPEG are allowed.');
-        setValue('flyerFile', null); // Reset file input
+        setValue('flyerFile', null);
         setValue('flyerPreview', null);
         return;
       }
 
       const reader = new FileReader();
-
       reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-          // ✅ Validate dimensions
           if (img.width <= 500 && img.height <= 800) {
-            setValue('flyerPreview', event.target.result); // Base64 string
+            setValue('flyerPreview', event.target.result);
           } else {
             alert('Image must be max 400x800px.');
             setValue('flyerFile', null);
@@ -70,19 +66,14 @@ const EditableEventReviewRHF = ({ role }) => {
         };
         img.src = event.target.result;
       };
-
       reader.readAsDataURL(file);
     } else {
-      // Reset preview if no file
       setValue('flyerPreview', null);
     }
   }, [flyerFile, setValue]);
 
-
-  // ✅ Fetch event details
   useEffect(() => {
     if (!event_id) return;
-
     const fetchEvent = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -90,12 +81,10 @@ const EditableEventReviewRHF = ({ role }) => {
           params: { id: event_id },
           headers: { Authorization: `Bearer ${token}` }
         });
-
-        // API returns an array → take first item
         const data = res.data[0];
         if (!data) throw new Error("Event not found");
         
-        const normalizedData = { ...data, id: data.id,flyerPreview: data.flyer_url || data.event_flyer || "", };
+        const normalizedData = { ...data, id: data.id, flyerPreview: data.flyer_url || data.event_flyer || "" };
         setEventData(normalizedData);
 
         reset({
@@ -112,7 +101,6 @@ const EditableEventReviewRHF = ({ role }) => {
                 ? `https://lagos-turnup.onrender.com/${data.event_flyer.replace(/^\//, '')}`
                 : '',
           featureChoice: data.is_featured ? "yes-feature" : "no-feature",
-          // These may not exist on the API, but keep in case your backend actually supports them
           link: data.link || '',
           contactMethod: data.contact_method || '',
           contactValue: data.contact_value || ''
@@ -127,18 +115,14 @@ const EditableEventReviewRHF = ({ role }) => {
         });
       }
     };
-
-
     fetchEvent();
   }, [event_id, reset, setEventData]);
 
-  // ✅ Save event
   const onSubmit = async (data) => {
     if (!eventData?.id) {
       setModalInfo({ show: true, title: 'Error', message: 'No event ID to update.', subMessage: '' });
       return;
     }
-
     setSaving(true);
     try {
       const fd = new FormData();
@@ -153,7 +137,6 @@ const EditableEventReviewRHF = ({ role }) => {
       fd.append('contact_method', data.contactMethod);
       fd.append('contact_value', data.contactValue);
       fd.append('link', data.link);
-
       if (data.flyerFile && data.flyerFile.length > 0) {
         fd.append('event_flyer', data.flyerFile[0]);
       }
@@ -169,12 +152,11 @@ const EditableEventReviewRHF = ({ role }) => {
       }
 
       setEventData(updated);
-
       setModalInfo({ show: true, title: 'Success', message: 'Event updated successfully.', subMessage: '' });
 
       if (featureChoice === 'yes-feature') {
         setShowFeatureDuration(true);
-      }else {
+      } else {
         navigate('/adminevents');
       }
     } catch (err) {
@@ -189,34 +171,21 @@ const EditableEventReviewRHF = ({ role }) => {
     }
   };
 
-  // ✅ Delete event
   const handleDelete = () => {
     if (!eventData?.id) {
-      setModalInfo({
-        show: true,
-        title: 'Error',
-        message: 'No event ID to delete.',
-        subMessage: '',
-      });
+      setModalInfo({ show: true, title: 'Error', message: 'No event ID to delete.', subMessage: '' });
       return;
     }
-
     setModalInfo({
       show: true,
       type: 'duration',
-      title: 'Are you sure you want to delete this event?',
-      message: 'This action is permanent. The event will be removed from TurnUpLagos and will no longer be visible to users. You won’t be able to recover it later.',
-      subMessage: '',
+      message: 'Are you sure you want to delete this event?',
+      subMessage: 'This action is permanent and cannot be undone.',
       footerButtons: (
         <div className="modal-btn-group">
+          <button className="modal-close-btn" onClick={() => setModalInfo({ show: false })}>Cancel</button>
           <button
-            className="modal-close-btn"
-            onClick={() => setModalInfo({ show: false })} // cancel just closes
-          >
-            Cancel
-          </button>
-          <button
-            className="modal-btn-danger"
+            className="modal-close-btn-primary"
             onClick={async () => {
               setDeleting(true);
               try {
@@ -225,21 +194,13 @@ const EditableEventReviewRHF = ({ role }) => {
                 } else {
                   await api.delete(`/event/events/${eventData.event_id}`);
                 }
-
                 setModalInfo({
                   show: true,
                   type: 'success',
                   title: 'Deleted',
                   message: 'Event deleted successfully.',
-                  subMessage: '',
                   footerButtons: (
-                    <button
-                      className="modal-close-btn"
-                      onClick={() => {
-                        closeModal();
-                        navigate('/adminevents'); // ✅ only navigate after closing
-                      }}
-                    >
+                    <button className="modal-close-btn" onClick={() => { closeModal(); navigate('/adminevents'); }}>
                       Continue
                     </button>
                   ),
@@ -261,9 +222,7 @@ const EditableEventReviewRHF = ({ role }) => {
         </div>
       )
     });
-
   };
-
 
   const closeModal = () => setModalInfo(prev => ({ ...prev, show: false }));
   const handleFeatureConfirm = (selectedDuration) => {
@@ -287,7 +246,6 @@ const EditableEventReviewRHF = ({ role }) => {
       </header>
 
       <form id='eventForm' onSubmit={handleSubmit(onSubmit)} className="review-content" encType="multipart/form-data">
-
         {/* Flyer Upload */}
         <div className="review-upload-section">
           <div className="review-upload-label">
@@ -296,40 +254,26 @@ const EditableEventReviewRHF = ({ role }) => {
           </div>
           <div className="review-upload-area">
             <img
-              src={eventData?.flyerPreview ||
-                  eventData?.flyer_url || 
-                  eventData?.event_flyer }// fallback
+              src={eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer}
               alt="Event Flyer Preview"
               className="review-flyer-preview"
               onError={(e) => (e.target.src = '/placeholder.png')}
             />
           </div>
-          <input
-            type="file"
-            accept="image/*"
-            {...register('flyerFile')}
-            className="review-file-input"
-          />
+          <input type="file" accept="image/*" {...register('flyerFile')} className="review-file-input" />
         </div>
 
-        {/* Event details form */}
+        {/* Event details */}
         <div className="review-form">
           <div className="review-fields">
-
             <div className="review-row">
               <div className="review-group">
                 <label className="review-label" htmlFor="eventName">Event Name</label>
                 <input id="eventName" className="form-input" {...register('eventName', { required: true })} />
               </div>
-
               <div className="review-group">
                 <label className="review-label" htmlFor="location">State</label>
-                <select
-                  id="location"
-                  className="form-input"
-                  {...register('location', { required: true })}
-                  defaultValue=""
-                >
+                <select id="location" className="form-input" {...register('location', { required: true })} defaultValue="">
                   <option value="">Where in Nigeria is the event?</option>
                   <option value="Lagos">Within Lagos</option>
                   <option value="Outside Lagos">Beyond Lagos</option>
@@ -342,7 +286,6 @@ const EditableEventReviewRHF = ({ role }) => {
                 <label className="review-label" htmlFor="venue">Venue</label>
                 <input id="venue" className="form-input" {...register('venue')} />
               </div>
-
               <div className="review-group">
                 <label className="review-label" htmlFor="date">Date</label>
                 <input type="date" id="date" className="form-input" {...register('date')} />
@@ -354,7 +297,6 @@ const EditableEventReviewRHF = ({ role }) => {
                 <label className="review-label" htmlFor="time">Time</label>
                 <input type="time" id="time" className="form-input" {...register('time')} />
               </div>
-
               <div className="review-group">
                 <label className="review-label" htmlFor="dressCode">Dress Code</label>
                 <input id="dressCode" className="form-input" {...register('dressCode')} />
@@ -395,7 +337,6 @@ const EditableEventReviewRHF = ({ role }) => {
                 <label className="review-label" htmlFor="contactMethod">We’ll need a way to reach you</label>
                 <input id="contactMethod" className="form-input" {...register('contactMethod')} />
               </div>
-
               <div className="review-group review-full">
                 <label className="review-label" htmlFor="contactValue">Contact Value</label>
                 <input id="contactValue" className="form-input" {...register('contactValue')} />
@@ -409,10 +350,20 @@ const EditableEventReviewRHF = ({ role }) => {
           </div>
 
           <footer className="review-footer">
-            <button type="submit" className="review-submit-btn review-submit-btn--save" disabled={saving} form="eventForm">
+            <button
+              type="button"
+              className="review-submit-btn review-submit-btn--save"
+              disabled={saving}
+              onClick={() => setShowSaveConfirm(true)} // 👈 open confirm modal
+            >
               <Pencil size={16}/>{saving ? 'Saving Event...' : 'Save Event'}
             </button>
-            <button type="button" className="review-submit-btn review-submit-btn--delete" disabled={deleting} onClick={handleDelete}>
+            <button
+              type="button"
+              className="review-submit-btn review-submit-btn--delete"
+              disabled={deleting}
+              onClick={handleDelete}
+            >
               <Trash2 size={16}/>{deleting ? 'Deleting Event...' : 'Delete Event'}
             </button>
           </footer>
@@ -425,6 +376,32 @@ const EditableEventReviewRHF = ({ role }) => {
           role={role}
           onClose={() => setShowFeatureDuration(false)}
           onConfirm={handleFeatureConfirm}
+        />
+      )}
+
+      {/* Save Confirmation Modal */}
+      {showSaveConfirm && (
+        <Modal
+          show={showSaveConfirm}
+          onClose={() => setShowSaveConfirm(false)}
+          type="duration"
+          title=""
+          message="Do you want to save the changes to this event?"
+          subMessage="Your updates will overwrite the current event details."
+          footerButtons={
+            <div className="modal-btn-group">
+              <button className="modal-close-btn" onClick={() => setShowSaveConfirm(false)}>Cancel</button>
+              <button
+                className="modal-close-btn-primary"
+                onClick={() => {
+                  setShowSaveConfirm(false);
+                  handleSubmit(onSubmit)(); // 👈 trigger actual save
+                }}
+              >
+                Yes, Save
+              </button>
+            </div>
+          }
         />
       )}
 
@@ -444,7 +421,6 @@ const EditableEventReviewRHF = ({ role }) => {
           )
         }
       />
-
     </div>
   );
 };

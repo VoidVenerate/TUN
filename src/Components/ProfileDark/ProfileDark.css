@@ -29,19 +29,14 @@ body{
 /* Left side */
 .profile-dark-left {
   flex: 1;
-  max-width: 250px;
+  max-width: 300px;
   text-align: center;
   background: #000; /* optional, gives it a card feel */
   border: 1px solid #333; /* thin, dark border */
   border-radius: 12px;    /* rounded corners, makes it smooth */
   padding: 16px;          /* add breathing room */
   height: 500px;
-  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.4); 
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
-}
-.profile-dark-left:hover {
-  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
-  border-color: var(--accent-color, #5423D2);
 }
 
 .profile-dark-label {
@@ -69,18 +64,19 @@ body{
 
 
 .profile-dark-btn {
-  background-color: #5423d2;
+  background-color: rgba(255, 255, 255, 0.1);
   color: #eee;
-  border: none;
-  padding: 10px 22px;
+  padding: 20px 24px;
   border-radius: 25px;
+  border: none;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.3s ease;
+  margin-top: -10px;
 }
 
 .profile-dark-btn:hover {
-  background-color: #6c43e6;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Right side */
@@ -91,13 +87,9 @@ body{
   border-radius: 12px;    /* rounded corners, makes it smooth */
   padding: 16px;          /* add breathing room */
   height: 500px;
-  box-shadow: 0 4px 16px rgba(79, 140, 255, 0.4); 
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
-.profile-dark-right:hover {
-  box-shadow: 0 6px 20px rgba(79, 140, 255, 0.6);
-  border-color: var(--accent-color, #5423D2);
-}
+
 
 /* Each row contains two inputs side by side except single row */
 .profile-dark-row {
@@ -270,4 +262,139 @@ body{
 .action-btn.delete {
   background: crimson;
   color: white;
+}
+/* =========================
+   RESPONSIVE MEDIA QUERIES
+   ========================= */
+
+/* Small phones (≤480px) */
+@media (max-width: 480px) {
+  .profile-dark-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .profile-dark-left,
+  .profile-dark-right {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .profile-dark-image {
+    width: 160px;
+    height: 160px;
+  }
+
+  .profile-dark-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .profile-dark-btn-wrapper {
+    justify-content: center;
+  }
+
+  /* Sub-admin cards */
+  .sub-admin-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .sub-admin-info {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .sub-admin-actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: flex-start;
+  }
+
+  .action-btn {
+    flex: 1 1 45%;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+  }
+}
+
+/* Normal phones (481px–768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .profile-dark-content {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .profile-dark-left,
+  .profile-dark-right {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .profile-dark-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .profile-dark-row {
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .profile-dark-btn-wrapper {
+    justify-content: center;
+  }
+
+  /* Sub-admin cards */
+  .sub-admin-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .sub-admin-actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .action-btn {
+    flex: 1 1 30%; /* 3 per row if space allows */
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+}
+
+/* Tablets (769px–1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .profile-dark-content {
+    flex-direction: row;
+    gap: 30px;
+  }
+
+  .profile-dark-left {
+    max-width: 250px;
+    height: auto;
+  }
+
+  .profile-dark-right {
+    height: auto;
+  }
+
+  /* Sub-admin cards */
+  .sub-admin-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .sub-admin-actions {
+    gap: 0.8rem;
+  }
 }

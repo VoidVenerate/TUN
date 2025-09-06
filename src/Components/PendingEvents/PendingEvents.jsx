@@ -6,6 +6,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
 import api from "../api";
 import "./PendingEvents.css";
+import SearchBar from "../SearchBar/SearchBar";
 
 const PendingEvents = () => {
   const [events, setEvents] = useState([]);
@@ -64,32 +65,16 @@ const PendingEvents = () => {
       {/* Header */}
       <div className="pendingEvents-header">
         <p style={{fontFamily:"Rushon Ground"}}>Pending Events</p>
-         <h4 onClick={() => navigate("/pendingBanner")}>Pending Banner</h4>
-      </div>
-
-      {/* Search */}
-      <div className="pending-events-controls">
-        <div className="event-search">
-          <Search size={18} className="search-icon" />
-          <input
-            type="text"
-            placeholder="Search events..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
+        {/* Search */}
+        <div className="pending-events-controls">
+          <SearchBar
+            onSearch={(query) => {
+              setSearchTerm(query);
               setCurrentPage(1);
             }}
           />
-          {searchTerm && (
-            <button
-              type="button"
-              className="clear-btn"
-              onClick={() => setSearchTerm("")}
-            >
-              ✕
-            </button>
-          )}
         </div>
+        <h4 onClick={() => navigate("/pendingBanner")}>Pending Banner</h4>
       </div>
 
       {/* Event list */}

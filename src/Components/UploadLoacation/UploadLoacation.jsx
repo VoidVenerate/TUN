@@ -126,7 +126,7 @@ const UploadLocation = () => {
 
       setModalInfo({
         show: true,
-        title: "Success!",
+        title: "",
         message: "Spot Added Successfully!",
         subMessage: "Your location has been published on Discover Lagos 🎉",
         type: "success",

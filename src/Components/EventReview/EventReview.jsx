@@ -64,7 +64,7 @@ const EventReview = () => {
       if (response.status === 200 || response.status === 201) {
         setModalInfo({
           show: true,
-          title: 'Success!',
+          title: '',
           message: 'Event submitted successfully.',
           subMessage:
             rules.role === 'sub-admin' || rules.role === 'super-admin'
@@ -72,7 +72,8 @@ const EventReview = () => {
               : "Thanks for submitting your event. Our team will review it and publish it on TurnUpLagos within 24-48 hours. If featured, an agent will contact you to discuss payment and promotion. We'll notify you when your event goes live!",
           type: 'success',
           footerButtons: (
-            <button
+           <>
+              <button
               className="modal-close-btn"
               onClick={() => {
                 closeModal();
@@ -82,9 +83,16 @@ const EventReview = () => {
                     : '/home'
                 );
               }}
-            >
-              Close
-            </button>
+              >
+                Close
+              </button>
+              <button className='modal-close-btn' onClick={() => {
+                closeModal();
+                navigate('/adminpromoteevent')
+              }}>
+                Create Another Event
+              </button>
+           </>
           ),
         });
       } else {
@@ -247,7 +255,7 @@ const EventReview = () => {
           ← Back to Feature
         </button>
 
-        <button className="review-submit-btn" onClick={handleSubmit} disabled={isSubmitting}>
+        <button className="review-submit-button" onClick={handleSubmit} disabled={isSubmitting}>
           {isSubmitting ? 'Submitting...' : 'Submit Event'}
         </button>
       </footer>

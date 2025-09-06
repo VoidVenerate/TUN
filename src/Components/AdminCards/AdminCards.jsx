@@ -192,7 +192,7 @@ const AdminCards = () => {
         <p>{totalEvents}</p>
         <p
           onClick={() => navigate("/adminpromoteevent")}
-          style={{ color: "#0084FF", cursor: "pointer", fontSize: "14px" }}
+          style={{ color: "#0084FF", cursor: "pointer", fontSize: "14px", fontWeight: '500' }}
         >
           Upload Events
         </p>
@@ -204,7 +204,7 @@ const AdminCards = () => {
         <p>{totalBanner}</p>
         <p
           onClick={() => navigate("/newbanner")}
-          style={{ color: "#0084FF", fontSize: "14px", cursor: "pointer" }}
+          style={{ color: "#0084FF", fontSize: "14px", cursor: "pointer", fontWeight: '500' }}
         >
           Upload Banner
         </p>
@@ -216,7 +216,7 @@ const AdminCards = () => {
         <p>{discoverCount}</p>
         <p
           onClick={() => navigate("/adminspots")}
-          style={{ color: "#0084FF", fontSize: "14px", cursor: "pointer" }}
+          style={{ color: "#0084FF", fontSize: "14px", cursor: "pointer", fontWeight: '500' }}
         >
           Upload Events
         </p>

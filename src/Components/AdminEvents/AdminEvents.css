@@ -14,7 +14,7 @@
   font-weight: 600;
 }
 
-.adminEvents-header button {
+.adminEvents-header .button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,7 +195,7 @@
   font-size: 14px;
   border: 1px solid #4b5563; /* Gray border */
   border-radius: 8px;
-  background-color: #1f2937; /* Dark background */
+  background-color: #000; /* Dark background */
   color: #f9fafb; /* Light text */
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
