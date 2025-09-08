@@ -8,14 +8,12 @@ import api from '../api'
 const AdminCards = () => {
   // ====== Pending Events ======
   const [pendingEvents, setPendingEvents] = useState(0)
-  const [prevPendingEvents, setPrevPendingEvents] = useState(null)
   const [eventTrend, setEventTrend] = useState(null)
   const [eventPercentage, setEventPercentage] = useState(0)
   const [displayedEventPercentage, setDisplayedEventPercentage] = useState(0)
 
   // ====== Pending Banners ======
   const [pendingBanner, setPendingBanner] = useState(0)
-  const [prevPendingBanners, setPrevPendingBanners] = useState(null)
   const [bannerTrend, setBannerTrend] = useState(null)
   const [bannerPercentage, setBannerPercentage] = useState(0)
   const [displayedBannerPercentage, setDisplayedBannerPercentage] = useState(0)
@@ -32,6 +30,10 @@ const AdminCards = () => {
       try {
         const token = localStorage.getItem("token")
         if (!token) return
+
+        // ✅ track lastUpdate for Option 1
+        const today = new Date().toDateString()
+        const lastUpdate = localStorage.getItem("lastUpdate")
 
         // ✅ Pending Events
         const pendingRes = await api.get(
@@ -56,7 +58,6 @@ const AdminCards = () => {
         }
 
         setPendingEvents(newPendingEvents)
-        localStorage.setItem("prevPendingEvents", newPendingEvents)
 
         // ✅ Events (non-pending)
         const eventRes = await axios.get(
@@ -93,7 +94,6 @@ const AdminCards = () => {
         }
 
         setPendingBanner(newPendingBanners)
-        localStorage.setItem("prevPendingBanners", newPendingBanners)
 
         // ✅ Discover Lagos
         const discoverRes = await axios.get(
@@ -101,6 +101,13 @@ const AdminCards = () => {
           { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
         setDiscoverCount(discoverRes.data.length)
+
+        // ✅ Option 1: update localStorage only once per day
+        if (lastUpdate !== today) {
+          localStorage.setItem("prevPendingEvents", newPendingEvents)
+          localStorage.setItem("prevPendingBanners", newPendingBanners)
+          localStorage.setItem("lastUpdate", today)
+        }
       } catch (error) {
         console.error("Error fetching Data", error)
       }
