@@ -4,6 +4,7 @@ import { useBanner } from '../BannerContext/BannerContext';
 import { ChevronLeft, Upload } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Modal from '../Modal/Modal';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../RoleContext/RoleContext';
 import { ArrowLeft } from 'lucide-react';
@@ -28,6 +29,8 @@ const PromoteBanner = () => {
     const { name, value } = e.target;
     setBannerData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     return () => {
@@ -129,6 +132,18 @@ const PromoteBanner = () => {
           ? "Your banner is live immediately."
           : "Our team will review it, and if approved, it will go live within 24–48 hours.",
         type: "success",
+        footerButtons: (
+           <>
+              <button
+              className="modal-close-btn"
+              onClick={() => {
+                navigate(-1);
+              }}
+              >
+                Close
+              </button>
+           </>
+          ),
       });
 
       // Reset form
@@ -256,11 +271,7 @@ const PromoteBanner = () => {
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
         type={modalInfo.type}
-        footerButtons={ <>
-        
-        </>
-          
-        }
+        footerButtons={modalInfo.footerButtons}
       />
     </div>
   );

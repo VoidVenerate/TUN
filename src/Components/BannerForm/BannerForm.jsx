@@ -87,7 +87,19 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
         show: true,
         title: 'Success!',
         message: editingBanner ? 'Banner updated successfully.' : 'Banner added successfully.',
-        type: 'success'
+        type: 'success',
+        footerButtons: (
+           <>
+              <button
+              className="modal-close-btn"
+              onClick={() => {
+                navigate(-1);
+              }}
+              >
+                Close
+              </button>
+           </>
+          ),
       });
 
       if (typeof onRefresh === 'function') onRefresh();
@@ -211,6 +223,7 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
           message={modalInfo.message}
           type={modalInfo.type}
           onClose={() => !loading && setModalInfo((prev) => ({ ...prev, show: false }))}
+          footerButtons={modalInfo.footerButtons}
         />
       )}
     </div>
