@@ -45,6 +45,8 @@ const PendingBanner = () => {
     fetchPendingBanners();
   }, []);
 
+  const closeModal = () => setModalInfo(prev => ({...prev,show:false}))
+
   // ✅ Approve banner
   const handleAccept = async (id) => {
     try {
@@ -57,9 +59,15 @@ const PendingBanner = () => {
 
       setModalInfo({
         show: true,
-        title: "Banner Approved",
-        message: "Banner successfully approved.",
+        title: "",
+        message: "Banner Approved",
+        subMessage:'Banner successfully approved.',
         type: "success",
+        footerButtons: <>
+          <button className="modal-close-btn" onClick={() => closeModal()}>
+            Close
+          </button>
+        </>
       });
 
       fetchPendingBanners();
@@ -70,6 +78,11 @@ const PendingBanner = () => {
         title: "Error",
         message: "Could not approve banner.",
         type: "error",
+        footerButtons: <>
+          <button className="modal-close-btn" onClick={() => closeModal()}>
+            Close
+          </button>
+        </>
       });
     }
   };
@@ -87,18 +100,30 @@ const PendingBanner = () => {
 
       setModalInfo({
         show: true,
-        title: "Banner Rejected",
-        message: "Banner successfully rejected.",
+        title: "",
+        message: "Banner Rejected",
+        subMessage:'Banner successfully rejected.',
         type: "success",
+        footerButtons: <>
+          <button className="modal-close-btn" onClick={() => closeModal()}>
+            Close
+          </button>
+        </>
       });
       fetchPendingBanners();
     } catch (err) {
       console.error(err);
       setModalInfo({
         show: true,
-        title: "Error",
-        message: "Could not reject banner.",
+        title: "",
+        message: "Error",
+        subMessage: 'Could not reject banner.',
         type: "error",
+        footerButtons: <>
+          <button className="modal-close-btn" onClick={() => closeModal()}>
+            Close
+          </button>
+        </>
       });
     }
   };
@@ -184,7 +209,8 @@ const PendingBanner = () => {
           message={modalInfo.message}
           subMessage={modalInfo.subMessage}
           type={modalInfo.type}
-          onClose={() => setModalInfo({ ...modalInfo, show: false })}
+          footerButtons={modalInfo.footerButtons}
+          // onClose={() => setModalInfo({ ...modalInfo, show: false })}
         />
       )}
     </div>
