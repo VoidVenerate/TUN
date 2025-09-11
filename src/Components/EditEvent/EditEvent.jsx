@@ -59,7 +59,7 @@ const EditableEventReviewRHF = ({ role }) => {
           if (img.width <= 500 && img.height <= 800) {
             setValue('flyerPreview', event.target.result);
           } else {
-            alert('Image must be max 400x800px.');
+            alert('Image must be max 500x800px.');
             setValue('flyerFile', null);
             setValue('flyerPreview', null);
           }

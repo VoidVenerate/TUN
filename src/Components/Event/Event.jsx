@@ -50,7 +50,7 @@ const Event = () => {
     reader.onload = (event) => {
       const img = new Image();
       img.onload = () => {
-        if (img.width <= 600 && img.height <= 800) {
+        if (img.width <= 10000 && img.height <= 10000) {
           setEventData((prev) => ({
             ...prev,
             flyer: file,
