@@ -67,7 +67,7 @@ const AdminNavbar = () => {
         setProfileImage(pic || null);
       } catch (error) {
         console.error('Unable to fetch profile picture', error);
-        setProfileImage(null);
+        setProfileImage(prev => prev || null);
       }
     };
     fetchImage();

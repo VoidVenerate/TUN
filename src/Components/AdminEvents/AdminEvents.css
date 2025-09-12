@@ -34,10 +34,8 @@
 
 /* ===== EVENTS WRAPPER ===== */
 .admin-Events {
-  display: flex;
-  margin-top: 3vw;
-  margin-left: 2vw;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
 }
 
 /* ===== EVENT CARD ===== */
