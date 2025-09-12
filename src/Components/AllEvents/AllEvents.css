@@ -40,12 +40,11 @@
 }
 
 .LagEvents-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;                     /* ← activate grid mode */
+  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+  gap: 20px;                          /* space between cards */
   margin-top: 0vw;
   margin-left: 2vw;
-  justify-content: flex-start;
   box-sizing: border-box;
 }
 
@@ -309,10 +308,7 @@ a {
 }
 @media (min-width: 980px) and (max-width: 1330px) {
   .LagEvents-list {
-    margin-left: 0vw;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
+     grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (min-width: 768px) and (max-width: 979px) {
@@ -321,5 +317,10 @@ a {
     width: 100%;
     display: flex;
     justify-content: space-around;
+  }
+}
+@media (max-width: 600px) {
+  .LagEvents-list {
+    grid-template-columns: 1fr; /* phones → single column */
   }
 }

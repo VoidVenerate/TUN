@@ -26,7 +26,7 @@ const BannerCard = ({ banner, onEdit, onDelete }) => {
       <div className="banner-info-btns">
         <div className="banner-card__info">
           <h3 className="banner-card__name">{banner.name}</h3>
-          <p className="banner-card__link">{banner.link}</p>
+          <p className="banner-card__link">{banner.banner_link ? banner.banner_link : 'No link provided'}</p>
           </div>
 
         {/* Buttons */}

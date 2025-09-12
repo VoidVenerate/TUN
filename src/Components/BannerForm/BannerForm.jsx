@@ -3,12 +3,14 @@ import { UploadCloud, ChevronLeft } from 'lucide-react';
 import api from '../api';
 import Modal from '../Modal/Modal';
 import './BannerForm.css'
+import { useNavigate } from 'react-router-dom';
 
 const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
+  const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false);
 
@@ -24,8 +26,8 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
   useEffect(() => {
     if (editingBanner) {
       setName(editingBanner.name || '');
-      setLink(editingBanner.link || '');
-      setPreview(editingBanner.image || null);
+      setLink(editingBanner.banner_link || '');
+      setPreview(editingBanner.banner_url || null);
       setImage(null);
     } else {
       // reset when not editing
@@ -57,9 +59,11 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('link', link);
+    formData.append('banner_link', link);
     if (image) formData.append('banner', image);
-
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
     try {
       const config = {
         headers: {
@@ -76,7 +80,7 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
         );
       } else {
         await api.post(
-          'https://lagos-turnup.onrender.com/event/banners',
+          'https://lagos-turnup.onrender.com/event/banners/create',
           formData,
           config
         );

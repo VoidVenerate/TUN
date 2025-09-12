@@ -23,6 +23,8 @@ const BannerComponent = () => {
   // React Router navigation hook for navigating programmatically
   const navigate = useNavigate();
 
+  const [confirmDelete, setConfirmDelete] = useState({show: false,bannerId:null})
+
   // Fetch banners once when the component mounts
   const [modalInfo, setModalInfo] = useState({
       show: false,
@@ -131,7 +133,9 @@ const BannerComponent = () => {
                 key={banner.id}
                 banner={banner}
                 onEdit={() => handleEdit(banner)}      // Pass banner to edit handler
-                onDelete={() => handleDelete(banner.id)} // Pass banner ID to delete handler
+                onDelete={() =>
+                  setConfirmDelete({ show: true, bannerId: banner.id })
+                }// Pass banner ID to delete handler
               />
             ))}
           </div>
@@ -154,6 +158,36 @@ const BannerComponent = () => {
           </div>
         </>
       )}
+      {confirmDelete.show && (
+      <Modal
+        show={confirmDelete.show}
+        onClose={() => setConfirmDelete({ show: false, bannerId: null })}
+        title=""
+        type="duration" // matches TakeAction look
+        message="Are you sure you want to delete this banner?"
+        subMessage="This action is permanent and cannot be undone."
+        footerButtons={
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <button
+              className="modal-close-btn"
+              onClick={() => setConfirmDelete({ show: false, bannerId: null })}
+            >
+              Cancel
+            </button>
+            <button
+              className="modal-close-btn-primary"
+              onClick={async () => {
+                await handleDelete(confirmDelete.bannerId);
+                setConfirmDelete({ show: false, bannerId: null });
+              }}
+            >
+              Yes, Delete
+            </button>
+          </div>
+        }
+      />
+    )}
+
       {modalInfo.show && (
         <Modal
           title={modalInfo.title}

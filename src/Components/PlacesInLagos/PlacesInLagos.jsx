@@ -9,10 +9,10 @@ import './PlacesInLagos.css'
 const PlacesInLagos = () => {
   return (
     <div className='PlacesInLagos-container'>
+        <div className="PlacesInLagos-txt">
+            <h2 style={{fontFamily: 'Rushon Ground'}}>Discover Lagos</h2>
+        </div>
         <div className="PlacesInLagos">
-            <div className="PlacesInLagos-txt">
-                <h2 style={{fontFamily: 'Rushon Ground'}}>Discover Lagos</h2>
-            </div>
             <button>
                 <NavLink
                     to="/clubs"
