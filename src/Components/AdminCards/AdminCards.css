@@ -64,3 +64,8 @@
   font-weight: 500;
   
 }
+@media (max-width: 440px) {
+  .dashboard-cards {
+    margin-left: 0;
+  }
+}
