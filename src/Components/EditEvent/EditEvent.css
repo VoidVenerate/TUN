@@ -63,7 +63,7 @@
   border-radius: 8px;
   background: #000000;
   padding: 12px;
-  height: 700px;
+  height: 783px;
 }
 
 .review-upload-label {
@@ -112,7 +112,7 @@
 /* Rows with two columns */
 .review-row {
   display: flex;
-  gap: 16px;
+  gap: 24px;
 }
 
 .review-group {

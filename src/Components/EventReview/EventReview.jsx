@@ -196,7 +196,7 @@ const EventReview = () => {
       {/* Feature Toggle + Contact */}
       <div className="review-form">
         <div className="review-fields">
-          <div className="toggle-group">
+          <div className="togglei-group">
             <button className={eventData.featureChoice === 'no-feature' ? 'active' : ''}>
               No, I do not want to feature my event.
             </button>
