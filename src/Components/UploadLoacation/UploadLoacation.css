@@ -44,7 +44,6 @@
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  min-height: 38.5vw;
   height: auto;
 }
 .upload-sec {
@@ -54,7 +53,7 @@
   text-align: center;
   cursor: pointer;
   transition: border-color 0.3s ease;
-  height: 24vw;
+  height: 414px;
   justify-content: center;
 }
 
