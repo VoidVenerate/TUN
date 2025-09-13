@@ -338,7 +338,7 @@ const TakeAction = ({ role }) => {
     <div className="review-container">
       <header className="review-header">
         <h1 className="review-header-title" style={{ fontFamily: 'Rushon Ground' }}>
-          <ChevronLeft size = {24} onClick={() => navigate(-1)} /> EDIT EVENT
+          <ChevronLeft size = {24} onClick={() => navigate(-1)} /> TAKE ACTION
         </h1>
       </header>
 
@@ -423,7 +423,7 @@ const TakeAction = ({ role }) => {
         <div className="review-fields">
           <div className="review-group review-full">
             <label className="review-label" htmlFor="link">Additional Information Link</label>
-            <input id="link" className="form-input" {...register('link')} />
+            <input disabled id="link" className="form-input" {...register('link')} />
           </div>
 
           <footer className="review-footer">
