@@ -13,6 +13,7 @@ const Event = () => {
 
   const [wordCount, setWordCount] = useState(0);
   const [wordError, setWordError] = useState('');
+  const [dateError, setDateError] = useState('');
 
   const navigate = useNavigate();
   const { rules } = useAuth();
@@ -71,6 +72,19 @@ const Event = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (wordCount < 20) return;
+    // Validate date
+    const today = new Date();
+    const selectedDate = new Date(eventData.date);
+
+    // Clear time part of today's date for accurate comparison
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      setDateError("The date has already passed. Please pick an upcoming date.");
+      return;
+    } else {
+      setDateError('');
+    }
     setIsSubmitting(true);
     if (["admin", "sub-admin", "super-admin"].includes(role)) {
       navigate('/adminfeatureevent');
@@ -186,6 +200,7 @@ const Event = () => {
                   onChange={handleChange}
                   required
                 />
+                {dateError && <p className="word-error">{dateError}</p>}
               </div>
             </div>
 
