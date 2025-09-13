@@ -357,13 +357,7 @@ const TakeAction = ({ role }) => {
               onError={(e) => (e.target.src = '/placeholder.png')}
             />
           </div>
-          <input
-            type="file"
-            accept="image/*"
-            {...register('flyerFile')}
-            className="review-file-input"
-            disabled
-          />
+          
         </div>
 
         {/* Event details form */}
