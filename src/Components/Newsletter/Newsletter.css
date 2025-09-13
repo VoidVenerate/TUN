@@ -15,11 +15,13 @@
 
 .sub-form-row label {
   min-width: 110px;
-  font-weight: 600;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #fff;
 }
 .sub-form-row label span {
+  color: #ff0000;
+}
+.sub-form-area label span {
   color: #ff0000;
 }
 
@@ -57,6 +59,7 @@
   background: rgba(255, 255, 255, 0.081);
   color: #fff;
   outline: none;
+  margin-top: 10px;
 }
 .sub-form-area label, .sub-form-area span {
   color: #fff;
@@ -303,7 +306,7 @@
   max-width: 100%;
 }
 .sub-form-area textarea {
-  width: 94% !important;
+  width: 95.7% !important;
   max-width: 100%;
 }
 

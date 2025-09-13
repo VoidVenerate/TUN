@@ -6,6 +6,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
 import api from "../api";
 import Loader from "../Loader/Loader";
+import './ReusableSpots.css'
 
 const ReusableSpots = ({ spotType, addPath, editPath }) => {
   const [spots, setSpots] = useState([]);
@@ -196,18 +197,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         <p style={{ fontFamily: "Rushon Ground" }}>
           {spotType.charAt(0).toUpperCase() + spotType.slice(1)}s
         </p>
-      </div>
-
-      {/* Search and sort */}
-      <div className="search-sort-bar">
-        <input
-          type="text"
-          className="search-input"
-          placeholder={`Search ${spotType}s by name`}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button onClick={() => setSortAsc((prev) => !prev)}>
+        <button className="sort-bar" onClick={() => setSortAsc((prev) => !prev)}>
           Sort Name {sortAsc ? "↑" : "↓"}
         </button>
       </div>

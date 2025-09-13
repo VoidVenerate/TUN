@@ -1,0 +1,9 @@
+.sort-bar {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #5423D2;
+  color: white;
+  cursor: pointer;
+  margin-right: 5vw;
+}
