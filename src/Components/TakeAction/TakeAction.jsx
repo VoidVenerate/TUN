@@ -362,6 +362,7 @@ const TakeAction = ({ role }) => {
             accept="image/*"
             {...register('flyerFile')}
             className="review-file-input"
+            disabled
           />
         </div>
 
@@ -372,12 +373,12 @@ const TakeAction = ({ role }) => {
             <div className="review-row">
               <div className="review-group">
                 <label className="review-label" htmlFor="eventName">Event Name</label>
-                <input id="eventName" className="form-input" {...register('eventName', { required: true })} />
+                <input disabled id="eventName" className="form-input" {...register('eventName', { required: true })} />
               </div>
 
               <div className="review-group">
                 <label className="review-label" htmlFor="location">State</label>
-                <select id="location" className="form-input" {...register('location', { required: true })} defaultValue="">
+                <select disabled id="location" className="form-input" {...register('location', { required: true })} defaultValue="">
                   <option value="">Where in Nigeria is the event?</option>
                   <option value="Lagos">Within Lagos</option>
                   <option value="Outside Lagos">Beyond Lagos</option>
@@ -388,30 +389,30 @@ const TakeAction = ({ role }) => {
             <div className="review-row">
               <div className="review-group">
                 <label className="review-label" htmlFor="venue">Venue</label>
-                <input id="venue" className="form-input" {...register('venue')} />
+                <input disabled id="venue" className="form-input" {...register('venue')} />
               </div>
 
               <div className="review-group">
                 <label className="review-label" htmlFor="date">Date</label>
-                <input type="date" id="date" className="form-input" {...register('date')} />
+                <input disabled type="date" id="date" className="form-input" {...register('date')} />
               </div>
             </div>
 
             <div className="review-row">
               <div className="review-group">
                 <label className="review-label" htmlFor="time">Time</label>
-                <input type="time" id="time" className="form-input" {...register('time')} />
+                <input disabled type="time" id="time" className="form-input" {...register('time')} />
               </div>
 
               <div className="review-group">
                 <label className="review-label" htmlFor="dressCode">Dress Code</label>
-                <input id="dressCode" className="form-input" {...register('dressCode')} />
+                <input disabled id="dressCode" className="form-input" {...register('dressCode')} />
               </div>
             </div>
 
             <div className="review-group review-full">
               <label className="review-label" htmlFor="description">Event Description</label>
-              <textarea id="description" className="form-textarea" {...register('description')} />
+              <textarea disabled id="description" className="form-textarea" {...register('description')} />
             </div>
           </div>
         </div>
