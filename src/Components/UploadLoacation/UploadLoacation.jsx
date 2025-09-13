@@ -323,6 +323,7 @@ const UploadLocation = () => {
                 value={locationData.additionalInformation}
                 onChange={handleChange}
                 maxLength={200}
+                style={{minHeight:'200px'}}
               />
               <div className="word-info">
                 <span className={`word-count ${wordCount >= 20 ? 'valid' : ''}`}>

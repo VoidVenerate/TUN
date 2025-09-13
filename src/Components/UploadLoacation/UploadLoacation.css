@@ -44,7 +44,7 @@
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  min-height: 61vw;
+  min-height: 38.5vw;
   height: auto;
 }
 .upload-sec {
@@ -54,7 +54,7 @@
   text-align: center;
   cursor: pointer;
   transition: border-color 0.3s ease;
-  height: 30vw;
+  height: 24vw;
   justify-content: center;
 }
 
@@ -188,7 +188,7 @@
 
 .form-textarea {
   resize: none;
-  min-height: 300px;
+  min-height: 200px;
 }
 
 .form-footer {
