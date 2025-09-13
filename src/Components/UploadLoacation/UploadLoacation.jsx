@@ -240,75 +240,77 @@ const UploadLocation = () => {
         {/* Form Section */}
         <div className="form">
           <form className="form-fields" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">Location Name <span>*</span></label>
-                <input
-                  required
-                  type="text"
-                  className="form-input"
-                  placeholder="What's the name of the location?"
-                  name='locationName'
-                  value={locationData.locationName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">City <span>*</span></label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="Which city"
-                  name='city'
-                  value={locationData.city}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">State <span>*</span></label>
-                <div style={{ position: 'relative', display: 'inline-block' }}>
+            <div className="grid">
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Location Name <span>*</span></label>
+                  <input
+                    required
+                    type="text"
+                    className="form-input"
+                    placeholder="What's the name of the location?"
+                    name='locationName'
+                    value={locationData.locationName}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">City <span>*</span></label>
                   <input
                     type="text"
                     required
                     className="form-input"
-                    name="state"
-                    value={locationData.state}
+                    placeholder="Which city"
+                    name='city'
+                    value={locationData.city}
                     onChange={handleChange}
-                    readOnly
-                    style={{ paddingRight: '30px', width: '93%', color: "#fff" }}
-                  />
-                  <LockKeyhole
-                    style={{
-                      position: 'absolute',
-                      right: '25px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      pointerEvents: 'none',
-                      color: '#888'
-                    }}
                   />
                 </div>
               </div>
-              <div className="form-group">
-                <label className="form-label">Type of Spot <span>*</span></label>
-                <select
-                  className="form-select"
-                  required
-                  name='typeOfSpot'
-                  value={locationData.typeOfSpot}
-                  onChange={handleChange}
-                >
-                  <option value="">Select One</option>
-                  <option value='club'>Clubs</option>
-                  <option value='hotel'>Hotels</option>
-                  <option value='foodspot'>Food Spots</option>
-                  <option value='beach'>Beaches</option>
-                </select>
-              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">State <span>*</span></label>
+                  <div style={{ position: 'relative', display: 'inline-block' }}>
+                    <input
+                      type="text"
+                      required
+                      className="form-input"
+                      name="state"
+                      value={locationData.state}
+                      onChange={handleChange}
+                      readOnly
+                      style={{ paddingRight: '30px', width: '86%', color: "#fff" }}
+                    />
+                    <LockKeyhole
+                      style={{
+                        position: 'absolute',
+                        right: '25px',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        pointerEvents: 'none',
+                        color: '#888'
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Type of Spot <span>*</span></label>
+                  <select
+                    className="form-select"
+                    required
+                    name='typeOfSpot'
+                    value={locationData.typeOfSpot}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select One</option>
+                    <option value='club'>Clubs</option>
+                    <option value='hotel'>Hotels</option>
+                    <option value='foodspot'>Food Spots</option>
+                    <option value='beach'>Beaches</option>
+                  </select>
+                </div>
+            </div>
             </div>
 
             <div className="form-group full-width" style={{gap:"10px",  marginTop:"10px"}}>

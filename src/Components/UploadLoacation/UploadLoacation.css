@@ -67,7 +67,11 @@
   color: #aaa;
 }
 
-
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 20px;
+}
 .upload-section.drag-active {
   border-color: #6d28d9; /* purple accent when dragging */
   background-color: #1a1a1a;
@@ -171,6 +175,8 @@
 }
 .form-select {
   background: #161616;
+  width: 390px;
+  height: 58px;
 }
 
 .form-input:focus,
