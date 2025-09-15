@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../RoleContext/RoleContext';
 
-
 const ViewDetails = () => {
   const { id } = useParams(); // expects route like /viewevent/:id
   const navigate = useNavigate();
@@ -15,8 +14,12 @@ const ViewDetails = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await axios.get(`https://lagos-turnup.onrender.com/event/events/${id}`);
-        setEventData(res.data);
+        const res = await axios.get(
+          `https://lagos-turnup.onrender.com/event/events`,
+          { params: { id } }
+        );
+        // API returns an array → grab the first item
+        setEventData(res.data[0] || null);
       } catch (err) {
         console.error('Failed to fetch event:', err);
       } finally {
@@ -27,11 +30,19 @@ const ViewDetails = () => {
   }, [id]);
 
   if (loading) {
-    return <div className="review-container"><p>Loading...</p></div>;
+    return (
+      <div className="review-container">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (!eventData) {
-    return <div className="review-container"><p>Event not found.</p></div>;
+    return (
+      <div className="review-container">
+        <p>Event not found.</p>
+      </div>
+    );
   }
 
   return (

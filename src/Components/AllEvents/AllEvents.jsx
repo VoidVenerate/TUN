@@ -67,7 +67,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
                 </p>
                 <div className="LagEvents-btns">
                   <button style={{fontSize: '13px'}}>
-                    <NavLink to='/eventdetails' style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
+                    <NavLink to={`/viewdetails/${event.id}`}  style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
                   </button>
                   <button disabled className='LagEvents-buyBtn' style={{fontSize: '12px'}}>
                     Buy Tickets

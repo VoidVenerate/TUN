@@ -199,6 +199,7 @@ const Event = () => {
                   value={eventData.date || ""}
                   onChange={handleChange}
                   required
+                  min={new Date().toISOString().split("T")[0]}
                 />
                 {dateError && <p className="word-error">{dateError}</p>}
               </div>

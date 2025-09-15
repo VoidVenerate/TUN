@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import "./FtEvents.css";
+import { NavLink } from "react-router-dom";
 
 const FtEvents = () => {
   const [events, setEvents] = useState([]);
@@ -132,7 +133,7 @@ const FtEvents = () => {
                     }
                     onClick={() => handleClick(index, "details")}
                   >
-                    View Details
+                    <NavLink to={`/viewdetails/${event.id}`}  >View Details</NavLink>
                   </button>
 
                   <button disabled className="buy-tickets-btn">

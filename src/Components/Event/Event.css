@@ -327,3 +327,109 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-size: 0.875rem;
   margin-top: 2px;
 }
+/* === Tablets & Mobile (≤768px) === */
+@media (max-width: 768px) {
+  .event-unique-content {
+    flex-direction: column;
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .event-unique-upload-section {
+    flex: unset;
+    width: 100%;
+    min-height: 280px;
+  }
+
+  .event-unique-upload-area {
+    min-height: 250px;
+    margin-top: 16px;
+  }
+
+  .event-unique-flyer-preview {
+    max-height: 280px;
+  }
+
+  .event-unique-form {
+    padding: 16px;
+  }
+
+  .event-unique-form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .event-unique-form-input,
+  .event-unique-form-select,
+  .event-unique-form-textarea {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .event-unique-form-textarea {
+    min-height: 180px;
+  }
+
+  .event-unique-submit-btn {
+    width: 100%;
+  }
+}
+
+/* === Small Phones (≤480px) === */
+@media (max-width: 480px) {
+  .event-unique-title {
+    font-size: 16px;
+  }
+
+  .event-unique-upload-text p {
+    font-size: 13px;
+  }
+
+  .event-unique-upload-description {
+    font-size: 11px;
+  }
+
+  .event-unique-upload-area {
+    min-height: 200px;
+  }
+
+  .event-unique-form-label {
+    font-size: 12px;
+  }
+
+  .event-unique-form-input,
+  .event-unique-form-select,
+  .event-unique-form-textarea {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .event-unique-submit-btn {
+    font-size: 13px;
+    padding: 10px;
+  }
+}
+
+/* === Extra Small Phones (≤360px) === */
+@media (max-width: 360px) {
+  .event-unique-title {
+    font-size: 14px;
+  }
+
+  .event-unique-upload-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .event-unique-upload-title {
+    font-size: 13px;
+  }
+
+  .event-unique-upload-subtitle {
+    font-size: 11px;
+  }
+
+  .event-unique-form-textarea {
+    min-height: 140px;
+  }
+}

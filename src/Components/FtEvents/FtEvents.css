@@ -144,15 +144,20 @@
 }
 @media (min-width: 321px) and (max-width: 480px) {
   .event-img {
-    width: 350px;
-    height: 400px;
+    width: 100%;           /* take full card width */
+    height: auto;          /* auto-scale */
+    max-height: 300px;     /* optional cap */
   }
   .slider li {
-    width: 350px;
-    height: 520px;
+    width: 90%;            /* relative instead of fixed */
+    max-width: 320px;      /* prevent overflow */
+    height: auto;          /* let height adapt */
   }
   .slider-info {
-    height: 520px;
+    height: auto;          /* let content decide height */
+  }
+  .ft-events {
+    padding: 10px;
   }
 }
 

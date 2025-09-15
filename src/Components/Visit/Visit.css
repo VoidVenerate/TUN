@@ -43,24 +43,33 @@
 /* Small phones like iPhone SE (320px width) */
 @media (max-width: 360px) {
   .visit-container {
-    width: 98%; /* almost full width on small phones */
+    width: 94%; /* almost full width on small phones */
     margin-left: 1vw;
     margin-top: 2vw;
+  }
+  .caption {
+    display: none;
   }
 }
 
 /* Phones up to 480px */
 @media (min-width: 361px) and (max-width: 480px) {
   .visit-container {
-    width: 100%;
+    width: 94%;
     margin-left: 2vw;
+  }
+  .caption {
+    display: none;
   }
 }
 
 /* Tablets (481px to 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
   .visit-container {
-    width: 90%;
+    width: 94%;
     margin-left: 3vw;
+  }
+  .caption {
+    display: none;
   }
 }
