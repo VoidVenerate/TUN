@@ -313,3 +313,193 @@
   width: 100%;
   object-fit: cover;
 }
+/* === General Fixes === */
+.form-select {
+  background: #161616;
+  width: 100%; /* ✅ flexible width */
+  max-width: 390px; /* only limit on large screens */
+  height: 58px;
+}
+
+.flyer-preview {
+  width: 100%;
+  max-height: 500px; /* ✅ prevent stretching on small devices */
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* ✅ Phones (<= 480px) */
+@media (max-width: 480px) {
+  .event-form-container {
+    padding: 1rem;
+    margin-left: 0; /* ✅ remove side margin */
+  }
+
+  .header-title {
+    font-size: 1rem;
+    text-align: center; /* ✅ better alignment on small screens */
+  }
+
+  .upload-section {
+    padding: 1rem;
+    min-height: 200px;
+  }
+
+  .upload-sec {
+    margin-top: 2rem;
+    min-height: 160px;
+  }
+
+  .upload-flyer-text p,
+  .upload-description {
+    font-size: 0.8rem;
+  }
+
+  .form {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .form-label {
+    font-size: 0.8rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%; /* ✅ full width for inputs */
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .form-textarea {
+    min-height: 150px;
+  }
+
+  .create-event-btn {
+    width: 100%; /* ✅ big thumb-friendly button */
+    padding: 0.8rem;
+  }
+
+  .word-info,
+  .word-error {
+    font-size: 0.75rem;
+  }
+}
+
+/* ✅ Tablets (<= 768px) */
+@media (max-width: 768px) {
+  .event-form-container {
+    padding: 1rem;
+    margin-left: 0;
+  }
+
+  .header-title {
+    font-size: 1.25rem;
+  }
+
+  .form {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .form-row {
+    flex-direction: column; /* ✅ stack inputs */
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 0.9rem;
+    width: 100%;
+    padding: 0.7rem 1rem;
+  }
+
+  .create-event-btn {
+    width: 100%;
+  }
+
+  .upload-section,
+  .upload-sec {
+    min-height: 220px; /* ✅ keep upload box visible */
+    margin-top: 1rem;
+  }
+}
+
+/* ✅ Small Laptops/Tablets (<= 1024px) */
+@media (max-width: 1024px) {
+  .form-content {
+    grid-template-columns: 1fr; /* ✅ stack upload + form */
+    gap: 1.5rem;
+  }
+
+  .upload-section {
+    height: auto;
+    min-height: 250px;
+  }
+
+  .upload-sec {
+    height: auto;
+    min-height: 180px;
+  }
+}
+@media (max-width: 480px) {
+  /* Container */
+  .event-form-container {
+    padding: 1rem;
+    margin-left: 0; /* remove side spacing */
+    width: 84%;
+  }
+
+  /* Header */
+  .header-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  /* Upload Section */
+  .upload-section {
+    padding: 1rem;
+    min-height: 200px;
+    width: 100%;
+  }
+
+  .upload-sec {
+    margin-top: 1rem;
+    min-height: 160px;
+  }
+
+  /* Form */
+  .form {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .form-row {
+    flex-direction: column; /* stack inputs */
+    gap: 2rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%; /* full width */
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .form-textarea {
+    min-height: 150px;
+  }
+
+  /* Button */
+  .create-event-btn {
+    width: 100%;
+    padding: 0.8rem;
+  }
+
+  /* Grid sections (force single column) */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

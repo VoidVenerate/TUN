@@ -362,8 +362,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .event-unique-form-input,
   .event-unique-form-select,
   .event-unique-form-textarea {
-    width: 100%;
+    width: 94%;
     font-size: 14px;
+  }
+
+  .event-unique-form-select {
+    width: 100%;
+    height: 74px;
   }
 
   .event-unique-form-textarea {

@@ -49,7 +49,7 @@
 /* === Events Wrapper === */
 .pending-Events {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);  /* 💡 Default: 3 columns for laptops/desktops */
   gap: 20px;
   justify-content: flex-start;
   margin-left: 2vw;
@@ -60,12 +60,12 @@
 .event-card {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 20px;
-  width: 100%;
+  width: 100%;            /* ✅ Let grid control the width */
   max-width: 430px;
   height: auto;
   display: flex;
   flex-direction: column;
-  margin-top: 0vw;
+  margin-top: 0;
 }
 .events {
   padding: 20px;
@@ -111,7 +111,6 @@
   color: #fff;
   cursor: pointer;
   font-weight: 600;
-  cursor: pointer;
   transition: background 0.3s ease;
 }
 .event-actions button:hover {
@@ -201,28 +200,44 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  .pending-Events { justify-content: center; gap: 15px; }
-  .event-card { width: 90vw; height: auto; }
+  .pending-Events {
+    grid-template-columns: 1fr;    /* 1 column */
+    gap: 15px;
+    justify-content: center;
+  }
   .events img { height: 300px; }
 }
 
 /* Phones 361px - 480px */
 @media (min-width: 361px) and (max-width: 480px) {
-  .pending-Events { justify-content: center; gap: 15px; }
-  .event-card { width: 320px; }
+  .pending-Events {
+    grid-template-columns: 1fr;    /* 1 column */
+    gap: 15px;
+    justify-content: center;
+  }
   .events img { height: 325px; }
 }
 
 /* Tablets 481px - 768px */
 @media (min-width: 481px) and (max-width: 768px) {
-  .pending-Events { justify-content: center; gap: 20px; }
-  .event-card { width: 300px; }
+  .pending-Events {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 20px;
+    justify-content: center;
+  }
   .events img { height: 350px; }
 }
 
 /* Medium desktops 769px - 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .event-card { width: 45%; }
+  .pending-Events {
+    grid-template-columns: repeat(3, 1fr); /* ✅ Laptops = 3 columns */
+  }
 }
 
-
+/* Big desktops >1024px */
+@media (min-width: 1025px) {
+  .pending-Events {
+    grid-template-columns: repeat(3, 1fr); /* keep 3, can bump to 4 if you want later */
+  }
+}

@@ -241,7 +241,7 @@ const EditableEventReviewRHF = ({ role }) => {
       <header className="review-header">
         <h1 className="review-header-title" style={{ fontFamily: 'Rushon Ground' }}>
           <button onClick={() => navigate(-1)} className="review-back-btn"><ChevronLeft/></button>
-          EDIT EVENT
+          <span>EDIT EVENT</span>
         </h1>
       </header>
 

@@ -5,3 +5,9 @@
 .reject-btn:hover {
   background: rgba(255, 60, 60, 0.2);
 }
+@media (min-width:361px) and (max-width: 800px) {
+  .review-container {
+    margin-left: 0;
+    width: 91%;
+  }
+}

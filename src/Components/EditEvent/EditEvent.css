@@ -317,3 +317,8 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+@media (min-width:300px) and (max-width: 800px) {
+  .review-header h1 {
+    display: flex;
+  }
+}

@@ -6,7 +6,7 @@
   color: #fff;
   min-height: 100vh;
   padding: 20px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'DM Sans';
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -242,7 +242,6 @@
 
   .review-back-btn,
   .review-submit-btn {
-    width: 100%;
     text-align: center;
   }
 }
