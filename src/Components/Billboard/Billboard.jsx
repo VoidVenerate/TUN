@@ -58,7 +58,7 @@ const Billboard = () => {
           </a>
         ))
       ) : (
-        <p className="loading-text">Loading banners...</p>
+        <p className="loading-text"></p>
       )}
     </div>
   );
