@@ -23,7 +23,6 @@ const FeatureDuration = ({ role, show, onClose, onConfirm }) => {
     }
   };
 
-  if (role && role !== "sub-admin" && role !== "super-admin") return null;
 
   return (
     <Modal

@@ -22,7 +22,9 @@ const UserNavbar = () => {
     <nav className="navbar">
       <div className="navbar-header">
         <div className="navbar-logo">
-          <img src={logo} alt="TurnUp Lagos" />
+          <NavLink to='/home'>
+            <img src={logo} alt="TurnUp Lagos" />
+          </NavLink>
         </div>
 
         <div className={`hamburger ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>

@@ -141,7 +141,7 @@ const TakeAction = ({ role }) => {
       fd.append('is_featured', data.featureChoice === 'yes-feature');
       fd.append('contact_method', data.contactMethod);
       fd.append('contact_value', data.contactValue);
-      fd.append('link', data.link);
+      fd.append('contact_link', data.link);
 
       if (data.flyerFile && data.flyerFile.length > 0) {
         fd.append('event_flyer', data.flyerFile[0]);
