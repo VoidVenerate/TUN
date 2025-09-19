@@ -331,8 +331,8 @@
   color: #888;
 }
 .event-horizontal-line {
-  display: flex;
-  justify-content: space-between; /* spread evenly */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;                      /* spacing */
   flex-wrap: wrap;                /* wrap on smaller screens */
   margin-bottom: 20px;
