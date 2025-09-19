@@ -131,7 +131,7 @@ const FtEvents = () => {
                         ? "active"
                         : ""
                     }
-                    onClick={() => navigate(`/viewdetails/${event.id}`)}
+                    onClick={() => navigate(`/viewdetails/${event.event_id}`)}
                     
                   >
                     View Details
