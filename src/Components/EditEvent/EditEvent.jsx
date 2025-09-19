@@ -1,5 +1,4 @@
-// EditableEventReviewRHF.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useEvent } from '../EventContext/EventContext';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -10,224 +9,370 @@ import './EditEvent.css';
 import { ChevronLeft, Trash2, Pencil } from 'lucide-react';
 import axios from 'axios';
 
+// Constants
+const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
+const MAX_IMAGE_DIMENSIONS = { width: 500, height: 800 };
+const API_BASE_URL = 'https://lagos-turnup.onrender.com';
+
+// Form validation rules
+const VALIDATION_RULES = {
+  eventName: { required: 'Event name is required' },
+  location: { required: 'Location is required' },
+  contactMethod: (isFeatured) => ({
+    required: isFeatured ? 'Contact method is required' : false,
+  }),
+  contactValue: (isFeatured) => ({
+    required: isFeatured ? 'Contact information is required' : false,
+    validate: (value, formValues) => {
+      if (!isFeatured) return true;
+      if (!value) return 'Contact information is required';
+      
+      // Validate email format
+      if (formValues.contactMethod === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value) || 'Please enter a valid email address';
+      }
+      
+      // Validate phone format (basic)
+      if (formValues.contactMethod === 'phone' || formValues.contactMethod === 'whatsapp') {
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+        return phoneRegex.test(value) || 'Please enter a valid phone number';
+      }
+      
+      return true;
+    },
+  }),
+};
+
+// Default form values
+const DEFAULT_FORM_VALUES = {
+  eventName: '',
+  location: '',
+  venue: '',
+  date: '',
+  time: '',
+  dressCode: '',
+  description: '',
+  featureChoice: 'no-feature',
+  contactMethod: '',
+  contactValue: '',
+  link: '',
+  flyerFile: null,
+  flyerPreview: null,
+};
+
+// Custom hooks
+const useFilePreview = (file, setValue) => {
+  useEffect(() => {
+    if (!file || !file.length) {
+      setValue('flyerPreview', null);
+      return;
+    }
+
+    const selectedFile = file[0];
+    
+    if (!ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
+      alert('Invalid file type. Only PNG and JPEG are allowed.');
+      setValue('flyerFile', null);
+      setValue('flyerPreview', null);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width <= MAX_IMAGE_DIMENSIONS.width && img.height <= MAX_IMAGE_DIMENSIONS.height) {
+          setValue('flyerPreview', event.target.result);
+        } else {
+          alert(`Image must be max ${MAX_IMAGE_DIMENSIONS.width}x${MAX_IMAGE_DIMENSIONS.height}px.`);
+          setValue('flyerFile', null);
+          setValue('flyerPreview', null);
+        }
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(selectedFile);
+  }, [file, setValue]);
+};
+
+const useModal = () => {
+  const [modalInfo, setModalInfo] = useState({ 
+    show: false, 
+    title: '', 
+    message: '', 
+    subMessage: '', 
+    type: 'info',
+    footerButtons: null 
+  });
+
+  const showModal = useCallback((config) => {
+    setModalInfo(prev => ({ ...prev, show: true, ...config }));
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setModalInfo(prev => ({ ...prev, show: false }));
+  }, []);
+
+  return { modalInfo, showModal, closeModal };
+};
+
+// Utility functions
+const normalizeEventData = (data) => ({
+  ...data,
+  id: data.id || data.event_id,
+  event_id: data.id || data.event_id,
+  flyerPreview: data.flyer_url || data.event_flyer || '',
+});
+
+const buildFlyerUrl = (flyerPath) => {
+  if (!flyerPath) return '';
+  if (flyerPath.startsWith('http')) return flyerPath;
+  return `${API_BASE_URL}/${flyerPath.replace(/^\//, '')}`;
+};
+
+const createFormData = (data, eventId, isFeatured) => {
+  const formData = new FormData();
+  
+  const fieldMappings = {
+    event_name: data.eventName || '',
+    state: data.location || '',
+    venue: data.venue || '',
+    date: data.date || '',
+    time: data.time || '',
+    dress_code: data.dressCode || '',
+    event_description: data.description || '',
+    is_featured: isFeatured,
+    featured_requested: isFeatured,
+    contact_method: data.contactMethod || '',
+    contact_link: data.link || '', // This is for additional links
+  };
+
+  Object.entries(fieldMappings).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  // Handle contact_value separately - you might need to store this in a custom field
+  // or concatenate it with contact_method for the API
+  if (isFeatured && data.contactValue) {
+    // Option 1: Store in contact_link if no separate link provided
+    if (!data.link) {
+      formData.set('contact_link', data.contactValue);
+    } else {
+      // Option 2: Store in a custom field or combine with contact_method
+      // You might need to discuss with backend team about adding contact_value field
+      formData.append('contact_info', JSON.stringify({
+        method: data.contactMethod,
+        value: data.contactValue
+      }));
+    }
+  }
+
+  if (data.flyerFile && data.flyerFile.length > 0) {
+    formData.append('event_flyer', data.flyerFile[0]);
+  }
+
+  return formData;
+};
+
+// Main component
 const EditableEventReviewRHF = ({ role }) => {
   const { eventData, updateEvent, setEventData, deleteEvent } = useEvent();
   const navigate = useNavigate();
   const { event_id } = useParams();
+  
+  // State management
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showFeatureDuration, setShowFeatureDuration] = useState(false);
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  
+  const { modalInfo, showModal, closeModal } = useModal();
 
+  // Form setup
   const {
     register,
     handleSubmit,
     reset,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
-    defaultValues: {
-      eventName: '',
-      location: '',
-      venue: '',
-      date: '',
-      time: '',
-      dressCode: '',
-      description: '',
-      featureChoice: 'no-feature',
-      contactMethod: '',
-      contactValue: '',
-      link: '',
-      flyerFile: null,
-      flyerPreview: null,
-    },
+    defaultValues: DEFAULT_FORM_VALUES,
     shouldUnregister: false,
   });
 
-  const [modalInfo, setModalInfo] = useState({ show: false, title: '', message: '', subMessage: '' });
-  const [showFeatureDuration, setShowFeatureDuration] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  const watchedValues = watch(['flyerFile', 'featureChoice', 'contactMethod']);
+  const [flyerFile, featureChoice, contactMethod] = watchedValues;
+  const isFeatured = featureChoice === 'yes-feature';
 
-  const flyerFile = watch('flyerFile');
-  const featureChoice = watch('featureChoice');
+  // Custom hooks
+  useFilePreview(flyerFile, setValue);
 
-  useEffect(() => {
-    if (flyerFile && flyerFile.length > 0) {
-      const file = flyerFile[0];
-      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-      if (!allowedTypes.includes(file.type)) {
-        alert('Invalid file type. Only PNG and JPEG are allowed.');
-        setValue('flyerFile', null);
-        setValue('flyerPreview', null);
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          if (img.width <= 500 && img.height <= 800) {
-            setValue('flyerPreview', event.target.result);
-          } else {
-            alert('Image must be max 500x800px.');
-            setValue('flyerFile', null);
-            setValue('flyerPreview', null);
-          }
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setValue('flyerPreview', null);
-    }
-  }, [flyerFile, setValue]);
+  // Memoized values
+  const validationRules = useMemo(() => ({
+    eventName: VALIDATION_RULES.eventName,
+    location: VALIDATION_RULES.location,
+    contactMethod: VALIDATION_RULES.contactMethod(isFeatured),
+    contactValue: VALIDATION_RULES.contactValue(isFeatured),
+  }), [isFeatured]);
 
-  // fetch on mount
-  useEffect(() => {
+  // API functions
+  const fetchEventData = useCallback(async () => {
     if (!event_id) return;
-    const fetchEvent = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await api.get(`/event/events`, {
-          params: { id: event_id },
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = res.data[0];
-        if (!data) throw new Error('Event not found');
 
-        const normalizedData = {
-          ...data,
-          id: data.id || data.event_id,
-          event_id: data.id || data.event_id,
-          flyerPreview: data.flyer_url || data.event_flyer || '',
-        };
-        setEventData(normalizedData);
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await api.get('/event/events', {
+        params: { id: event_id },
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-        const featureChoiceValue = data.is_featured ? 'yes-feature' : 'no-feature';
-
-        reset({
-          eventName: data.event_name || '',
-          date: data.date || '',
-          time: data.time || '',
-          location: data.state || '',
-          venue: data.venue || '',
-          dressCode: data.dress_code || '',
-          description: data.event_description || '',
-          flyerPreview: data.flyer_url
-            ? data.flyer_url
-            : data.event_flyer
-            ? `https://lagos-turnup.onrender.com/${data.event_flyer.replace(/^\//, '')}`
-            : '',
-          featureChoice: featureChoiceValue,
-          link: data.contact_link || '',
-          contactMethod: data.contact_method || '',
-          contactValue: data.contact_value || '',
-        });
-      } catch (err) {
-        console.error('Failed to fetch event', err);
-        setModalInfo({
-          show: true,
-          title: 'Error',
-          message: 'Error fetching event details.',
-          subMessage: err?.message || '',
-        });
+      const eventData = response.data[0];
+      if (!eventData) {
+        throw new Error('Event not found');
       }
-    };
-    fetchEvent();
-  }, [event_id, reset, setEventData]);
-  console.log("event_id from params:", event_id);
-  console.log("eventData:", eventData);
 
-  const onSubmit = async (data) => {
-    const idToUse = parseInt(event_id)
-    if (!idToUse) {
-      setModalInfo({ show: true, title: 'Error', message: 'No event ID to update.', subMessage: '' });
+      const normalizedData = normalizeEventData(eventData);
+      setEventData(normalizedData);
+
+      // Reset form with fetched data
+      reset({
+        eventName: eventData.event_name || '',
+        date: eventData.date || '',
+        time: eventData.time || '',
+        location: eventData.state || '',
+        venue: eventData.venue || '',
+        dressCode: eventData.dress_code || '',
+        description: eventData.event_description || '',
+        flyerPreview: buildFlyerUrl(eventData.flyer_url || eventData.event_flyer),
+        featureChoice: eventData.is_featured ? 'yes-feature' : 'no-feature',
+        link: eventData.contact_link || '',
+        contactMethod: eventData.contact_method || '',
+        // Map contact_link back to contactValue if it exists and looks like contact info
+        contactValue: eventData.contact_value || (
+          eventData.contact_method && eventData.contact_link && 
+          !eventData.contact_link.startsWith('http') ? eventData.contact_link : ''
+        ) || '',
+      });
+    } catch (error) {
+      console.error('Failed to fetch event:', error);
+      showModal({
+        title: 'Error',
+        message: 'Error fetching event details.',
+        subMessage: error?.message || '',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [event_id, reset, setEventData, showModal]);
+
+  // Effects
+  useEffect(() => {
+    fetchEventData();
+  }, [fetchEventData]);
+
+  // Event handlers
+  const handleFeatureChoiceChange = useCallback((choice) => {
+    setValue('featureChoice', choice, { shouldValidate: true });
+  }, [setValue]);
+
+  const handleSaveEvent = useCallback(async (data) => {
+    const eventIdToUpdate = parseInt(event_id);
+    
+    if (!eventIdToUpdate) {
+      showModal({
+        title: 'Error',
+        message: 'No event ID to update.',
+        type: 'error',
+      });
       return;
     }
 
-    if (featureChoice === 'yes-feature') {
-      if (!(data.contactMethod ?? '') || !(data.contactValue ?? '')) {
-        setModalInfo({
-          show: true,
-          title: 'Missing Information',
-          message: 'Contact method and contact value are required when featuring an event.',
-          subMessage: 'Please fill in your preferred contact information.',
-        });
-        return;
-      }
+    // Validate featured event requirements
+    if (isFeatured && (!data.contactMethod || !data.contactValue)) {
+      showModal({
+        title: 'Missing Information',
+        message: 'Contact method and contact value are required when featuring an event.',
+        subMessage: 'Please fill in your preferred contact information.',
+        type: 'warning',
+      });
+      return;
     }
 
     setSaving(true);
+
+    // Add this after the API response
+    console.log('API Response:', eventData);
+    console.log('contact_method:', eventData.contact_method);
+    console.log('contact_value:', eventData.contact_value);
+    console.log('contact_link:', eventData.contact_link);
+    console.log('is_featured:', eventData.is_featured);
+    
     try {
-      const fd = new FormData();
-      fd.append('event_id', String(event_id))
-      fd.append('event_name', data.eventName ?? '');
-      fd.append('state', data.location ?? '');
-      fd.append('venue', data.venue ?? '');
-      fd.append('date', data.date ?? '');
-      fd.append('time', data.time ?? '');
-      fd.append('dress_code', data.dressCode ?? '');
-      fd.append('event_description', data.description ?? '');
+      const formData = createFormData(data, event_id, isFeatured);
+      let updatedEvent;
 
-      const isFeatured = featureChoice === 'yes-feature';
-      fd.append('is_featured', isFeatured ? 'true' : 'false');
-      fd.append('featured_requested', isFeatured ? 'true' : 'false');
-
-      fd.append('contact_method', data.contactMethod ?? eventData?.contactMethod ?? '');
-      fd.append('contact_value', data.contactValue ?? eventData?.contactValue ?? '');
-      fd.append('contact_link', data.link ?? eventData?.link ?? '');
-
-      if (data.flyerFile && data.flyerFile.length > 0) {
-        fd.append('event_flyer', data.flyerFile[0]);
-      }
-
-      let updated;
       if (typeof updateEvent === 'function') {
-        updated = await updateEvent(idToUse, fd);
+        updatedEvent = await updateEvent(eventIdToUpdate, formData);
       } else {
         const token = localStorage.getItem('token');
-        const res = await axios.put(`https://lagos-turnup.onrender.com/event/events/${idToUse}`, fd, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        updated = res.data;
+        const response = await axios.put(
+          `${API_BASE_URL}/event/events/${event_id}`,
+          formData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        updatedEvent = response.data;
       }
 
-      if (updated && typeof updated === 'object' && (updated.id || updated.event_id || updated.event_name)) {
-        setEventData(updated);
+      if (updatedEvent && typeof updatedEvent === 'object') {
+        setEventData(updatedEvent);
       }
 
-      setModalInfo({ show: true, title: 'Success', message: 'Event updated successfully.', subMessage: '' });
+      showModal({
+        title: 'Success',
+        message: 'Event updated successfully.',
+        type: 'success',
+      });
 
       if (isFeatured) {
         setShowFeatureDuration(true);
       } else {
         navigate('/adminevents');
       }
-    } catch (err) {
-      console.error('Save failed', err);
-      const sub = err?.response?.data || err?.message || '';
-      setModalInfo({
-        show: true,
+    } catch (error) {
+      console.error('Save failed:', error);
+      showModal({
         title: 'Error',
-        message: 'Failed to save event. Try again.',
-        subMessage: JSON.stringify(sub),
+        message: 'Failed to save event. Please try again.',
+        subMessage: error?.response?.data || error?.message || '',
+        type: 'error',
       });
     } finally {
       setSaving(false);
     }
-  };
+  }, [event_id, isFeatured, updateEvent, setEventData, showModal, navigate]);
 
-  const handleDelete = () => {
-    if (!eventData?.id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No event ID to delete.', subMessage: '' });
+  const handleDeleteEvent = useCallback(() => {
+    if (!eventData?.event_id) {
+      showModal({
+        title: 'Error',
+        message: 'No event ID to delete.',
+        type: 'error',
+      });
       return;
     }
-    setModalInfo({
-      show: true,
-      type: 'duration',
+
+    showModal({
+      type: 'confirmation',
       message: 'Are you sure you want to delete this event?',
       subMessage: 'This action is permanent and cannot be undone.',
       footerButtons: (
         <div className="modal-btn-group">
-          <button className="modal-close-btn" onClick={() => setModalInfo({ show: false })}>
+          <button className="modal-close-btn" onClick={closeModal}>
             Cancel
           </button>
           <button
@@ -243,8 +388,8 @@ const EditableEventReviewRHF = ({ role }) => {
                     headers: { Authorization: `Bearer ${token}` },
                   });
                 }
-                setModalInfo({
-                  show: true,
+
+                showModal({
                   type: 'success',
                   title: 'Deleted',
                   message: 'Event deleted successfully.',
@@ -260,12 +405,12 @@ const EditableEventReviewRHF = ({ role }) => {
                     </button>
                   ),
                 });
-              } catch (err) {
-                setModalInfo({
-                  show: true,
+              } catch (error) {
+                showModal({
                   title: 'Error',
                   message: 'Failed to delete event. Please try again.',
-                  subMessage: err?.message || '',
+                  subMessage: error?.message || '',
+                  type: 'error',
                 });
               } finally {
                 setDeleting(false);
@@ -277,25 +422,30 @@ const EditableEventReviewRHF = ({ role }) => {
         </div>
       ),
     });
-  };
+  }, [eventData, deleteEvent, showModal, closeModal, navigate]);
 
-  const closeModal = () => setModalInfo((prev) => ({ ...prev, show: false }));
-
-  const handleFeatureConfirm = (selectedDuration) => {
+  const handleFeatureConfirm = useCallback((selectedDuration) => {
     setShowFeatureDuration(false);
-    setModalInfo({
-      show: true,
+    showModal({
       title: 'Success',
       message: `Event featured for ${selectedDuration}.`,
-      subMessage: '',
+      type: 'success',
     });
     navigate('/adminevents');
-  };
+  }, [showModal, navigate]);
 
-  // Corrected feature choice handler
-  const handleFeatureChoiceChange = (choice) => {
-    setValue('featureChoice', choice, { shouldValidate: true });
-  };
+  const handleSaveConfirm = useCallback(() => {
+    setShowSaveConfirm(true);
+  }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="review-container">
+        <div className="loading-spinner">Loading event details...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="review-container">
@@ -310,17 +460,16 @@ const EditableEventReviewRHF = ({ role }) => {
 
       <form
         id="eventForm"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleSaveEvent)}
         className="review-form-wrapper"
         encType="multipart/form-data"
       >
-        {/* two-column area */}
         <div className="review-content">
-          {/* Flyer */}
+          {/* Flyer Section */}
           <div className="review-upload-section">
             <div className="review-upload-label">
               <span className="review-upload-text">Event Flyer</span>
-              <div className="review-upload-description">Uploaded flyer preview.</div>
+              <div className="review-upload-description">Current flyer preview.</div>
             </div>
             <div className="review-upload-area">
               <img
@@ -332,26 +481,40 @@ const EditableEventReviewRHF = ({ role }) => {
             </div>
           </div>
 
-          {/* Event fields */}
+          {/* Form Fields */}
           <div className="review-form">
             <div className="review-fields">
               <div className="review-row">
                 <div className="review-group">
                   <label className="review-label" htmlFor="eventName">
-                    Event Name
+                    Event Name *
                   </label>
-                  <input id="eventName" className="form-input" {...register('eventName', { required: true })} />
+                  <input 
+                    id="eventName" 
+                    className="form-input" 
+                    {...register('eventName', validationRules.eventName)} 
+                  />
+                  {errors.eventName && (
+                    <span className="error-message">{errors.eventName.message}</span>
+                  )}
                 </div>
 
                 <div className="review-group">
                   <label className="review-label" htmlFor="location">
-                    State
+                    State *
                   </label>
-                  <select id="location" className="form-input" {...register('location', { required: true })} defaultValue="">
+                  <select 
+                    id="location" 
+                    className="form-input" 
+                    {...register('location', validationRules.location)}
+                  >
                     <option value="">Where in Nigeria is the event?</option>
                     <option value="Lagos">Within Lagos</option>
                     <option value="Outside Lagos">Beyond Lagos</option>
                   </select>
+                  {errors.location && (
+                    <span className="error-message">{errors.location.message}</span>
+                  )}
                 </div>
               </div>
 
@@ -395,7 +558,7 @@ const EditableEventReviewRHF = ({ role }) => {
           </div>
         </div>
 
-        {/* === FEATURE BLOCK === */}
+        {/* Feature Section */}
         <div className="feature-block" style={{ marginTop: 20 }}>
           <div className="review-fields">
             <div className="toggle-group" style={{ marginBottom: 12 }}>
@@ -415,7 +578,7 @@ const EditableEventReviewRHF = ({ role }) => {
               </button>
             </div>
 
-            {featureChoice === 'yes-feature' && (
+            {isFeatured && (
               <div className="contact-section">
                 <h3 className="contact-title">📧 We'll need a way to reach you *</h3>
                 <p className="contact-description">
@@ -426,31 +589,31 @@ const EditableEventReviewRHF = ({ role }) => {
                   <div className="contact-group">
                     <select
                       className="contact-select"
-                      {...register('contactMethod', {
-                        required: featureChoice === 'yes-feature' ? 'Contact method is required' : false,
-                      })}
+                      {...register('contactMethod', validationRules.contactMethod)}
                     >
                       <option value="">Choose a method</option>
                       <option value="email">Email Address</option>
                       <option value="phone">Phone Number</option>
                       <option value="whatsapp">WhatsApp</option>
                     </select>
-                    {errors.contactMethod && <span className="error-message">{errors.contactMethod.message}</span>}
+                    {errors.contactMethod && (
+                      <span className="error-message">{errors.contactMethod.message}</span>
+                    )}
                   </div>
 
                   <input
                     className="contact-input"
-                    placeholder={`Enter your ${watch('contactMethod') || 'contact info'}`}
-                    {...register('contactValue', {
-                      required: featureChoice === 'yes-feature' ? 'Contact information is required' : false,
-                    })}
+                    placeholder={`Enter your ${contactMethod || 'contact info'}`}
+                    {...register('contactValue', validationRules.contactValue)}
                   />
-                  {errors.contactValue && <span className="error-message">{errors.contactValue.message}</span>}
+                  {errors.contactValue && (
+                    <span className="error-message">{errors.contactValue.message}</span>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Additional info link */}
+            {/* Additional Information Link */}
             <div className="additional-info-section">
               <h3 className="additional-title">Additional Information Link</h3>
               <p className="additional-description">
@@ -467,12 +630,13 @@ const EditableEventReviewRHF = ({ role }) => {
               </div>
             </div>
 
+            {/* Action Buttons */}
             <footer className="review-footer">
               <button
                 type="button"
                 className="review-submit-btn review-submit-btn--save"
-                disabled={saving}
-                onClick={() => setShowSaveConfirm(true)}
+                disabled={saving || !isDirty}
+                onClick={handleSaveConfirm}
               >
                 <Pencil size={16} />
                 {saving ? 'Saving Event...' : 'Save Event'}
@@ -481,7 +645,7 @@ const EditableEventReviewRHF = ({ role }) => {
                 type="button"
                 className="review-submit-btn review-submit-btn--delete"
                 disabled={deleting}
-                onClick={handleDelete}
+                onClick={handleDeleteEvent}
               >
                 <Trash2 size={16} />
                 {deleting ? 'Deleting Event...' : 'Delete Event'}
@@ -491,17 +655,21 @@ const EditableEventReviewRHF = ({ role }) => {
         </div>
       </form>
 
-      {/* Feature Duration */}
+      {/* Feature Duration Modal */}
       {showFeatureDuration && (
-        <FeatureDuration role={role} onClose={() => setShowFeatureDuration(false)} onConfirm={handleFeatureConfirm} />
+        <FeatureDuration 
+          role={role} 
+          onClose={() => setShowFeatureDuration(false)} 
+          onConfirm={handleFeatureConfirm} 
+        />
       )}
 
-      {/* Save confirmation modal */}
+      {/* Save Confirmation Modal */}
       {showSaveConfirm && (
         <Modal
           show={showSaveConfirm}
           onClose={() => setShowSaveConfirm(false)}
-          type="duration"
+          type="confirmation"
           message="Do you want to save the changes to this event?"
           subMessage="Your updates will overwrite the current event details."
           footerButtons={
@@ -513,7 +681,7 @@ const EditableEventReviewRHF = ({ role }) => {
                 className="modal-close-btn-primary"
                 onClick={() => {
                   setShowSaveConfirm(false);
-                  handleSubmit(onSubmit)();
+                  handleSubmit(handleSaveEvent)();
                 }}
               >
                 Yes, Save
@@ -523,18 +691,16 @@ const EditableEventReviewRHF = ({ role }) => {
         />
       )}
 
-      {/* Feedback modal */}
+      {/* General Purpose Modal */}
       <Modal
         show={modalInfo.show}
         onClose={closeModal}
-        type="duration"
+        type={modalInfo.type}
         title={modalInfo.title}
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
         footerButtons={
-          modalInfo.footerButtons ? (
-            modalInfo.footerButtons
-          ) : (
+          modalInfo.footerButtons || (
             <button onClick={closeModal} className="modal-close-btn-primary">
               Close
             </button>
