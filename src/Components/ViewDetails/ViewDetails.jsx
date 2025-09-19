@@ -201,11 +201,7 @@ const ViewDetails = () => {
                   </a>
                 ) : (
                   <div className="no">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                      <path d="M12 16V12M12 8H12.01" stroke="currentColor" strokeWidth="2"/>
-                    </svg>
-                  <span>No Additional Information</span>
+                    <span>🔗No Additional Information</span>
                   </div>
                 )}
               </span>
@@ -213,10 +209,11 @@ const ViewDetails = () => {
           </div>
         </div>
 
+        <hr />
+
         {/* Similar Events */}
         {similarEvents.length > 0 && (
           <div className="similar-events-section">
-            <h3 className="similar-events-title">Similar Events</h3>
             <div className="similar-events-grid">
               {similarEvents.map((event, index) => (
                 <div key={event.id || index} className="similar-event-card">
