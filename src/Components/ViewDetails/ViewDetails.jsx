@@ -189,22 +189,24 @@ const ViewDetails = () => {
 
 
             <div className="no-additional-info">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                <path d="M12 16V12M12 8H12.01" stroke="currentColor" strokeWidth="2"/>
-              </svg>
               <span className="info-value">
                 {eventData.contact_link ? (
                   <a 
                     href={eventData.contact_link} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className='modal-close-btn-primary'
+                    className='modal-close-btn-primary-info'
                   >
-                    Additional information
+                    🔗 More Event Information
                   </a>
                 ) : (
+                  <div className="no">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M12 16V12M12 8H12.01" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
                   <span>No Additional Information</span>
+                  </div>
                 )}
               </span>
             </div>
