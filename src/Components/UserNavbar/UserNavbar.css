@@ -136,7 +136,7 @@
 .hamburger span {
   display: block;
   height: 3px;
-  background: #5423D2;
+  background: #fff;
   border-radius: 2px;
   transition: all 0.3s ease;
   position: relative;
@@ -196,7 +196,7 @@
 
   .navbar-link {
     padding: 10px 0;
-    color: #5423D2;
+    color: #7f7f7f;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 

@@ -158,6 +158,8 @@
   }
   .ft-events {
     padding: 10px;
+    width: 86%;
+    margin-left: 4vw;
   }
 }
 

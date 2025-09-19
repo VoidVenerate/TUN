@@ -321,5 +321,6 @@ a {
 @media (max-width: 600px) {
   .LagEvents-list {
     grid-template-columns: 1fr; /* phones → single column */
+    margin-left: 4vw;
   }
 }
