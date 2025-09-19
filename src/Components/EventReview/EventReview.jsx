@@ -43,6 +43,8 @@ const EventReview = () => {
       formData.append('event_description', eventData.description || '');
       formData.append('is_featured', eventData.featureChoice === 'yes-feature');
       formData.append('feature_duration', eventData.featureDuration || '');
+      formData.append('contact_method', eventData.contactMethod || '');
++     formData.append('contact_link', eventData.link || '');
 
       if (eventData.flyer) formData.append('event_flyer', eventData.flyer);
 

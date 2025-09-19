@@ -98,7 +98,7 @@ const PromoteBanner = () => {
 
       const formData = new FormData();
       formData.append("name", bannerData.bannerName);
-      formData.append("banner_url", bannerData.bannerLink || "");
+      formData.append("banner_link", bannerData.bannerLink || "");
 
       if (isAdmin) {
         // Admin uploads go straight into banner and are auto-approved

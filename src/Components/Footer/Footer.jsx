@@ -72,9 +72,10 @@ const Footer = () => {
       </div>
       <hr />
       <div className="footer-logo">
-        <img src={fb} alt="Facebook" />
-        <img src={x} alt="X (Twitter)" />
-        <img src={ig} alt="Instagram" />
+        <NavLink to='' ><img src={fb} alt="Facebook" /></NavLink>
+        <NavLink to='https://x.com/TurnUpLag'><img src={x} alt="X (Twitter)" /></NavLink>
+        <NavLink to='https://www.instagram.com/turnuplag/'><img src={ig} alt="Instagram" /></NavLink>
+        
       </div>
       <div className="footer-copyright">
         <p>Copyright &copy; TurnupLagos | All right reserved</p>

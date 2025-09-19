@@ -119,7 +119,7 @@ const FtEvents = () => {
                   <div className="event-text">
                     <p>{event.event_name}</p>
                     <p>
-                      {event.venue} • {event.state}
+                      {event.state}
                     </p>
                   </div>
                 </div>
@@ -131,9 +131,10 @@ const FtEvents = () => {
                         ? "active"
                         : ""
                     }
-                    onClick={() => handleClick(index, "details")}
+                    onClick={() => navigate(`/viewdetails/${event.id}`)}
+                    
                   >
-                    <NavLink to={`/viewdetails/${event.id}`}  >View Details</NavLink>
+                    View Details
                   </button>
 
                   <button disabled className="buy-tickets-btn">

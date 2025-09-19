@@ -13,7 +13,10 @@
   padding: 20px;
   border-bottom: 1px solid #333;
   position: relative;
+  width: 90%;
+  margin-left: 3vw;
 }
+
 
 .back-btn {
   background: none;
@@ -44,6 +47,8 @@
 /* ===== MAIN CONTENT ===== */
 .event-details-content {
   padding: 20px;
+  width: 94%;
+  margin-left: 2vw;
 }
 
 .header-left {
@@ -59,7 +64,7 @@
   padding: 24px;
   margin-bottom: 32px;
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 351px 1fr;
   gap: 32px;
 }
 
@@ -75,24 +80,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 20px;
-  padding: 10px;
-  background: #0f0f0f;
+  max-width: 451px;
+  max-height: 572px;
+
 }
 
 .event-flyer {
   width: 100%;
-  max-width: 320px;
   border-radius: 12px;
-  aspect-ratio: 3/4;
   object-fit: cover;
+  height: 100%;
 }
 
 .flyer-placeholder {
   width: 100%;
   max-width: 280px;
-  aspect-ratio: 3/4;
   border: 2px dashed #444;
   border-radius: 12px;
   display: flex;
@@ -237,7 +240,7 @@
 
 .similar-event-card {
   background: #0a0a0a;
-  border-radius: 12px;
+  border-radius: 20px;
   overflow: hidden;
   border: 1px solid #333;
   height: 650px;
@@ -249,11 +252,13 @@
   display: flex;
   justify-content: center;
   border: none;
+  
 }
 .similar-event-image img {
   width: 90%;
   height: 97%;
   margin-top: 20px;
+  border-radius: 20px;
 }
 
 .similar-event-placeholder {
@@ -287,14 +292,13 @@
 }
 .view-details-btn {
   flex: 1;
-  padding: 8px 16px;
-  background: none;
-  border: 1px solid #555;
-  color: #ffffff;
+  padding: 20px 24px 20px 24px;
+  border: none;
   border-radius: 100px;
+  background-color: rgba(255, 255, 255, 0.070);
+  color: #fff;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 .view-details-btn:hover {
   background: #333;
@@ -303,7 +307,7 @@
 .buy-ticket-btn {
   flex: 1;
   padding: 20px 24px;
-  background: rgba(255, 255, 255, 0.057);
+  background: rgba(255, 255, 255, 0.01);
   border: none;
   color: rgba(255, 255, 255, 0.157);
   border-radius: 100px;
@@ -326,4 +330,23 @@
   min-height: 50vh;
   font-size: 18px;
   color: #888;
+}
+.event-horizontal-line {
+  display: flex;
+  justify-content: space-between; /* spread evenly */
+  gap: 20px;                      /* spacing */
+  flex-wrap: wrap;                /* wrap on smaller screens */
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px; /* stops items from shrinking too small */
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
 }

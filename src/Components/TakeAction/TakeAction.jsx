@@ -107,7 +107,7 @@ const TakeAction = ({ role }) => {
               ? `https://lagos-turnup.onrender.com/${data.event_flyer.replace(/^\//, '')}`
               : '',
           featureChoice: data.is_featured ? 'yes-feature' : 'no-feature',
-          link: data.link || '',
+          link: data.contact_link || '',
           contactMethod: data.contact_method || '',
           contactValue: data.contact_value || ''
         });
@@ -159,7 +159,7 @@ const TakeAction = ({ role }) => {
       }
 
       setEventData(updated);
-      setModalInfo({ show: true, title: 'Success', message: 'Event updated successfully.', subMessage: '' });
+      setModalInfo({ show: true, title: 'Success', message: 'Event updated successfully.', subMessage: '',  });
 
       if (featureChoice === 'yes-feature') {
         setShowFeatureDuration(true);

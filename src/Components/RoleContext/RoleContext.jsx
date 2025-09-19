@@ -12,7 +12,6 @@ async function fetchUserRules() {
     const response = await axios.get("https://lagos-turnup.onrender.com/me", {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log("Token:", localStorage.getItem("token"));
 
   
     return response.data;
@@ -22,7 +21,6 @@ async function fetchUserRules() {
     return { role: "guest", permissions: [] };
   }
 }
-console.log(localStorage.getItem("token"));
 
 export function AuthProvider({ children }) {
   const [rules, setRules] = useState(() => {

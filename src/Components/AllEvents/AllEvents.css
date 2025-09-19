@@ -42,7 +42,6 @@
 .LagEvents-list {
   display: grid;                     /* ← activate grid mode */
   grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-  gap: 20px;                          /* space between cards */
   margin-top: 0vw;
   margin-left: 2vw;
   box-sizing: border-box;

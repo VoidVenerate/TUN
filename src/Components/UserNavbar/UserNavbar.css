@@ -45,7 +45,7 @@
   cursor: pointer;
   font-weight: 500;
   position: relative;
-  color: #03e9f4;
+  color: #5423D2;
   text-transform: uppercase;
   letter-spacing: 4px;
   overflow: hidden;
@@ -55,14 +55,14 @@
 }
 
 .navbar-button button:hover {
-  background: #03e9f4;
+  background: #5423D2;
   color: #050801;
   box-shadow:
-    0 0 5px #03e9f4,
-    0 0 25px #03e9f4,
-    0 0 50px #03e9f4,
-    0 0 75px #03e9f4,
-    0 0 200px #03e9f4;
+    0 0 5px #5423D2,
+    0 0 25px #5423D2,
+    0 0 50px #5423D2,
+    0 0 75px #5423D2,
+    0 0 200px #5423D2;
 }
 
 /* ===== Animated button borders ===== */
@@ -75,7 +75,7 @@
   left: 100%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #03e9f4);
+  background: linear-gradient(90deg, transparent, #5423D2);
   animation: animate1 1s linear infinite;
 }
 @keyframes animate1 {
@@ -87,7 +87,7 @@
   right: 0;
   width: 2px;
   height: 100%;
-  background: linear-gradient(180deg, transparent, #03e9f4);
+  background: linear-gradient(180deg, transparent, #5423D2);
   animation: animate2 1s linear infinite;
   animation-delay: 0.25s;
 }
@@ -100,7 +100,7 @@
   right: 100%;
   width: 100%;
   height: 2px;
-  background: linear-gradient(270deg, transparent, #03e9f4);
+  background: linear-gradient(270deg, transparent, #5423D2);
   animation: animate3 1s linear infinite;
   animation-delay: 0.5s;
 }
@@ -113,7 +113,7 @@
   left: 0;
   width: 2px;
   height: 100%;
-  background: linear-gradient(360deg, transparent, #03e9f4);
+  background: linear-gradient(360deg, transparent, #5423D2);
   animation: animate4 1s linear infinite;
   animation-delay: 0.75s;
 }
@@ -136,7 +136,7 @@
 .hamburger span {
   display: block;
   height: 3px;
-  background: #03e9f4;
+  background: #5423D2;
   border-radius: 2px;
   transition: all 0.3s ease;
   position: relative;
@@ -196,7 +196,7 @@
 
   .navbar-link {
     padding: 10px 0;
-    color: #03e9f4;
+    color: #5423D2;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 

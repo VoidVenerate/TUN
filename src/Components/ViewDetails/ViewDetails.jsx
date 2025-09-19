@@ -144,37 +144,49 @@ const ViewDetails = () => {
                 </div>
               </div>
 
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <img src={calendar} alt="" />
+              <div className="event-horizontal-line">
+                <div className="detail-item">
+                  <div className="detail-icon">
+                    <img src={calendar} alt="calendar" />
+                  </div>
+                  <div className="detail-content">
+                    <span className="detail-label">Date</span>
+                    <span className="detail-value">{formatDate(eventData.date)}</span>
+                  </div>
                 </div>
-                <div className="detail-content">
-                  <span className="detail-label">Date</span>
-                  <span className="detail-value">{formatDate(eventData.date)}</span>
+
+                <div className="detail-item">
+                  <div className="detail-icon">
+                    <img src={clock} alt="clock" />
+                  </div>
+                  <div className="detail-content">
+                    <span className="detail-label">Time</span>
+                    <span className="detail-value">{eventData.time}</span>
+                  </div>
                 </div>
+
+                <div className="detail-item">
+                  <div className="detail-icon">
+                    🎭 {/* or an image for dress code */}
+                  </div>
+                  <div className="detail-content">
+                    <span className="detail-label">Dress Code</span>
+                    <span className="detail-value">{eventData.dress_code || 'Not Specified'}</span>
+                  </div>
+                </div>
+
+                <div className="detail-item">
+                  <div className="detail-icon">
+                    📍 {/* or a location icon */}
+                  </div>
+                  <div className="detail-content">
+                    <span className="detail-label">Location</span>
+                    <span className="detail-value">{eventData.state}</span>
+                  </div>
+                </div>
+              </div>
               </div>
 
-              <div className="detail-item">
-                <div className="detail-icon">
-                  <img src={clock} />
-                </div>
-                <div className="detail-content">
-                  <span className="detail-label">Time</span>
-                  <span className="detail-value">{eventData.time}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="additional-info">
-              <div className="info-row">
-                <span className="info-label">Dress Code</span>
-                <span className="info-value">{eventData.dress_code || 'Not Specified'}</span>
-              </div>
-              <div className="info-row">
-                <span className="info-label">Location</span>
-                <span className="info-value">{eventData.state}</span>
-              </div>
-            </div>
 
             <div className="no-additional-info">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -189,7 +201,7 @@ const ViewDetails = () => {
                     rel="noopener noreferrer"
                     className='modal-close-btn-primary'
                   >
-                    {eventData.contact_link}
+                    Additional information
                   </a>
                 ) : (
                   <span>No Additional Information</span>

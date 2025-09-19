@@ -5,7 +5,7 @@ import api from '../api';
 const EventContext = createContext();
 
 export const EventProvider = ({ children }) => {
-  // ✅ Single current event state (instead of events dictionary)
+  // single current event state
   const [eventData, setEventData] = useState({
     eventName: '',
     date: '',
@@ -24,15 +24,15 @@ export const EventProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
 
-  // ✅ Persist current event (without raw file objects) into localStorage
+  // persist current event (no raw files) to localStorage
   useEffect(() => {
-    const safeData = { ...eventData, flyer: null }; 
+    const safeData = { ...eventData, flyer: null };
     localStorage.setItem('eventData', JSON.stringify(safeData));
   }, [eventData]);
 
-  // ✅ Load saved event from localStorage on first render
+  // load saved event on mount
   useEffect(() => {
     const saved = localStorage.getItem('eventData');
     if (saved) {
@@ -40,7 +40,7 @@ export const EventProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ Load event by ID from API
+  // load event by id from API
   const loadEvent = async (id) => {
     if (!id) throw new Error('loadEvent requires an id');
     setLoading(true);
@@ -49,6 +49,7 @@ export const EventProvider = ({ children }) => {
       const res = await api.get(`/event/events/${id}`);
       const payload = res.data;
 
+      // map server fields into app state
       const mappedData = {
         eventName: payload.event_name || '',
         date: payload.date || '',
@@ -60,10 +61,12 @@ export const EventProvider = ({ children }) => {
         dressCode: payload.dress_code || '',
         time: payload.time || '',
         venue: payload.venue || '',
-        contactMethod: 'email',
-        contactValue: '',
-        link: '',
+        contactMethod: payload.contact_method || 'email',
+        contactValue: payload.contact_value || '',
+        link: payload.contact_link || '',
         id: payload.id || id,
+        event_id: payload.id || id,
+        featured_requested: !!payload.featured_requested
       };
 
       setEventData(mappedData);
@@ -76,48 +79,75 @@ export const EventProvider = ({ children }) => {
     }
   };
 
-  // ✅ Update event (API + context state)
-  // ✅ Update event (API + context state)
+  // update event (API + context state)
   const updateEvent = async (id, formData) => {
     if (!id) throw new Error('updateEvent requires an event ID');
     setLoading(true);
     setError(null);
+
     try {
-      // 👉 Wrap the provided formData so we can map featureChoice → is_featured
+      // build mappedFormData so we can ensure required server fields are present
       const mappedFormData = new FormData();
 
-      // Copy original formData entries
+      // copy all entries
       for (let [key, value] of formData.entries()) {
         mappedFormData.append(key, value);
       }
 
-      // Inject is_featured (true/false) from featureChoice
-      mappedFormData.set(
-        "is_featured",
-        eventData.featureChoice === "yes-feature"
-      );
+      // prefer whatever the component submitted; if not present, fall back to context
+        const providedIsFeatured = formData.get('is_featured');
+        if (providedIsFeatured !== null && providedIsFeatured !== undefined) {
+          // leave as-is (string 'true'/'false' or '1'/whatever the component sent)
+          mappedFormData.set('is_featured', providedIsFeatured);
+        } else {
+          mappedFormData.set('is_featured', eventData.featureChoice === 'yes-feature');
+        }
+
+        // same for featured_requested if you want:
+        const providedFeaturedReq = formData.get('featured_requested');
+        if (providedFeaturedReq !== null && providedFeaturedReq !== undefined) {
+          mappedFormData.set('featured_requested', providedFeaturedReq);
+        } else {
+          mappedFormData.set('featured_requested', eventData.featureChoice === 'yes-feature');
+        }
+
+      // DEBUG: optional log - comment out in production
+      // for (let p of mappedFormData.entries()) console.log('PUT FD:', p[0], p[1]);
 
       const res = await api.put(`/event/events/${id}`, mappedFormData, {
-        headers: { 
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`  
+        headers: {
+          Authorization: `Bearer ${token}`
         },
       });
 
       const updated = res.data;
 
-      const mappedData = {
-        ...eventData,
-        ...updated,
-        id: updated.id || id,
-        flyer: null,
-        flyerPreview: updated.flyer_url || eventData.flyerPreview,
-        featureChoice: updated.is_featured ? "yes-feature" : "no-feature", // ← sync back
-      };
-
-      setEventData(mappedData);
-      setLoading(false);
-      return mappedData;
+      // If server returned an object, use it. If it returned a minimal/string response,
+      // re-fetch the event to get canonical state.
+      let mappedData;
+      if (updated && typeof updated === 'object') {
+        mappedData = {
+          ...eventData,
+          ...updated,
+          id: updated.id || id,
+          event_id: updated.id || id,
+          flyer: null,
+          flyerPreview: updated.flyer_url || eventData.flyerPreview,
+          featureChoice: updated.is_featured ? 'yes-feature' : 'no-feature',
+          featured_requested: !!updated.featured_requested,
+          contactMethod: updated.contact_method || eventData.contactMethod,
+          contactValue: updated.contact_value || eventData.contactValue,
+          link: updated.contact_link || eventData.link
+        };
+        setEventData(mappedData);
+        setLoading(false);
+        return mappedData;
+      } else {
+        // fallback: reload event from API
+        const fresh = await loadEvent(id);
+        setLoading(false);
+        return fresh;
+      }
     } catch (err) {
       setLoading(false);
       setError(err);
@@ -125,15 +155,14 @@ export const EventProvider = ({ children }) => {
     }
   };
 
-
-  // ✅ Delete event
+  // delete event
   const deleteEvent = async (id) => {
     if (!id) throw new Error('deleteEvent requires an event ID');
     setLoading(true);
     setError(null);
     try {
       await api.delete(`/event/events/${id}`, {
-        headers: { Authorization: `Bearer ${token}`}
+        headers: { Authorization: `Bearer ${token}` }
       });
       clearEventData();
       setLoading(false);
@@ -145,7 +174,6 @@ export const EventProvider = ({ children }) => {
     }
   };
 
-  // ✅ Clear state + storage
   const clearEventData = () => {
     setEventData({
       eventName: '',
