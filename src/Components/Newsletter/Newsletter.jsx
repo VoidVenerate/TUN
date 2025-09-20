@@ -68,56 +68,76 @@ const Newsletter = () => {
 
     // Fetch subscription count once
     useEffect(() => {
-        const fetchSubscription = async () => {
-            try {
-                const res = await api.get
-                ('https://lagos-turnup.onrender.com/event/newsletter');
-                const pendingData = res.data;
-                const newCount = Array.isArray(pendingData) ? pendingData.length : 0;
+    const fetchSubscription = async () => {
+        try {
+        const today = new Date().toDateString();
+        const lastUpdate = localStorage.getItem("newsletterLastUpdate");
 
-                if (prevSubscriptions !== null) {
-                    const diff = newCount - prevSubscriptions;
-                    const percent = prevSubscriptions > 0 
-                        ? Math.abs((diff / prevSubscriptions) * 100).toFixed(1) 
-                        : 0;
-                    setPercentageChange(percent);
-                    setTrend(diff > 0 ? 'up' : diff < 0 ? 'down' : null);
-                }
+        const res = await api.get('/event/newsletter?limit=1000&offset=0');
+        const data = res.data;
 
-                setPrevSubscriptions(newCount);
-                setSubscriptions(newCount);
-            } catch (error) {
-                console.error("Error sending newsletter", error.response?.data || error.message);
-                setModalInfo({
-                    show: true,
-                    title: "Error!",
-                    message: "Failed to send newsletter.",
-                    subMessage: error.response?.data?.message || "",
-                    type: "error",
-                });
-            }
-        };
+        const newCount = data?.metadata?.total ?? (data?.subscriptions?.length || 0);
 
-        fetchSubscription();
-    }, []); // only runs on mount
+        // Get yesterday's value from localStorage
+        const oldCount = Number(localStorage.getItem("prevSubscriptions")) || 0;
+
+        if (oldCount > 0) {
+            const diff = newCount - oldCount;
+            const percent = ((diff / oldCount) * 100).toFixed(1);
+
+            setPercentageChange(Number(percent));
+            setTrend(diff > 0 ? "up" : diff < 0 ? "down" : "flat");
+        } else if (oldCount === 0 && newCount > 0) {
+            setPercentageChange(100);
+            setTrend("up");
+        }
+
+        setSubscriptions(newCount);
+
+        // ✅ Update localStorage only once per day
+        if (lastUpdate !== today) {
+            localStorage.setItem("prevSubscriptions", newCount);
+            localStorage.setItem("newsletterLastUpdate", today);
+        }
+        } catch (error) {
+        console.error("Error fetching newsletter subscriptions:", error.response?.data || error.message);
+        setModalInfo({
+            show: true,
+            title: "Error!",
+            message: "Failed to fetch newsletter subscriptions.",
+            subMessage: error.response?.data?.message || "",
+            type: "error",
+        });
+        }
+    };
+
+    fetchSubscription();
+    }, []);
+
+
 
     // Animate percentage change
+    // Animate percentage change (smooth animation like AdminCards)
     useEffect(() => {
-        let start = displayedPercentage;
-        let end = percentageChange;
-        let step = (end - start) / 20;
+        let startValue = displayedPercentage;
+        const endValue = percentageChange;
+        let startTime = null;
+        const duration = 800; // same as AdminCards
 
-        let animation = setInterval(() => {
-            start += step;
-            if ((step > 0 && start >= end) || (step < 0 && start <= end)) {
-                start = end;
-                clearInterval(animation);
-            }
-            setDisplayedPercentage(start.toFixed(1));
-        }, 30);
+        const animate = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
 
-        return () => clearInterval(animation);
+            const newValue = startValue + (endValue - startValue) * progress;
+            setDisplayedPercentage(Number(newValue.toFixed(1)));
+
+            if (progress < 1) requestAnimationFrame(animate);
+        };
+
+        requestAnimationFrame(animate);
     }, [percentageChange]);
+
 
     // Handle final submission
     const handleSubmit = async () => {

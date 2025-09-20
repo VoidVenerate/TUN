@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import "./FtEvents.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const FtEvents = () => {
   const [events, setEvents] = useState([]);
@@ -11,6 +11,7 @@ const FtEvents = () => {
 
   const sliderRef = useRef(null);
   const scrollInterval = useRef(null);
+  const navigate = useNavigate()
 
   // 🔹 Fetch featured events
   useEffect(() => {
@@ -126,12 +127,7 @@ const FtEvents = () => {
 
                 <div className="slider-btn">
                   <button
-                    className={
-                      activeBtn.index === index && activeBtn.type === "details"
-                        ? "active"
-                        : ""
-                    }
-                    onClick={() => navigate(`/viewdetails/${event.event_id}`)}
+                    onClick={() => navigate(`/viewdetails/${event.id}`)}
                     
                   >
                     View Details

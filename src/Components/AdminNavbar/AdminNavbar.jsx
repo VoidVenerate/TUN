@@ -60,7 +60,6 @@ const AdminNavbar = () => {
         });
 
         const user = res.data;
-        console.log("User data:", user);
         setUserName(user.first_name || '');
 
         const pic = user.profile_picture_url || user.profile_picture;

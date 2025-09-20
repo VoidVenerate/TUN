@@ -105,7 +105,7 @@ const Event = () => {
         >
           <ChevronLeft className="event-unique-back" />
         </NavLink>
-        <h1 className="event-unique-title">PROMOTE AN EVENT</h1>
+        <h1 className="event-unique-title" style={{fontFamily:'Rushon Ground'}}>PROMOTE AN EVENT</h1>
       </div>
 
       <div className="event-unique-content">

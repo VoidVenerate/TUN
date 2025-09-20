@@ -11,6 +11,7 @@ const Footer = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,11 +20,16 @@ const Footer = () => {
 
     try {
       const res = await api.post('/event/newsletter', { email });
-      setMessage('✅ You have been subscribed successfully!');
+      setMessage('');
+      setIsSubscribed(true)
+
+      setInterval(() => {
+        setIsSubscribed(false)
+      }, 3000);
       setEmail('');
     } catch (err) {
       console.error(err);
-      setMessage('❌ Subscription failed. Please try again.');
+      setIsSubscribed(false)
     } finally {
       setIsLoading(false);
     }
@@ -62,8 +68,8 @@ const Footer = () => {
                 required
                 className="email-ftinput"
               />
-              <button type="submit" disabled={isLoading}>
-                {isLoading ? 'Subscribing...' : 'Subscribe now'}
+              <button type="submit" disabled={isLoading || isSubscribed}>
+                {isLoading ? 'Subscribing...' : isSubscribed ? 'Subscribed' : 'Subscribe'}
               </button>
             </form>
             {message && <p className="subscribe-message">{message}</p>}

@@ -98,7 +98,7 @@ const ViewDetails = () => {
         >
             <ChevronLeft />
           </button>
-          <h1 className="page-title">EVENT DETAILS</h1>
+          <h1 className="page-title" style={{fontFamily:'Rushon Ground'}}>EVENT DETAILS</h1>
         </div>
         {eventData.is_featured && (
           <div className="featured-star">
