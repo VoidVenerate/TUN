@@ -391,3 +391,113 @@ hr{
     height: 2px;
     border: none;
 }
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablets and below (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .event-main-info {
+    grid-template-columns: 1fr; /* stack flyer and info */
+    padding: 16px;
+    gap: 20px;
+  }
+
+  .event-details-content {
+    padding: 16px;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .event-flyer-section {
+    max-width: 100%;
+    max-height: 400px;
+  }
+}
+
+/* Mobile devices (max-width: 768px) */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 16px;
+  }
+
+  .event-title {
+    font-size: 22px;
+  }
+
+  .event-description {
+    font-size: 14px;
+  }
+
+  .event-horizontal-line {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 4 */
+    gap: 12px;
+  }
+
+  .detail-item {
+    padding: 12px;
+    min-width: unset; /* let them shrink naturally */
+  }
+
+  .similar-events-grid {
+    grid-template-columns: 1fr; /* single column */
+  }
+
+  .similar-event-card {
+    height: auto; /* flexible */
+  }
+
+  .similar-event-image {
+    height: auto;
+    max-height: 300px;
+  }
+
+  .similar-event-image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .similar-event-actions {
+    flex-direction: column; /* stack buttons */
+  }
+
+  .view-details-btn,
+  .buy-ticket-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .modal-close-btn-primary-info,
+  .no {
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+  }
+}
+
+/* Small phones (max-width: 480px) */
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 14px;
+  }
+
+  .event-title {
+    font-size: 18px;
+  }
+
+  .event-description {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .event-horizontal-line {
+    grid-template-columns: 1fr; /* 1 column */
+  }
+
+  .similar-event-name {
+    font-size: 14px;
+  }
+
+  .similar-event-desc {
+    font-size: 13px;
+  }
+}
