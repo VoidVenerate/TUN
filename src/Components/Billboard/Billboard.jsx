@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./Billboard.css";
+import EventImage from "../skeleton/skeleton";
 
 const Billboard = () => {
   const [slides, setSlides] = useState([]);
@@ -50,11 +51,12 @@ const Billboard = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img
-              src={slide.banner_url || slide.banner_image}
-              alt={slide.name || `Banner ${slide.id}`}
-              className={`slide fade ${i === index ? "active" : ""}`}
-            />
+            <div className={`slide fade ${i === index ? "active" : ""}`}>
+              <EventImage
+                src={slide.banner_url || slide.banner_image}
+                alt={slide.name || `Banner ${slide.id}`}
+              />
+            </div>
           </a>
         ))
       ) : (

@@ -324,3 +324,54 @@ a {
     margin-left: 4vw;
   }
 }
+
+/* ===== Skeleton Loader ===== */
+.skeleton {
+  background: #1a1a1a;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-card {
+  width: 300px;
+  background: #222;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5vw;
+  margin-left: 3vw;
+}
+
+.skeleton-img {
+  height: 150px;
+}
+
+.skeleton-text {
+  height: 15px;
+  width: 80%;
+}
+
+.skeleton-small {
+  height: 12px;
+  width: 60%;
+}

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import axios from 'axios'
 import './AllEvents.css'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const AllEvents = ({ stateFilter, limit, page = 1 }) => {
   const [allEvents, setAllEvents] = useState([])
@@ -25,7 +27,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
     if (stateFilter) fetchEvents()
   }, [stateFilter])
 
-  if (loading) return <p>Loading events...</p>
+
 
   // client-side pagination
   const start = (page - 1) * limit
@@ -51,9 +53,54 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
       </div>
 
       <div className="LagEvents-list">
-        {currentEvents.length === 0 ? (
-          <p>No events found.</p>
-        ) : (
+         {loading ? (
+            [...Array(limit)].map((_, idx) => (
+              <div key={idx} className='LagEvents-card'>
+                <div className="LagEvents-content">
+                  {/* Fake image */}
+                  <Skeleton 
+                    height={150} 
+                    borderRadius={8} 
+                    baseColor="#1e1e1e" 
+                    highlightColor="#333" 
+                  />
+
+                  {/* Title + venue */}
+                  <div className="LagEvents-txt" style={{ marginTop: '10px' }}>
+                    <Skeleton 
+                      height={20} 
+                      width="70%" 
+                      borderRadius={4} 
+                      baseColor="#1e1e1e" 
+                      highlightColor="#333" 
+                    />
+                    <Skeleton 
+                      height={15} 
+                      width="50%" 
+                      borderRadius={4} 
+                      baseColor="#1e1e1e" 
+                      highlightColor="#333" 
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <Skeleton 
+                    count={2} 
+                    height={12} 
+                    style={{ marginTop: '8px' }} 
+                    baseColor="#1e1e1e" 
+                    highlightColor="#333" 
+                  />
+
+                  {/* Buttons */}
+                  <div className="LagEvents-btns" style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                    <Skeleton height={30} width={100} borderRadius={6} baseColor="#1e1e1e" highlightColor="#333" />
+                    <Skeleton height={30} width={80} borderRadius={6} baseColor="#1e1e1e" highlightColor="#333" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ): (
           currentEvents.map((event) => (
             <div key={event.id} className='LagEvents-card'>
               <div className="LagEvents-content">
