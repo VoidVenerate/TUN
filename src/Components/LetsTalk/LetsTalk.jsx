@@ -83,7 +83,7 @@ const LetsTalk = () => {
     <div className='LetsTalk-container'>
       <div className="LetsTalk">
         <div className="LetsTalk-header">
-          <h2>LET'S TALK</h2>
+          <h2 style={{fontFamily: 'Rushon Ground'}}>LET'S TALK</h2>
           <p>Get in touch with us using the enquiry form below.</p>
         </div>
         <div className="LetsTalk-form">

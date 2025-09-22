@@ -159,6 +159,19 @@
   position: absolute;
   width: 25px;
 }
+/* Default hidden on mobile */
+.navbar-button {
+  display: none;
+}
+
+/* Show inside menu when open */
+@media (max-width: 1024px) {
+  .navbar-links.open + .navbar-button {
+    display: block;
+    margin: 10px 0;
+  }
+}
+
 
 /* ===== Mobile & Tablet Styles ===== */
 @media (max-width: 1024px) {
