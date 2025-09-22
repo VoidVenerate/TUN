@@ -9,6 +9,9 @@ import ContactUs from './Pages/USERS/ContactUs/ContactUs'
 import PromoteWithUs from './Pages/USERS/PromoteWithUs/PromoteWithUs'
 import LagVisit from './Pages/USERS/LagVisit/LagVisit'
 import BestClubs from './Pages/USERS/BestClubs/BestClubs'
+import BestBeaches from './Pages/USERS/BestBeaches/BestBeaches'
+import BestFoodspots from './Pages/USERS/BestFoodSpots/BestFoodspots'
+import BestHotels from './Pages/USERS/BestHotels/BestHotels'
 import PromoteEvent from './Pages/USERS/PromoteEvent/PromoteEvent'
 import FeatureEvent from './Pages/USERS/FeatureEvent/FeatureEvent'
 import { EventProvider } from './Components/EventContext/EventContext'
@@ -57,6 +60,9 @@ function App() {
         <Route path='/promote' element = {<PromoteWithUs/>} />
         <Route path='/lagvisit' element = {<LagVisit/>} />
         <Route path='/clubs' element = {<BestClubs/>} />
+        <Route path='/hotels' element = {<BestHotels/>} />
+        <Route path='/foodspots' element = {<BestFoodspots/>} />
+        <Route path='/beaches' element = {<BestBeaches/>} />
         <Route path='/promoteevent' element = {<PromoteEvent/>} />
         <Route path='/featureevent' element = {<FeatureEvent/>} />
         <Route path='/review' element = {<Review/>} />

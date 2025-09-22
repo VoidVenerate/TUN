@@ -69,7 +69,7 @@ const SpotList = ({ spotType, title }) => {
                   <h3>{spot.location_name}</h3>
                   <p>{spot.city}</p>
                 </div>
-                <p style={{width:"100%"}}>{spot.state}</p>
+                <p style={{width:"100%"}}>{spot.additional_info.split(" ").slice(0, 15).join(" ")+'...'}</p>
               </div>
             </div>
           ))

@@ -3,14 +3,14 @@ import UserNavbar from '../../../Components/UserNavbar/UserNavbar'
 import Footer from '../../../Components/Footer/Footer'
 import SpotList from '../../../Components/SpotList/SpotList'
 
-const BestClubs = () => {
+const BestHotels = () => {
   return (
     <div>
         <UserNavbar/>
-        <SpotList spotType="club" title="Best Clubs in Lagos" />
+        <SpotList spotType="hotel" title="Best Clubs in Lagos" />
         <Footer/>
     </div>
   )
 }
 
-export default BestClubs
+export default BestHotels

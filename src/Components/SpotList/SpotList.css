@@ -180,7 +180,7 @@
   }
 
   .clubs img {
-    max-height: 200px;
+    max-height: 322px;
     object-fit: cover;
   }
 
@@ -193,7 +193,6 @@
   }
 
   .club-pagination {
-    flex-direction: column;
     gap: 8px;
   }
 }
