@@ -184,7 +184,7 @@ const UploadLocation = () => {
     <div className="event-form-container">
       <div className="header">
         <ChevronLeft className="back-arrow" onClick={() =>{navigate(-1)}} />
-        <h1 className="header-title">UPLOAD LOCATION</h1>
+        <h1 className="header-title" style={{fontFamily:"Rushon Ground"}}>UPLOAD LOCATION</h1>
       </div>
 
       <div className="form-content">
@@ -280,7 +280,7 @@ const UploadLocation = () => {
                       value={locationData.state}
                       onChange={handleChange}
                       readOnly
-                      style={{ paddingRight: '30px', width: '86%', color: "#fff" }}
+                      style={{width: '86%', color: "#fff" }}
                     />
                     <LockKeyhole
                       style={{

@@ -454,7 +454,7 @@
   /* Header */
   .header-title {
     font-size: 1rem;
-    text-align: center;
+    text-align: left;
   }
 
   /* Upload Section */
@@ -479,11 +479,14 @@
     flex-direction: column; /* stack inputs */
     gap: 2rem;
   }
+  .form-group select {
+    width: 98%;
+  }
 
   .form-input,
   .form-select,
   .form-textarea {
-    width: 87%; /* full width */
+    width: 86%; /* full width */
     font-size: 0.85rem;
     padding: 0.6rem 0.8rem;
   }
