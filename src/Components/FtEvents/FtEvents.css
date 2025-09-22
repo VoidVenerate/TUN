@@ -146,12 +146,13 @@
   .event-img {
     width: 100%;           /* take full card width */
     height: auto;          /* auto-scale */
-    max-height: 300px;     /* optional cap */
+    max-height: 411px;     /* optional cap */
   }
   .slider li {
     width: 90%;            /* relative instead of fixed */
-    max-width: 320px;      /* prevent overflow */
+    max-width: 330px;      /* prevent overflow */
     height: auto;          /* let height adapt */
+    border: 1px solid #ffffff33
   }
   .slider-info {
     height: auto;          /* let content decide height */

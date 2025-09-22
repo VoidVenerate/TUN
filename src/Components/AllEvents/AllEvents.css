@@ -207,7 +207,7 @@ a {
 
   .LagEvents-card {
     width: 100%;
-    margin-left: 0vw;
+    margin-left: -2vw;
     margin-bottom: 1.5rem;
   }
 
@@ -322,6 +322,12 @@ a {
   .LagEvents-list {
     grid-template-columns: 1fr; /* phones → single column */
     margin-left: 4vw;
+  }
+  .LagEvents-header p {
+    font-size: 20px;
+  }
+  .LagEvents-card {
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 }
 
