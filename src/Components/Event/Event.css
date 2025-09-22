@@ -372,7 +372,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .event-unique-form-textarea {
-    min-height: 180px;
+    min-height: 300px;
   }
 
   .event-unique-submit-btn {
@@ -411,7 +411,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   .event-unique-submit-btn {
     font-size: 13px;
-    padding: 10px;
+    padding: 15px;
+  }
+  .event-unique-upload-section {
+    width: 91.5%;
   }
 }
 
