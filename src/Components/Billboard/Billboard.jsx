@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css';
 import "./Billboard.css";
-import EventImage from "../skeleton/skeleton";
 
 const Billboard = () => {
   const [slides, setSlides] = useState([]);
@@ -14,10 +15,8 @@ const Billboard = () => {
     const fetchSlides = async () => {
       try {
         const res = await axios.get("https://lagos-turnup.onrender.com/event/banners", {
-          params: { approved_only: true }, // if you want only approved banners
+          params: { approved_only: true },
         });
-
-        // The API returns an array of banners
         setSlides(res.data || []);
       } catch (error) {
         console.error("Failed to load banners:", error);
@@ -52,15 +51,27 @@ const Billboard = () => {
             rel="noopener noreferrer"
           >
             <div className={`slide fade ${i === index ? "active" : ""}`}>
-              <EventImage
+              <img
                 src={slide.banner_url || slide.banner_image}
                 alt={slide.name || `Banner ${slide.id}`}
+                className="banner-img"
               />
             </div>
           </a>
         ))
       ) : (
-        <p className="loading-text"></p>
+        // Skeleton placeholders (like YouTube shimmer)
+        [...Array(3)].map((_, idx) => (
+          <div key={idx} className="slide fade active">
+            <Skeleton
+              height={300}
+              borderRadius={10}
+              baseColor="#1e1e1e"
+              highlightColor="#333"
+              className="skeleton-banner"
+            />
+          </div>
+        ))
       )}
     </div>
   );
