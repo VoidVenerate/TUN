@@ -277,6 +277,8 @@
   .bf-upload-section {
     width: 100% !important;
     margin-bottom: 24px;
+    flex: 0;
+    height: 180px;
   }
 
   .bf-upload-area {

@@ -483,9 +483,12 @@
   .form-input,
   .form-select,
   .form-textarea {
-    width: 100%; /* full width */
+    width: 87%; /* full width */
     font-size: 0.85rem;
     padding: 0.6rem 0.8rem;
+  }
+  .review-group select {
+    width: 100%;
   }
 
   .form-textarea {

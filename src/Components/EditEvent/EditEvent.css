@@ -320,5 +320,6 @@
 @media (min-width:300px) and (max-width: 800px) {
   .review-header h1 {
     display: flex;
+    align-items: center;
   }
 }
