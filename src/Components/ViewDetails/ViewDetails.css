@@ -465,10 +465,11 @@ hr{
   .similar-event-image {
     height: auto;
     max-height: 400px;
+    margin-top: 12px;
   }
 
   .similar-event-image img {
-    width: 100%;
+    width: 93%;
     height: auto;
     margin: 0 auto;
   }
