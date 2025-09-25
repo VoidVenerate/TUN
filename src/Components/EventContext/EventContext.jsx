@@ -112,7 +112,6 @@ export const EventProvider = ({ children }) => {
         }
 
       // DEBUG: optional log - comment out in production
-      // for (let p of mappedFormData.entries()) console.log('PUT FD:', p[0], p[1]);
 
       const res = await api.put(`/event/events/${id}`, mappedFormData, {
         headers: {

@@ -304,13 +304,6 @@ const EditableEventReviewRHF = ({ role }) => {
     }
 
     setSaving(true);
-
-    // Add this after the API response
-    console.log('API Response:', eventData);
-    console.log('contact_method:', eventData.contact_method);
-    console.log('contact_value:', eventData.contact_value);
-    console.log('contact_link:', eventData.contact_link);
-    console.log('is_featured:', eventData.is_featured);
     
     try {
       const formData = createFormData(data, event_id, isFeatured);

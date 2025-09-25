@@ -241,26 +241,39 @@ body{
 }
 
 .action-btn {
-  padding: 0.5rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  border: none;
+  padding: 10px 14px 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid;
   cursor: pointer;
+  width: 171px;
+  height: 44px;
+}
+.action-btn.logs {
+  background-color: #ffffff0d;
+  color: #fff;
+  border-color: #ffffff33;
 }
 
 .action-btn.deactivate {
-  background: goldenrod;
-  color: black;
+  background: #ffc1300d;
+  color: #ffc130;
+  border-color: #ffc13033;
+  width: 129px;
 }
 
 .action-btn.reactivate {
-  background: green;
-  color: white;
+  background: #ffc1300d;
+  color: #ffc130;
+  border-color: #ffc13033;
+  width: 129px;
 }
 
 .action-btn.delete {
-  background: crimson;
-  color: white;
+  background: #ff3b300d;
+  color: #ff3b30;
+  width: 101px;
+  border-color: #ff3b3033;
 }
 /* =========================
    RESPONSIVE MEDIA QUERIES
@@ -275,7 +288,7 @@ body{
 
   .profile-dark-left,
   .profile-dark-right {
-    width: 100%;
+    width: 91%;
     max-width: 100%;
     height: auto;
   }
@@ -318,6 +331,25 @@ body{
     flex: 1 1 45%;
     font-size: 0.8rem;
     padding: 0.5rem;
+  }
+  .sub-admin-section {
+    padding: 0;
+  }
+  .sub-admin-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .action-btn{
+    width: 100%;
+  }
+  .action-btn.deactivate{
+    width: 100%;
+  }
+  .action-btn.reactivate {
+    width: 100%;
+  }
+  .action-btn.delete{
+    width: 100%;
   }
 }
 

@@ -36,6 +36,9 @@ const Auth = ({signUpKey}) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
 
+  // NEW ➡️ deactivated modal
+  const [showDeactivatedModal, setShowDeactivatedModal] = useState(false);
+
   // Password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -88,7 +91,6 @@ const Auth = ({signUpKey}) => {
         setError(validationError);
         return;
       }
-      // 👉 Show profile upload modal before final signup
       setShowUploadModal(true);
       return;
     }
@@ -104,16 +106,23 @@ const Auth = ({signUpKey}) => {
       localStorage.setItem("token", res.data.access_token);
       setModalMessage("Login successful!");
       setShowSuccessModal(true);
-        setTimeout(() => {
-          if (res.data.role === "super-admin") {
-            navigate("/super-admin-dashboard");
-          } else {
-            navigate("/adminhome");
-          }
-        }, 1500);
+      setTimeout(() => {
+        if (res.data.role === "super-admin") {
+          navigate("/super-admin-dashboard");
+        } else {
+          navigate("/adminhome");
+        }
+      }, 1500);
     } catch (err) {
-      const backendError = err.response?.data;
-      setError(backendError?.message || "Login failed");
+      const status = err.response?.status;
+      const msg = (err.response?.data?.message || '').toLowerCase();
+
+      // ✅ check for deactivated flag
+      if (status === 403 || msg.includes('deactivated')) {
+        setShowDeactivatedModal(true);
+      } else {
+        setError(err.response?.data?.message || "Login failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -129,7 +138,6 @@ const Auth = ({signUpKey}) => {
       signupData.append("email", formData.email);
       signupData.append("password", formData.password);
       signupData.append("role", formData.role);
-      // Added the signUpKey to FormData
       signupData.append("secret_key", signUpKey);
       if (formData.profile_picture) {
         signupData.append("profile_picture", formData.profile_picture);
@@ -140,13 +148,11 @@ const Auth = ({signUpKey}) => {
         signupData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      console.log("Signup response:", res.data);
       setModalMessage("Signup successful! Please log in.");
       setShowSuccessModal(true);
       setTimeout(() => {
-        setIsSignUp(false); // 🔄 show login panel
-        setShowSuccessModal(false); // close modal
+        setIsSignUp(false);
+        setShowSuccessModal(false);
       }, 1500);
     } catch (err) {
       console.error("Signup Error:", err.response?.data || err.message);
@@ -233,8 +239,8 @@ const Auth = ({signUpKey}) => {
       setResetLoading(false);
     }
   };
-  const [showLogoPanel, setShowLogoPanel] = useState(() => window.innerWidth > 900);
 
+  const [showLogoPanel, setShowLogoPanel] = useState(() => window.innerWidth > 900);
   useEffect(() => {
     const onResize = () => setShowLogoPanel(window.innerWidth > 900);
     window.addEventListener('resize', onResize);
@@ -436,6 +442,67 @@ const Auth = ({signUpKey}) => {
         }
       />
 
+      {/* Forgot Password Modal */}
+      <Modal
+        show={showForgotModal}
+        onClose={() => setShowForgotModal(false)}
+        title="Forgot Password"
+        message="Enter your email to receive a reset OTP."
+        type="info"
+        footerButtons={
+          <>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
+            />
+            <button onClick={handleForgotPassword} disabled={forgotLoading}>
+              {forgotLoading ? 'Sending...' : 'Send Reset Email'}
+            </button>
+          </>
+        }
+      />
+
+      {/* Reset Password Modal */}
+      <Modal
+        show={showResetModal}
+        onClose={() => setShowResetModal(false)}
+        title=""
+        message="Reset Your Password"
+        subMessage="Enter the OTP sent to your email and your new password."
+        type="info"
+        footerButtons={
+          <>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={resetOTP}
+              onChange={(e) => setResetOTP(e.target.value)}
+              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
+            />
+            <input
+              type={showResetPassword1 ? "text" : "password"}
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
+            />
+            <input
+              type={showResetPassword2 ? "text" : "password"}
+              placeholder="Confirm new password"
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
+            />
+            <button onClick={handleResetPassword} disabled={resetLoading}>
+              {resetLoading ? 'Resetting...' : 'Reset Password'}
+            </button>
+          </>
+        }
+      />
+
       {/* Upload Profile Modal */}
       <UploadProfileModal
         show={showUploadModal}
@@ -450,7 +517,16 @@ const Auth = ({signUpKey}) => {
         title=""
         message={modalMessage}
         type="success"
-        subMessage= 'Redirecting...'
+        subMessage='Redirecting...'
+      />
+
+      {/* NEW ➡️ Deactivated Account Modal */}
+      <Modal
+        show={showDeactivatedModal}
+        onClose={() => setShowDeactivatedModal(false)}
+        message="Your account has been deactivated by the Super Admin."
+        type="error"
+        subMessage="Contact support if you believe this is a mistake."
       />
     </div>
   );

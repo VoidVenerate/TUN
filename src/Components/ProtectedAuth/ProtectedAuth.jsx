@@ -9,17 +9,14 @@ const ProtectedAuth = () => {
 
   useEffect(() => {
     const encodedKey = searchParams.get('key');
-    console.log("Encoded key from URL:", encodedKey);
 
     if (!encodedKey) {
-      console.log("No key found, redirecting...");
       navigate('/', { replace: true });
       return;
     }
 
     try {
       const decodedKey = atob(encodedKey);
-      console.log("Decoded key:", decodedKey);
 
       // ✅ Check if the decoded key matches exactly
       

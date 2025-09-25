@@ -103,17 +103,8 @@ const UploadLocation = () => {
       if (locationData.flyer instanceof File) {
         formData.append("cover_image", locationData.flyer);
       }
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
-      console.log("Submitting spot:", {
-        location_name: locationData.locationName,
-        city: locationData.city,
-        state: locationData.state,
-        spot_type: locationData.typeOfSpot,
-        additional_info: locationData.additionalInformation,
-        cover_image: locationData.flyer,
-      });
+      
+      
 
 
       const token = localStorage.getItem("token");

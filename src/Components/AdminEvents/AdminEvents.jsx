@@ -81,7 +81,6 @@ const AdminEvents = () => {
       setError(null);
       try {
         const res = await api.get(`https://lagos-turnup.onrender.com/event/events?pending=false`);
-        console.log("API response:", res.data);
 
         const fetched = res.data.events || res.data;
 

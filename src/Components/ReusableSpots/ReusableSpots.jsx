@@ -72,7 +72,6 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         const res = await api.get(
           `https://lagos-turnup.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
         );
-        console.log(`API response (${spotType}):`, res.data);
 
         const fetched = res.data.spots || res.data[spotType] || res.data;
 

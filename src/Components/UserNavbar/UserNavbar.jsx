@@ -72,7 +72,9 @@ const UserNavbar = () => {
             Contact Us
           </NavLink>
         </li>
-        <div className="navbar-button">
+      </ul>
+
+      <div className="navbar-button">
           <NavLink
               to="/promote"
               className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
@@ -87,7 +89,6 @@ const UserNavbar = () => {
               </button>
             </NavLink>
         </div>
-      </ul>
 
       
     </nav>

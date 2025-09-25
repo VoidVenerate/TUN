@@ -89,7 +89,6 @@ const PendingBanner = () => {
 
   // ❌ Reject banner
   const handleReject = async (id) => {
-    console.log("Rejecting banner with id:", id); // 👈 sanity check
     try {
       const token = localStorage.getItem("token");
       if (!token) return;

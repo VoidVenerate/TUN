@@ -61,9 +61,6 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
     formData.append('name', name);
     formData.append('banner_link', link);
     if (image) formData.append('banner', image);
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
     try {
       const config = {
         headers: {

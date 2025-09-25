@@ -54,11 +54,9 @@ const EditableLocationRHF = () => {
           id: String(s.id), // keep IDs safe as strings
         }));
 
-        console.log("All spots:", spots);
 
         const spot = spots.find((s) => s.id === spot_id);
 
-        console.log("Fetched spot:", spot);
 
         if (spot) {
           reset({

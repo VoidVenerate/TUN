@@ -27,7 +27,6 @@ const EventReview = () => {
 
   const handleSubmit = async () => {
     if (eventData.featureChoice === "yes-feature" && !eventData.featureDuration) {
-      console.log("Need feature duration before submitting");
       setShowFeatureDuration(true);
       return;
     }
@@ -52,7 +51,7 @@ const EventReview = () => {
       const headers = { 'Content-Type': 'multipart/form-data' };
       if (token) headers.Authorization = `Bearer ${token}`;
 
-      for (let [key, value] of formData.entries()) console.log(key, value);
+      
 
       const response = await axios.post(
         'https://lagos-turnup.onrender.com/event/events/create',
@@ -275,7 +274,6 @@ const EventReview = () => {
           show={showFeatureDuration}
           onClose={() => setShowFeatureDuration(false)}
           onConfirm={(duration) => {
-            console.log("Feature duration selected:", duration);
             setEventData(prev => ({ ...prev, featureDuration: duration }));
             setShowFeatureDuration(false);
             handleSubmit();

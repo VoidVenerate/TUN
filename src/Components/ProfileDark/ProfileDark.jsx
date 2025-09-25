@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Modal from "../Modal/Modal";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import "./ProfileDark.css";
 import api from "../api";
@@ -36,7 +37,9 @@ const ProfileDark = () => {
   const [modalInfo, setModalInfo] = useState({
     show: false,
     title: "",
+    type:"",
     message: "",
+    subMessage:"",
     confirmAction: null,
   });
 
@@ -80,19 +83,23 @@ const ProfileDark = () => {
   const fetchSubAdmins = async () => {
     setManagementLoading(true);
     try {
-      const res = await api.get(
-        "https://lagos-turnup.onrender.com/get-sub-admin",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setSubAdmins(res.data);
+      const res = await api.get("https://lagos-turnup.onrender.com/get-sub-admin", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const adminsWithStatus = res.data.map(admin => ({
+        ...admin,
+        status: "active", // assume active when fetched
+      }));
+
+      setSubAdmins(adminsWithStatus);
     } catch {
       setError("Failed to load sub-admins.");
     } finally {
       setManagementLoading(false);
     }
   };
+
 
   const normalizeUrl = (path) => {
     if (!path) return "/placeholder.png";
@@ -228,51 +235,65 @@ const ProfileDark = () => {
 
 
   // ====== SUB-ADMIN ACTIONS ======
-  const performAction = async (url, method = "patch") => {
+  const performAction = async (url, method, id, newStatus) => {
     try {
       await axios({ method, url, headers: { Authorization: `Bearer ${token}` } });
-      fetchSubAdmins();
+      setSubAdmins(prev =>
+        prev.map(admin =>
+          admin.id === id ? { ...admin, status: newStatus } : admin
+        )
+      );
       setModalInfo({ show: false, title: "", message: "", confirmAction: null });
     } catch {
       setError("Action failed. Please try again.");
     }
   };
 
+
   const handleDeactivate = (id) =>
     setModalInfo({
       show: true,
-      title: "Deactivate Sub-Admin",
-      message: "Are you sure you want to deactivate this sub-admin?",
+      type:"duration",
+      message: "Deactivate Sub-Admin",
+      subMessage:"Are you sure you want to deactivate this sub-admin?",
       confirmAction: () =>
         performAction(
           `https://lagos-turnup.onrender.com/event/deactivate-user/${id}`,
-          "put"
+          "put",
+          id,
+          "inactive"
         ),
     });
 
   const handleReactivate = (id) =>
     setModalInfo({
       show: true,
-      title: "Reactivate Sub-Admin",
-      message: "Are you sure you want to reactivate this sub-admin?",
+      type:"duration",
+      message: "Reactivate Sub-Admin",
+      subMessage:"Are you sure you want to reactivate this sub-admin?",
       confirmAction: () =>
         performAction(
           `https://lagos-turnup.onrender.com/event/activate-user/${id}`,
-          "put"
+          "put",
+          id,
+          "active"
         ),
     });
 
   const handleDelete = (id) =>
     setModalInfo({
       show: true,
-      title: "Delete Sub-Admin",
-      message: "This action is permanent. Continue?",
+      type:"duration",
+      title: "",
+      message: "Delete Sub-Admin",
+      subMessage:"This action is permanent. Continue?",
       confirmAction: () =>
         performAction(
           `https://lagos-turnup.onrender.com/delete-user/${id}`,
           "delete"
         ),
     });
+  
 
   // ====== CONDITIONAL UI ======
   if (!token) return <p>Please log in to view your profile.</p>;
@@ -432,7 +453,7 @@ const ProfileDark = () => {
       {/* ====== SUB-ADMIN MANAGEMENT ====== */}
       {userData?.role === "super-admin" && (
         <div className="sub-admin-section">
-          <h3 className="sub-admin-title">Manage Sub Admins</h3>
+          <h3 className="sub-admin-title" style={{fontFamily:"Rushon Ground"}}>Manage Sub Admins</h3>
           {managementLoading ? (
             <p>Loading sub-admins...</p>
           ) : (
@@ -441,7 +462,7 @@ const ProfileDark = () => {
                 <div key={admin.id} className="sub-admin-card">
                   <div className="sub-admin-info">
                     <img
-                      src={admin.profile_picture_url || "/default-profile.png"}
+                      src={admin.profile_picture_url || admin.profile_picture || "/default-profile.png"}
                       alt={`${admin.first_name} ${admin.last_name}`}
                       className="sub-admin-avatar"
                       onError={(e) => { e.currentTarget.src = defaultAvatar }}
@@ -455,31 +476,30 @@ const ProfileDark = () => {
                   </div>
                   <div className="sub-admin-actions">
                     <button
-                      className="action-btn"
-                      onClick={() => console.log("View logs for", admin.id)}
+                      className="action-btn logs"
                     >
-                      View Logs
+                      View Admin Activity Logs
                     </button>
-                    {admin.is_active ? (
+                    {admin.status === "active" ? (
                       <button
                         onClick={() => handleDeactivate(admin.id)}
                         className="action-btn deactivate"
                       >
-                        Deactivate
+                        Deactivate Admin
                       </button>
                     ) : (
                       <button
                         onClick={() => handleReactivate(admin.id)}
                         className="action-btn reactivate"
                       >
-                        Reactivate
+                        Reactivate Admin
                       </button>
                     )}
                     <button
                       onClick={() => handleDelete(admin.id)}
                       className="action-btn delete"
                     >
-                      Delete
+                      Delete Admin
                     </button>
                   </div>
                 </div>
@@ -490,27 +510,36 @@ const ProfileDark = () => {
       )}
 
       {/* ====== MODAL ====== */}
-      {modalInfo.show && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>{modalInfo.title}</h3>
-            <p>{modalInfo.message}</p>
-            <div className="modal-buttons">
-              <button onClick={modalInfo.confirmAction} className="profile-dark-btn">
-                Confirm
-              </button>
-              <button
-                onClick={() =>
-                  setModalInfo({ show: false, title: "", message: "", confirmAction: null })
-                }
-                className="profile-dark-btn cancel"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ====== MODAL (using reusable component) ====== */}
+    <Modal
+      show={modalInfo.show}
+      onClose={() =>
+        setModalInfo({ show: false, title: "", type: "", message: "", subMessage: "", confirmAction: null })
+      }
+      title={modalInfo.title}
+      message={modalInfo.message}
+      subMessage={modalInfo.subMessage}
+      type={modalInfo.type}
+      footerButtons={
+        <>
+          <button
+            onClick={modalInfo.confirmAction}
+            className="modal-close-btn-primary"
+          >
+            Confirm
+          </button>
+          <button
+            onClick={() =>
+              setModalInfo({ show: false, title: "", type: "", message: "", subMessage: "", confirmAction: null })
+            }
+            className="modal-close-btn"
+          >
+            Cancel
+          </button>
+        </>
+      }
+    />
+
     </div>
   );
 };
