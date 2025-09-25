@@ -172,8 +172,7 @@
 /* Small tablets / large phones (480px - 767px) */
 @media (max-width: 480px) {
     .LetsTalk-container {
-        width: 95%;
-        padding: 1rem;
+        padding: 16px;
     }
 
     .form-field input,
