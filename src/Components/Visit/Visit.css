@@ -63,12 +63,12 @@
   .visit-container {
     width: 100%;
     height: auto;
-    margin-left: -1vw;
+    margin-left: -2vw;
   }
   .visit-container img {
     border-radius: 20px;
     height: 202px;
-    width: 349px;
+    width: 356px;
   }
 
   .caption {
