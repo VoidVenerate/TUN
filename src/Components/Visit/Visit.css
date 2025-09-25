@@ -49,19 +49,16 @@
   }
 
   .caption {
-    opacity: 1; /* always visible */
-    transform: translateY(0); /* no slide */
-    display: block; 
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    position: relative;  /* put caption under the image */
+    opacity: 1;
+    transform: none;     /* remove slide-up effect */
+    background: none;    /* remove gradient */
+    color: #fff;         /* dark text since background is white */
     padding: 10px;
   }
 
   .caption p {
-    font-size: 16px; /* smaller text for mobile */
+    font-size: 16px;
     line-height: 1.4;
   }
 }
@@ -69,24 +66,27 @@
 /* Phones up to 480px */
 @media (min-width: 361px) and (max-width: 480px) {
   .visit-container {
-    width: 94%;
-    margin-left: 2vw;
+    width: 100%;
+    height: auto;
+    margin-left: -1vw;
+  }
+  .visit-container img {
+    border-radius: 20px;
+    height: 202px;
+    width: 389px;
   }
 
   .caption {
+    position: relative;
     opacity: 1;
-    transform: translateY(0);
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    transform: none;
+    background: none;
+    color: #fff;
     padding: 12px;
   }
 
   .caption p {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.4;
   }
 }

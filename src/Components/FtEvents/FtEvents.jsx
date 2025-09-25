@@ -144,16 +144,6 @@ const FtEvents = () => {
       </div>
 
       {/* 🔹 Pagination dots (only show on mobile) */}
-      {isMobile && (
-        <div className="dots">
-          {events.map((_, idx) => (
-            <span
-              key={idx}
-              className={`dot ${currentIndex === idx ? "active" : ""}`}
-            ></span>
-          ))}
-        </div>
-      )}
     </nav>
   );
 };

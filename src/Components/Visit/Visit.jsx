@@ -1,5 +1,5 @@
 import React from 'react'
-import vl from '../../assets/vl.svg'
+import vl from '../../assets/vl.png'
 import './Visit.css'
 import { NavLink, useLocation } from 'react-router-dom'
 

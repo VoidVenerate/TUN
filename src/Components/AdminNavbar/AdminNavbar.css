@@ -42,11 +42,7 @@
     box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
   }
 }
-.navbar-button {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+
 
 .profile-container {
   position: relative;

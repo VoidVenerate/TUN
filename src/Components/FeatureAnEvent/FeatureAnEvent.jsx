@@ -11,7 +11,7 @@ const FeatureAnEvent = () => {
     <div className='FeatureAnEvent-container'>
         <div className="FeatureAnEvent-header">
         <ChevronLeft onClick={() => navigate(-1)} />
-        <h1 className="header-title">PROMOTE AN EVENT</h1>
+        <h1 className="header-title" style={{fontFamily: 'Rushon Ground'}}>PROMOTE AN EVENT</h1>
         </div>
         <PromoCard title="Feature Your Event" subtitle = "Want more people to discover your event"/>
     </div>

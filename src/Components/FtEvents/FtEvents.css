@@ -150,7 +150,7 @@
   }
   .slider li {
     width: 90%;            /* relative instead of fixed */
-    max-width: 330px;      /* prevent overflow */
+    max-width: 314px;      /* prevent overflow */
     height: auto;          /* let height adapt */
     border: 1px solid #ffffff33
   }
@@ -159,8 +159,18 @@
   }
   .ft-events {
     padding: 10px;
-    width: 86%;
+    width: 87%;
     margin-left: 4vw;
+  }
+  .ft-header{
+    margin-left: 16px;
+  }
+  .ft-header p{
+    font-size: 16px;
+  }
+  .slider {
+    margin-left: 16px;
+    margin-right: 16px;
   }
 }
 

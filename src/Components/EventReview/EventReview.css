@@ -128,7 +128,7 @@
 
 /* Responsive tweaks stay the same; just replace old class refs */
 @media (max-width:1024px){
-  .event-review__content{ flex-direction:column; }
+  .event-review__content{ flex-direction:column; margin-left: 3vw; margin-right: 3vw; }
   .event-review__row{ gap:10px; }
   .event-review__footer{ justify-content:center; }
 }

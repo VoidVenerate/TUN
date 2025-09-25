@@ -111,7 +111,7 @@
 @media (min-width: 321px) and (max-width: 480px) {
   .slider-container {
     aspect-ratio: 16 / 10; /* slightly taller */
-    height: 90px; 
+    height: 102px; 
   }
 
   .nav-buttons button {
@@ -177,4 +177,12 @@
   width: 100%;
   height: 300px; /* same as Skeleton height */
   object-fit: cover;
+}
+@media (min-width: 320px) and (max-width: 1024px) {
+  .slider-container {
+    border-radius: 0px;
+  }
+  .slider-container img, .slide{
+    border-radius: 0px;
+  }
 }

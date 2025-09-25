@@ -72,9 +72,23 @@ const UserNavbar = () => {
             Contact Us
           </NavLink>
         </li>
+        <li className="navbar-button mobile-only">
+          <NavLink
+            to="/promote"
+            className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
+            onClick={() => setMenuOpen(false)}
+          >
+            <button>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              Promote with us
+            </button>
+          </NavLink>
+        </li>
       </ul>
-
-      <div className="navbar-button">
+      <div className="navbar-button desktop-only">
           <NavLink
               to="/promote"
               className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}

@@ -235,6 +235,8 @@
 @media (max-width: 768px) {
   .feature-event-container {
     padding: 16px;
+    margin-left: 4vw;
+    margin-right: 4vw;
   }
   
   .feature-buttons {
@@ -259,9 +261,10 @@
 /* Tablets & general mobile (≤768px) */
 @media (max-width: 768px) {
   .feature-event-container {
-    padding: 16px 12px;
+    padding: 24px 16px;
     max-width: 95%;
-    margin-top: 2vw;
+    border: 1px solid #ffffff33;
+    background: #000;
   }
 
   .feature-buttons {
@@ -310,8 +313,10 @@
 /* Smartphones (≤480px) */
 @media (max-width: 480px) {
   .feature-event-container {
-    padding: 14px 10px;
-    max-width: 98%;
+    padding: 24px 16px;
+    max-width: 95%;
+    border: 1px solid #ffffff33;
+    background: #000;
   }
 
   .feature-title {
