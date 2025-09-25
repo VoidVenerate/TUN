@@ -231,9 +231,9 @@
   }
 
   .ft-events {
-    width: 95%;
+    width: 324px;
     padding: 1rem;
-    margin: 1rem auto;
+    margin: 16px;
   }
 
   .ft-header p {
@@ -280,7 +280,7 @@
 
   .slider li {
     flex: 0 0 85%;  /* each card ~85% of screen */
-    max-width: 310px;
+    max-width: 285px;
     height: auto;
     margin-left: 16px;
   }

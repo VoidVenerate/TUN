@@ -474,10 +474,6 @@ hr{
     margin: 0 auto;
   }
 
-  .similar-event-actions {
-    flex-direction: column;
-  }
-
   .view-details-btn,
   .buy-ticket-btn,
   .modal-close-btn-primary-info,
