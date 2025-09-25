@@ -1,25 +1,27 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import "./FtEvents.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const FtEvents = () => {
   const [events, setEvents] = useState([]);
-  const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [thumbPos, setThumbPos] = useState(0);
 
   const sliderRef = useRef(null);
   const scrollInterval = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // 🔹 Fetch featured events
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("https://lagos-turnup.onrender.com/event/events", {
-          params: { is_featured: true, limit: 10 },
-        });
+        const res = await axios.get(
+          "https://lagos-turnup.onrender.com/event/events",
+          {
+            params: { is_featured: true, limit: 10 },
+          }
+        );
         setEvents(res.data || []);
       } catch (err) {
         console.error("Error fetching featured events:", err);
@@ -50,29 +52,29 @@ const FtEvents = () => {
     };
   }, []);
 
-  // 🔹 Track current index for mobile dots
+  // 🔹 Track scroll for fake thumb
   useEffect(() => {
     if (!isMobile || !sliderRef.current) return;
 
     const slider = sliderRef.current;
 
     const handleScroll = () => {
-      const cardWidth = slider.firstChild?.firstChild?.offsetWidth || 1;
-      const index = Math.round(slider.scrollLeft / (cardWidth + 16)); // 16px margin
-      setCurrentIndex(Math.min(index, events.length - 1));
+      const scrollLeft = slider.scrollLeft;
+      const scrollWidth = slider.scrollWidth;
+      const clientWidth = slider.clientWidth;
+
+      const scrollPercent = scrollLeft / (scrollWidth - clientWidth);
+
+      const trackWidth = clientWidth * 0.9; // invisible track area
+      const thumbWidth = 50; // same as CSS
+      const maxThumbPos = trackWidth - thumbWidth;
+
+      setThumbPos(scrollPercent * maxThumbPos);
     };
 
     slider.addEventListener("scroll", handleScroll);
     return () => slider.removeEventListener("scroll", handleScroll);
   }, [isMobile, events]);
-
-  const handleClick = (index, type) => {
-    if (activeBtn.index === index && activeBtn.type === type) {
-      setActiveBtn({ index: null, type: null });
-    } else {
-      setActiveBtn({ index, type });
-    }
-  };
 
   const startScroll = () => {
     if (scrollInterval.current) return;
@@ -119,16 +121,13 @@ const FtEvents = () => {
                   />
                   <div className="event-text">
                     <p>{event.event_name}</p>
-                    <p>
-                      {event.state}
-                    </p>
+                    <p>{event.state}</p>
                   </div>
                 </div>
 
                 <div className="slider-btn">
                   <button
                     onClick={() => navigate(`/viewdetails/${event.id}`)}
-                    
                   >
                     View Details
                   </button>
@@ -143,7 +142,13 @@ const FtEvents = () => {
         </ul>
       </div>
 
-      {/* 🔹 Pagination dots (only show on mobile) */}
+      {/* 🔹 Floating fake thumb (only mobile) */}
+      {isMobile && (
+        <div
+          className="fake-thumb"
+          style={{ transform: `translateX(${thumbPos}px)` }}
+        ></div>
+      )}
     </nav>
   );
 };

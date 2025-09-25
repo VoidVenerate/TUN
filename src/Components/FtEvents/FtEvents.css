@@ -285,3 +285,26 @@
     margin-left: 16px;
   }
 }
+/* fake scrollbar */
+
+/* 🔹 Floating fake thumb (no track) */
+.fake-thumb {
+  width: 50px;   /* same as in JS */
+  height: 4px;
+  background: #fff;
+  border-radius: 2px;
+  margin: 12px auto 0;
+  transition: transform 0.1s linear;
+}
+/* Hide scrollbar but keep scroll functionality */
+.mobile-slider {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none; /* Firefox */
+}
+
+.mobile-slider::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
