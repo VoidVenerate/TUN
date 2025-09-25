@@ -213,3 +213,75 @@
 .mobile-slider li {
   scroll-snap-align: center;
 }
+@media (max-width: 480px) {
+  .slider li {
+    width: 90%;            /* shrink to screen */
+    max-width: 320px;      /* prevent overflow */
+    margin: 0 auto; 
+    height: auto;       /* center cards */
+  }
+
+  .event-img {
+    width: 100%;  /* optional cap */
+    object-fit: cover;
+  }
+
+  .slider-info {
+    height: auto;          /* adapt to content */
+  }
+
+  .ft-events {
+    width: 95%;
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .ft-header p {
+    font-size: 1.2rem;
+  }
+
+  .slider {
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+  }
+}
+.slider ul {
+  display: flex;
+  gap: 1.5rem; /* spacing between cards */
+  transition: transform 0.5s ease;
+  padding-right: 1rem; /* ensures right margin */
+}
+
+.slider li {
+  flex: 0 0 400px; /* fixed width on desktop */
+  background-color: #000000;
+  border-radius: 24px;
+  padding: 1rem;
+  list-style: none;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  position: relative;
+  height: 600px;
+}
+
+.event-img {
+  width: 100%; /* take full card width */
+  height: 474px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* 📱 Mobile adjustments */
+@media (max-width: 480px) {
+  .slider ul {
+    gap: 1rem; /* tighter gap */
+    padding-right: 1rem; /* margin at end */
+  }
+
+  .slider li {
+    flex: 0 0 85%;  /* each card ~85% of screen */
+    max-width: 310px;
+    height: auto;
+    margin-left: 16px;
+  }
+}

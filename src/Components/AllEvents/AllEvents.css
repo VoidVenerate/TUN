@@ -192,8 +192,8 @@ a {
 /* Phones up to 480px */
 @media (min-width: 361px) and (max-width: 480px) {
   .LagEvents-container {
-    margin-left: 2vw;
-    width: 95%;
+    margin-left: 3vw;
+    width: 93%;
   }
 
   .LagEvents-header {
