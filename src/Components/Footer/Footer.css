@@ -135,7 +135,7 @@ body {
 
   .footer-input button {
     margin-left: 0;
-    width: 88%;
+    width: 95%;
     border-radius: 12px;
     padding: 16px;
     height: auto;
@@ -143,10 +143,10 @@ body {
   }
 
   .email-ftinput {
-    width: 82%;
-    height: 36px;
+    width: 89%;
+    height: 48px;
     padding: 2px 6px 2px 12px;
-    border-radius: 16px;
+    border-radius: 4px;
     margin-bottom: 2vw;
   }
 

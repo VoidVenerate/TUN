@@ -546,4 +546,7 @@ hr{
     width: 84%;
     margin-left: 6vw;
   }
+  .event-details-header {
+    margin-left: -1vw;
+  }
 }
