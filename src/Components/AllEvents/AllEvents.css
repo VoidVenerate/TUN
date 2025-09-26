@@ -333,6 +333,7 @@ a {
   }
   .LagEvents-card {
     border: 1px solid rgba(255, 255, 255, 0.3);
+    height: auto;
   }
 }
 

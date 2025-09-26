@@ -231,7 +231,7 @@
   }
 
   .ft-events {
-    width: 324px;
+    width: 81%;
     padding: 1rem;
     margin: 16px;
   }
@@ -246,6 +246,60 @@
     padding: 0;
   }
 }
+/* Large phones / phablets */
+@media (min-width: 481px) and (max-width: 767px) {
+  .slider li {
+    flex: 0 0 75%;       /* slightly bigger cards */
+    max-width: 340px;
+    height: auto;
+    border: 1px solid #ffffff33;
+    margin-left: 6px;
+  }
+
+  .event-img {
+    height: 380px;       /* smaller image height */
+  }
+
+  .ft-header p {
+    font-size: 1.4rem;   /* text scales up */
+  }
+
+  .ft-events {
+    width: 85%;
+    padding: 1.2rem;
+    margin: 20px auto;
+  }
+}
+/* Tablets (portrait + landscape) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .slider ul {
+    gap: 1rem;           /* tighter gap */
+    justify-content: center;
+  }
+
+  .slider li {
+    flex: 0 0 45%;       /* show ~2 cards side by side */
+    max-width: 420px;
+    height: auto;
+    border: 1px solid #ffffff33;
+    margin-left: 6px;
+  }
+
+  .event-img {
+    height: 420px;       /* adjust height */
+  }
+
+  .ft-header p {
+    font-size: 1.6rem;
+  }
+
+  .ft-events {
+    width: 90%;
+    padding: 1.5rem;
+    margin: 24px auto;
+  }
+}
+
 .slider ul {
   display: flex;
   gap: 1.5rem; /* spacing between cards */
