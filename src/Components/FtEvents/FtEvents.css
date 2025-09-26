@@ -247,6 +247,7 @@
     padding: 0;
     margin-left: 16px;
     width: 88%;
+    padding-right: 1px;
   }
 }
 /* Large phones / phablets */
@@ -332,7 +333,7 @@
 @media (max-width: 480px) {
   .slider ul {
     gap: 1rem; /* tighter gap */
-    padding-right: 1rem; /* margin at end */
+    padding-left: 31px; /* margin at end */
   }
 
   .slider li {
