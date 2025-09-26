@@ -110,7 +110,7 @@ const FtEvents = () => {
           {[...events, ...(!isMobile ? events : [])].map((event, index) => (
             <li
               key={`${event.id}-${index}`}
-              style={{ flex: "0 0 auto", marginRight: "16px" }}
+              style={{ flex: "0 0 auto"}}
             >
               <div className="slider-info">
                 <div className="event-info">
