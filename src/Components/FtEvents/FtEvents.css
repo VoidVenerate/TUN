@@ -334,7 +334,7 @@
 
   .slider li {
     flex: 0 0 85%;  /* each card ~85% of screen */
-    max-width: 285px;
+    max-width: 284px;
     height: auto;
     margin-left: 16px;
   }
