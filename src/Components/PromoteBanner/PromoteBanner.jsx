@@ -195,12 +195,14 @@ const PromoteBanner = () => {
                 className="banner-flyer-preview"
               />
             ) : (
-              <div>
+              <div className='bu-place'>
                 <Upload className="banner-upload-icon" />
-                <div className="banner-upload-title">Click to Upload</div>
-                <div className="banner-upload-subtitle">or drag and drop</div>
-                <div className="banner-upload-format">
-                  PNG, JPG (must be 1400x300px)
+                <div className="bu-note">
+                  <div className="banner-upload-title">Click to Upload</div>
+                  <div className="banner-upload-subtitle">or drag and drop</div>
+                  <div className="banner-upload-format">
+                    PNG, JPG (must be 1400x300px)
+                  </div>
                 </div>
               </div>
             )}

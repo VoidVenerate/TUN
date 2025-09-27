@@ -235,6 +235,7 @@
     border-radius: 0;
     margin-left: 0;
     margin-top: 16px;
+    border: none;
   }
 
   .ft-header p {
@@ -332,7 +333,7 @@
 /* 📱 Mobile adjustments */
 @media (max-width: 480px) {
   .slider ul {
-    gap: 1rem; /* tighter gap */
+    gap: 0px; /* tighter gap */
     padding-left: 31px; /* margin at end */
   }
 

@@ -303,13 +303,27 @@
   }
 
   .banner-upload-area {
-    width: 90%;
+    width: 98% !important;
     padding: 10px 0px;
+    margin-left: 3px;
+  }
+  .bu-place {
+    display: flex;
+    flex-direction: row;
+    height: 149px;
+    align-items: center;
+  }
+  .banner-form-row {
+    margin-bottom: 0px;
   }
 
   .banner-upload-icon {
     width: 40px;
     height: 40px;
+    margin-right: 16px;
+  }
+  .banner-form-input {
+    width: 90% !important;
   }
 }
 

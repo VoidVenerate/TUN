@@ -16,7 +16,6 @@ const PlacesInLagos = () => {
             <button>
                 <NavLink
                     to="/clubs"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
                     <img src={Club} />
@@ -25,7 +24,6 @@ const PlacesInLagos = () => {
             <button>
                 <NavLink
                     to="/hotels"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
                     <img src={Hotel} />
@@ -34,7 +32,6 @@ const PlacesInLagos = () => {
             <button>
                 <NavLink
                     to="/foodspots"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
                     <img src={FoodSpot} />
@@ -43,7 +40,6 @@ const PlacesInLagos = () => {
             <button>
                 <NavLink
                     to="/beaches"
-                    className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
                     onClick={() => setMenuOpen(false)}
                 >
                     <img src={Beach} />

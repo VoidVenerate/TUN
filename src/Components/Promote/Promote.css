@@ -150,7 +150,7 @@
 @media screen and (max-width: 480px) {
   .promote-container {
     padding: 12px;
-    border-radius: 14px;
+    border-radius: 0px;
   }
 
   .promote {
@@ -381,6 +381,8 @@
 @media screen and (max-width: 480px) {
   .promote {
     padding: 15px;
+    margin-left: 8px;
+    margin-right: 10px;
   }
   .promote-text h2 { font-size: 20px; }
   .promote-text p { font-size: 13px; line-height: 1.4; }
@@ -388,6 +390,10 @@
     font-size: 13px;
     height: 46px;
     line-height: 46px;
+    width: 89%;
+  }
+  .promote-container {
+    border-radius: 0px;
   }
 }
 

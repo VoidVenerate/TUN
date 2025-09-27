@@ -72,7 +72,7 @@
   .visit-container img {
     height: auto;
     max-height: 220px;
-    margin-left: -5px;
+    margin-left: 16px;
     width: 103%;
     max-width: 358px;
   }

@@ -406,9 +406,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .event-unique-form-select,
   .event-unique-form-textarea {
     font-size: 13px;
-    padding: 10px;
+    height: 48px;
   }
-
+  .event-unique-form-select {
+    width: 98%;
+    height: 48px;          /* keep the fixed height */
+    line-height: 48px;     /* vertically center text */
+    padding: 0 12px;       /* nice left/right breathing room */
+    display: flex;         /* fix some mobile issues */
+    align-items: center;   /* make sure text sits in middle */
+  }
   .event-unique-submit-btn {
     font-size: 13px;
     padding: 15px;

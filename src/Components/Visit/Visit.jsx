@@ -8,7 +8,6 @@ const Visit = () => {
     <div className='visit-container'>
       <NavLink
         to="/lagvisit"
-        className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
       >
         <img src={vl} alt="Visit Lagos" />
         <div className="caption">
