@@ -287,6 +287,9 @@
     flex-direction: column;
     gap: 12px;
   }
+  .contact-form {
+    flex-direction: row;
+  }
 
   .contact-select,
   .contact-input,
