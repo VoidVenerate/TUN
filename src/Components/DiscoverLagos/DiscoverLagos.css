@@ -49,4 +49,7 @@
   .PlacesInLagos-txt{
     margin-top: -10vw;
   }
+  .PlacesInLagos-txt h2 {
+    margin-left: 0px;
+  }
 }
