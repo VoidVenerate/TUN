@@ -241,8 +241,8 @@
   left: 100%;
 }
 .promote-container {
-  width: 95%;
-  max-width: 1200px; /* prevent stretching too much on wide screens */
+  width: 100%;
+  max-width: 1380px; /* prevent stretching too much on wide screens */
   height: auto;
   background: rgba(84, 35, 210, 0.25);
   border-radius: 20px;
@@ -394,6 +394,7 @@
   }
   .promote-container {
     border-radius: 0px;
+    width: 95%;
   }
 }
 
