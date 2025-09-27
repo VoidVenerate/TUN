@@ -91,6 +91,9 @@
   .PlacesInLagos img {
     width: 90vw;
   }
+  .PlacesInLagos-container {
+    margin-bottom: 0;
+  }
 
   .PlacesInLagos {
     gap: 10px;
@@ -98,7 +101,7 @@
     margin-top: -21px;
   }
   .PlacesInLagos-txt {
-    margin-top: -8vw;
+    margin-top: 0vw;
     padding-top: 0;
   }
   .PlacesInLagos-txt h2 {

@@ -73,8 +73,7 @@
     height: auto;
     max-height: 220px;
     margin-left: 16px;
-    width: 103%;
-    max-width: 358px;
+    width: 92%;
   }
 
   .caption {
@@ -91,6 +90,8 @@
 
   .visit-container img {
     max-height: 280px;
+    margin-left: 16px;
+    width: 96%;
   }
 
   .caption {
