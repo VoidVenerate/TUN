@@ -45,7 +45,7 @@ const PromoteBanner = () => {
 
     if (file) {
       // ✅ File size validation (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
+      if (file.size > 10 * 1024 * 1024) {
         setError('File is too large. Maximum size is 2MB.');
         e.target.value = null;
         return;
@@ -54,7 +54,7 @@ const PromoteBanner = () => {
       const previewUrl = URL.createObjectURL(file);
       const img = new Image();
       img.onload = () => {
-        if (img.width <= 1700 && img.height <= 350) {
+        if (img.width <= 17000 && img.height <= 3500) {
           setBannerData((prev) => ({
             ...prev,
             flyer: file,

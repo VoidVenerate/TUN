@@ -66,12 +66,19 @@ const Auth = ({signUpKey}) => {
   const isPasswordStrong = (password) => {
     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
   };
+  const isTurnupEmail = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@turnuplagos\.com$/.test(email);
+  };
+
 
   const validateSignUpFields = () => {
     if (!formData.first_name.trim()) return "First name is required";
     if (!formData.last_name.trim()) return "Last name is required";
     if (!formData.email.trim()) return "Email is required";
     if (!formData.password) return "Password is required";
+    if(!isTurnupEmail(formData.email)) {
+      return "Only @turnuplagos.com emails are allowed";
+    }
     if (!isPasswordStrong(formData.password)) {
       return "Password must be 8+ chars, include uppercase, lowercase, number, and special character.";
     }
@@ -98,6 +105,10 @@ const Auth = ({signUpKey}) => {
     // Sign In flow
     try {
       setLoading(true);
+      if (!isTurnupEmail(formData.email)) {
+        setError("Only @turnuplagos.com emails are allowed");
+        return;
+      }
       const res = await axios.post(
         "https://lagos-turnup.onrender.com/sub-admin-login",
         { email: formData.email, password: formData.password }
@@ -165,15 +176,25 @@ const Auth = ({signUpKey}) => {
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
-      const res = await axios.post('https://lagos-turnup.onrender.com/auth/google/login', {
-        token: credentialResponse.credential
-      });
+
+      // ✅ Enforce only @turnuplagos.com
+      if (!isTurnupEmail(decoded.email)) {
+        setError("Only @turnuplagos.com emails are allowed for Google login");
+        return;
+      }
+
+      const res = await axios.post(
+        'https://lagos-turnup.onrender.com/auth/google/login',
+        { token: credentialResponse.credential }
+      );
+
       localStorage.setItem('token', res.data.token);
       navigate('/dashboard');
     } catch (error) {
       setError('Google authentication failed');
     }
   };
+
 
   const handleForgotPassword = async () => {
     if (!forgotEmail) {
