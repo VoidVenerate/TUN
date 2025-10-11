@@ -126,10 +126,10 @@ const PromoteBanner = () => {
         show: true,
         title: "Success!",
         message: isAdmin
-          ? "Banner successfully uploaded and auto-approved!"
+          ? "Banner submitted successfully and is pending review."
           : "Banner submitted successfully and is pending review.",
         subMessage: isAdmin
-          ? "Your banner is live immediately."
+          ? "YOur team will review it, and if approved, it will go live within 24–48 hours."
           : "Our team will review it, and if approved, it will go live within 24–48 hours.",
         type: "success",
         footerButtons: (
