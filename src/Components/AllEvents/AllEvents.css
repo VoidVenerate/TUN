@@ -276,19 +276,6 @@ a {
   }
 }
 
-/* --- Tablets (481px to 768px) --- */
-@media (min-width: 481px) and (max-width: 768px) {
-  .LagEvents-btns {
-    flex-direction: row;
-    gap: 1rem;
-  }
-
-  .LagEvents-btns > button {
-    padding: 20px 0;
-    font-size: 1rem;
-  }
-}
-
 /* --- Optional: Larger screens --- */
 @media (min-width: 769px) {
   .LagEvents-btns > button {
@@ -312,15 +299,70 @@ a {
 }
 @media (min-width: 980px) and (max-width: 1330px) {
   .LagEvents-list {
-     grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5vw;               /* Add breathing space between cards */
+    justify-content: center;
+    align-items: start;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-card {
+    max-width: 380px;         /* Slightly smaller to fit 3 comfortably */
+    height: auto;
+    margin: 1.5vw auto;
+  }
+
+  .LagEvents-img {
+    width: 100%;
+    height: 340px;            /* Shorter image to reduce tall stacking */
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .LagEvents-header p {
+    font-size: 24px;
+  }
+
+  .LagEvents-header button {
+    width: 110px;
+    height: 50px;
+    font-size: 0.95rem;
   }
 }
 @media (min-width: 768px) and (max-width: 979px) {
   .LagEvents-list {
-    margin-left: 0vw;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
+    gap: 2vw;                              /* spacing between cards */
+    justify-content: center;
+    align-items: start;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-card {
+    max-width: 420px;
+    height: auto;
+    margin: 2vw auto;
+  }
+
+  .LagEvents-img {
     width: 100%;
-    display: flex;
-    justify-content: space-around;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .LagEvents-header p {
+    font-size: 22px;
+  }
+
+  .LagEvents-header button {
+    width: 100px;
+    height: 45px;
+    font-size: 0.9rem;
   }
 }
 @media (max-width: 600px) {
@@ -336,6 +378,55 @@ a {
     height: auto;
   }
 }
+@media (min-width: 481px) and (max-width: 970px) {
+  .LagEvents-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 2vw;                              /* space between cards */
+    justify-content: center;
+    align-items: start;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-card {
+    max-width: 400px;
+    height: auto;
+    margin: 2vw auto;
+    border-radius: 20px;
+  }
+
+  .LagEvents-img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .LagEvents-header {
+    margin-left: 3vw;
+  }
+
+  .LagEvents-header p {
+    font-size: 22px;
+  }
+
+  .LagEvents-header button {
+    width: 100px;
+    height: 45px;
+    font-size: 0.9rem;
+  }
+
+  .LagEvents-btns {
+    gap: 1rem;
+  }
+
+  .LagEvents-btns > button {
+    font-size: 0.95rem;
+    padding: 16px 0;
+  }
+}
+
 
 /* ===== Skeleton Loader ===== */
 .skeleton {

@@ -31,6 +31,8 @@ const Auth = ({signUpKey}) => {
   });
 
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+
   const [loading, setLoading] = useState(false);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -64,7 +66,7 @@ const Auth = ({signUpKey}) => {
   };
 
   const isPasswordStrong = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?`~\-]).{8,}$/.test(password);
   };
   const isTurnupEmail = (email) => {
     return /^[a-zA-Z0-9._%+-]+@turnuplagos\.com$/.test(email);
@@ -72,35 +74,43 @@ const Auth = ({signUpKey}) => {
 
 
   const validateSignUpFields = () => {
-    if (!formData.first_name.trim()) return "First name is required";
-    if (!formData.last_name.trim()) return "Last name is required";
-    if (!formData.email.trim()) return "Email is required";
-    if (!formData.password) return "Password is required";
-    if(!isTurnupEmail(formData.email)) {
-      return "Only @turnuplagos.com emails are allowed";
+    const errors = {};
+
+    if (!formData.first_name.trim()) errors.first_name = "First name is required";
+    if (!formData.last_name.trim()) errors.last_name = "Last name is required";
+    if (!formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!isTurnupEmail(formData.email)) {
+      errors.email = "Only @turnuplagos.com emails are allowed";
     }
-    if (!isPasswordStrong(formData.password)) {
-      return "Password must be 8+ chars, include uppercase, lowercase, number, and special character.";
+
+    if (!formData.password) {
+      errors.password = "Password is required";
+    } else if (!isPasswordStrong(formData.password)) {
+      errors.password =
+        "Password must be 8+ chars, include uppercase, lowercase, number, and special character.";
     }
+
     if (formData.password !== formData.confirmPassword) {
-      return "Passwords do not match";
+      errors.confirmPassword = "Passwords do not match";
     }
-    return null;
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (isSignUp) {
-      const validationError = validateSignUpFields();
-      if (validationError) {
-        setError(validationError);
-        return;
-      }
+      const isValid = validateSignUpFields();
+      if (!isValid) return; // stop here if errors exist
       setShowUploadModal(true);
       return;
     }
+
 
     // Sign In flow
     try {
@@ -304,15 +314,18 @@ const Auth = ({signUpKey}) => {
                   <div className="row">
                     <div className="form-row">
                       <label>First Name <span>*</span></label>
-                      <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} required placeholder='Enter your first name' style={{marginTop:"10px"}} />
+                      <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={fieldErrors.first_name ? 'error-input' : ''} required placeholder='Enter your first name' style={{marginTop:"10px"}} />
+                      {fieldErrors.first_name && <p className="field-error">{fieldErrors.first_name}</p>}
                     </div>
                     <div className="form-row">
                       <label >Last Name <span>*</span></label>
-                      <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} required placeholder='Enter your last name' style={{marginTop:"10px"}} />
+                      <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={fieldErrors.last_name ? 'error-input' : ''} required placeholder='Enter your last name' style={{marginTop:"10px"}} />
+                      {fieldErrors.last_name && <p className="field-error">{fieldErrors.last_name}</p>}
                     </div>
                   </div>
                   <label>Email <span>*</span></label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} required placeholder='mail@simmmple.com' />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} className={fieldErrors.email ? 'error-input' : ''} required placeholder='mail@simmmple.com' />
+                  {fieldErrors.email && <p className="field-error">{fieldErrors.email}</p>}
 
                   <label>Password <span>*</span></label>
                   <div className="password-input">
@@ -322,10 +335,12 @@ const Auth = ({signUpKey}) => {
                       value={formData.password}
                       onChange={handleChange}
                       required placeholder='Enter password'
+                      className={fieldErrors.password ? 'error-input' : ''}
                     />
                     <span onClick={() => setShowPassword(!showPassword)} className="toggle-icon">
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </span>
+                    {fieldErrors.password && <p className="field-error">{fieldErrors.password}</p>}
                   </div>
 
                   <label>Confirm Password <span>*</span></label>
@@ -337,10 +352,12 @@ const Auth = ({signUpKey}) => {
                       onChange={handleChange}
                       required
                       placeholder='Confirm your password'
+                      className={fieldErrors.password ? 'error-input' : ''}
                     />
                     <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="toggle-icon">
                       {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </span>
+                    {fieldErrors.password && <p className="field-error">{fieldErrors.password}</p>}
                   </div>
                 </div>
                 {error && <p className="error">{error}</p>}
