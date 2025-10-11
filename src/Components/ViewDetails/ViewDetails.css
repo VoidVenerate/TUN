@@ -550,3 +550,43 @@ hr{
     margin-left: -1vw;
   }
 }
+/* Medium-large screens (small laptops: 1025px – 1366px) */
+@media (min-width: 1025px) and (max-width: 1366px) {
+  .event-details-content {
+    width: 94%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .event-main-info {
+    grid-template-columns: 380px 1fr; /* wider flyer section */
+    gap: 24px;
+    align-items: start;
+  }
+
+  .event-info-section {
+    width: 100%; /* allow it to fit within grid */
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  .event-flyer-section {
+    max-width: 380px;
+    max-height: 520px;
+  }
+
+  .event-horizontal-line {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .similar-events-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  hr {
+    width: 90%;
+    margin: 0 auto;
+  }
+}
