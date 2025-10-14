@@ -182,3 +182,27 @@
     grid-template-columns: repeat(3, 1fr); /* keep 3, or bump to 4 if needed later */
   }
 }
+/* Large Desktops (≥1630px) */
+@media (min-width: 1630px) {
+  .admin-Events {
+    grid-template-columns: repeat(4, 1fr); /* ✅ 4 columns on wide screens */
+    gap: 1.5vw;
+    justify-content: center;
+    align-items: start;
+    width: 91%;
+  }
+
+  .event-card {
+    max-width: 360px;
+    margin-left: 1vw;
+  }
+
+  .events img {
+    height: 320px;
+    object-fit: cover;
+  }
+
+  .adminEvents-header p {
+    font-size: 26px;
+  }
+}

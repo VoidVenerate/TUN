@@ -178,6 +178,12 @@ body {
 /* ========================= */
 /* 📱 RESPONSIVENESS */
 /* ========================= */
+@media (min-width:1630px) {
+  .banner-list {
+    width: 90%;
+    max-width: 1630px;
+  }
+}
 
 /* Tablets (≤ 1024px) */
 @media (max-width: 1024px) {

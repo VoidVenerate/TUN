@@ -242,3 +242,30 @@
     grid-template-columns: repeat(3, 1fr); /* keep 3, can bump to 4 if you want later */
   }
 }
+@media (min-width: 1630px) {
+  .pending-Events {
+    grid-template-columns: repeat(4, 1fr); /* 🟢 4 columns */
+    gap: 1.5vw;
+    justify-content: center;
+    align-items: start;
+    width: 91%;
+  }
+
+  .event-card {
+    max-width: 360px;
+    height: auto;
+  }
+
+  .events img {
+    height: 300px;
+    object-fit: cover;
+  }
+
+  .pendingEvents-header p {
+    font-size: 26px;
+  }
+
+  .pendingEvents-header h4 {
+    padding: 20px 30px;
+  }
+}

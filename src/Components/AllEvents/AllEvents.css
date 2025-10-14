@@ -478,3 +478,38 @@ a {
   height: 12px;
   width: 60%;
 }
+/* ===== Desktop screens (2030px and above) ===== */
+@media (min-width: 1630px) {
+  .LagEvents-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    gap: 1.5vw;
+    justify-content: center;
+    align-items: start;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-card {
+    max-width: 360px; /* ensure all 4 cards fit neatly */
+    height: auto;
+    margin: 1.5vw auto;
+  }
+
+  .LagEvents-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 16px;
+  }
+
+  .LagEvents-header p {
+    font-size: 26px;
+  }
+
+  .LagEvents-header button {
+    width: 120px;
+    height: 55px;
+    font-size: 1rem;
+  }
+}
