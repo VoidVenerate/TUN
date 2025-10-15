@@ -76,6 +76,30 @@ const FtEvents = () => {
     return () => slider.removeEventListener("scroll", handleScroll);
   }, [isMobile, events]);
 
+  // 🔹 Fix Safari scroll: allow laptop horizontal scrolling
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    // Make slider focusable for arrow keys
+    slider.setAttribute("tabindex", "0");
+
+    // Convert vertical scroll (wheel) to horizontal scroll
+    const handleWheel = (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        slider.scrollLeft += e.deltaY;
+        e.preventDefault(); // prevent vertical page scroll
+      }
+    };
+
+    slider.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      slider.removeEventListener("wheel", handleWheel, { passive: false });
+      slider.removeAttribute("tabindex");
+    };
+  }, [isMobile]);
+
   const startScroll = () => {
     if (scrollInterval.current) return;
     scrollInterval.current = setInterval(() => {
@@ -108,10 +132,7 @@ const FtEvents = () => {
       >
         <ul style={{ display: "flex" }}>
           {[...events, ...(!isMobile ? events : [])].map((event, index) => (
-            <li
-              key={`${event.id}-${index}`}
-              style={{ flex: "0 0 auto"}}
-            >
+            <li key={`${event.id}-${index}`} style={{ flex: "0 0 auto" }}>
               <div className="slider-info">
                 <div className="event-info">
                   <img
@@ -126,9 +147,7 @@ const FtEvents = () => {
                 </div>
 
                 <div className="slider-btn">
-                  <button
-                    onClick={() => navigate(`/viewdetails/${event.id}`)}
-                  >
+                  <button onClick={() => navigate(`/viewdetails/${event.id}`)}>
                     View Details
                   </button>
 

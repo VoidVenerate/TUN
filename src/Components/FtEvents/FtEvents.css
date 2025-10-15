@@ -366,3 +366,21 @@
 .mobile-slider::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Edge */
 }
+/* ===== Slider Scroll Fix for Safari/Desktop ===== */
+.slider {
+  overflow-x: auto;        /* allow scroll on desktop/laptop */
+  overflow-y: hidden;
+  width: 100%;
+  display: flex;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch; /* smooth scroll for Safari */
+  scroll-behavior: smooth;           /* optional, nice effect */
+}
+
+/* Hide scrollbar but keep functionality */
+.slider::-webkit-scrollbar {
+  display: none;
+}
+.slider {
+  scrollbar-width: none; /* Firefox */
+}
