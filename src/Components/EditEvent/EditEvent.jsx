@@ -535,7 +535,7 @@ const EditableEventReviewRHF = ({ role }) => {
                 </div>
                 <div className="review-group">
                   <label className="review-label" htmlFor="dressCode">
-                    Dress Code
+                    Gate Fee
                   </label>
                   <input id="dressCode" className="form-input" {...register('dressCode')} />
                 </div>

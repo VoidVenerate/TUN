@@ -4,6 +4,8 @@ import { Upload, TrendingUp, TrendingDown, Mail } from 'lucide-react';
 import axios from 'axios';
 import './Newsletter.css';
 import api from '../api';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const Newsletter = () => {
     // Stats states
@@ -196,6 +198,43 @@ const Newsletter = () => {
         }
     };
 
+    const exportSubscribersToExcel = async () => {
+        try {
+            const res = await api.get('/event/newsletter?limit=1000&offset=0');
+            const data = res.data?.subscriptions || [];
+
+            if (data.length === 0) {
+                setModalInfo({
+                    show: true,
+                    title: "No Data",
+                    message: "There are no subscribers to export.",
+                    subMessage: "",
+                    type: "info",
+                });
+                return;
+            }
+
+            // Prepare data for Excel
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Subscribers");
+
+            // Generate Excel file and trigger download
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const file = new Blob([excelBuffer], { type: 'application/octet-stream' });
+            saveAs(file, 'newsletter_subscribers.xlsx');
+        } catch (error) {
+            console.error("Error exporting subscribers", error);
+            setModalInfo({
+                show: true,
+                title: "Error!",
+                message: "Failed to export subscribers.",
+                subMessage: "",
+                type: "error",
+            });
+        }
+    }
+
     return (
         <div className='subscription-container'>
             {/* Stats Card */}
@@ -219,6 +258,11 @@ const Newsletter = () => {
                         </p>
                     </div>
 
+                </div>
+                <div className="export-card">
+                    <button className="button" onClick={exportSubscribersToExcel}>
+                        <Upload size={16} /> Export Emails
+                    </button>
                 </div>
             </div>
 

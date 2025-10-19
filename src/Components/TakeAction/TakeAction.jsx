@@ -399,7 +399,7 @@ const TakeAction = ({ role }) => {
               </div>
 
               <div className="review-group">
-                <label className="review-label" htmlFor="dressCode">Dress Code</label>
+                <label className="review-label" htmlFor="dressCode">Gate Fee</label>
                 <input disabled id="dressCode" className="form-input" {...register('dressCode')} />
               </div>
             </div>

@@ -170,7 +170,7 @@
   font-weight: 500;
 }
 
-/* Additional Info (Dress code, State) */
+/* Additional Info (Gate Fee, State) */
 .additional-info {
   display: grid;
   grid-template-columns: 1fr 1fr;

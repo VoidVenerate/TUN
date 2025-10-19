@@ -177,7 +177,7 @@ const EventReview = () => {
                 <p className="event-review__value">{eventData.time}</p>
               </div>
               <div className="event-review__group">
-                <label className="event-review__label">Dress Code</label>
+                <label className="event-review__label">Gate Fee</label>
                 <p className="event-review__value">{eventData.dressCode || 'N/A'}</p>
               </div>
             </div>

@@ -21,6 +21,7 @@
     "@tanstack/react-query": "^5.83.0",
     "axios": "^1.11.0",
     "date-fns": "^4.1.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^12.23.12",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.535.0",
@@ -33,7 +34,8 @@
     "react-loading-skeleton": "^3.5.0",
     "react-router-dom": "^7.7.1",
     "react-time-picker": "^7.0.0",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

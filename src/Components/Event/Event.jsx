@@ -219,11 +219,11 @@ const Event = () => {
               </div>
 
               <div className="event-unique-form-group">
-                <label className="event-unique-form-label">Dress Code</label>
+                <label className="event-unique-form-label">Gate Fee</label>
                 <input
                   type="text"
                   className="event-unique-form-input"
-                  placeholder="Leave blank if no dress code."
+                  placeholder="Leave blank if no gate fee."
                   name='dressCode'
                   value={eventData.dressCode}
                   onChange={handleChange}

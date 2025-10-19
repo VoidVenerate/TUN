@@ -167,10 +167,10 @@ const ViewDetails = () => {
 
                 <div className="detail-item">
                   <div className="detail-icon">
-                    🎭 {/* or an image for dress code */}
+                    🎭 {/* or an image for gate fee */}
                   </div>
                   <div className="detail-content">
-                    <span className="detail-label">Dress Code</span>
+                    <span className="detail-label">Gate Fee</span>
                     <span className="detail-value">{eventData.dress_code || 'Not Specified'}</span>
                   </div>
                 </div>

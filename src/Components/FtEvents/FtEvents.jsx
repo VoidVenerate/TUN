@@ -19,7 +19,7 @@ const FtEvents = () => {
         const res = await axios.get(
           "https://lagos-turnup.onrender.com/event/events",
           {
-            params: { is_featured: true, limit: 10 },
+            params: { is_featured: true, limit: 100 },
           }
         );
         setEvents(res.data || []);
@@ -105,7 +105,7 @@ const FtEvents = () => {
     scrollInterval.current = setInterval(() => {
       const slider = sliderRef.current;
       if (slider) {
-        slider.scrollLeft += 0.5;
+        slider.scrollLeft += 2;
         if (slider.scrollLeft >= slider.scrollWidth / 2) {
           slider.scrollLeft = 0;
         }

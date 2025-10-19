@@ -25,6 +25,23 @@
   color: #ff0000;
 }
 
+.export-card button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(0, 132, 255, 0.101);
+  padding: 20px 24px;
+  font-weight: bold;
+  color: #0084ff;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: 0.5px solid rgba(0, 132, 255, 0.204);
+  margin: 27px 4vw 1.5rem 0;
+  margin-right: 9vw;
+}
+
 .sub-form-row input[type="text"] {
   flex: 1;
   padding: 20px 12px;
@@ -209,7 +226,8 @@
 .subscription-header p { font-size: 1rem; color: #555;  margin-left: 4vw; }
 
 /* Subscription cards */
-.subscription-cards { margin-bottom: 2rem; width: 323px; height: 161px; margin-left: 4vw; }
+.subscription-cards { margin-bottom: 2rem; width: 323px; height: 161px; margin-left: 4vw;
+display: flex; width: 100%; justify-content: space-between;  }
 .subscription-card {
   background-color: #ffffff0d;
   padding: 1rem 1.5rem;
