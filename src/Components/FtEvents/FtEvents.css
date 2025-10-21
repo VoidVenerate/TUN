@@ -281,7 +281,6 @@
     gap: 1rem;           /* tighter gap */
     justify-content: center;
   }
-
   .slider li {
     flex: 0 0 45%;       /* show ~2 cards side by side */
     max-width: 420px;

@@ -19,7 +19,8 @@ export const EventProvider = ({ children }) => {
     venue: '',
     contactMethod: 'email',
     contactValue: '',
-    link: ''
+    link: '',
+    phoneNo:'',
   });
 
   const [loading, setLoading] = useState(false);
@@ -66,7 +67,8 @@ export const EventProvider = ({ children }) => {
         link: payload.contact_link || '',
         id: payload.id || id,
         event_id: payload.id || id,
-        featured_requested: !!payload.featured_requested
+        featured_requested: !!payload.featured_requested,
+        phoneNo: payload.phone_no,
       };
 
       setEventData(mappedData);
@@ -136,7 +138,8 @@ export const EventProvider = ({ children }) => {
           featured_requested: !!updated.featured_requested,
           contactMethod: updated.contact_method || eventData.contactMethod,
           contactValue: updated.contact_value || eventData.contactValue,
-          link: updated.contact_link || eventData.link
+          link: updated.contact_link || eventData.link,
+          phoneNo: updated.phone_no
         };
         setEventData(mappedData);
         setLoading(false);
@@ -187,7 +190,8 @@ export const EventProvider = ({ children }) => {
       venue: '',
       contactMethod: 'email',
       contactValue: '',
-      link: ''
+      link: '',
+      phoneNo:'',
     });
     localStorage.removeItem('eventData');
   };

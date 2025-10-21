@@ -44,6 +44,7 @@ const EventReview = () => {
       formData.append('feature_duration', eventData.featureDuration || '');
       formData.append('contact_method', eventData.contactMethod || '');
 +     formData.append('contact_link', eventData.link || '');
++     formData.append('phone_no', eventData.phoneNo || '');
 
       if (eventData.flyer) formData.append('event_flyer', eventData.flyer);
 
@@ -214,6 +215,10 @@ const EventReview = () => {
               </div>
             </>
           )}
+          <div className="event-review__group event-review__group--full">
+                <label className="event-review__label">Phone Number</label>
+                <p className="event-review__value">{eventData.phoneNo}</p>
+              </div>
 
           <div className="event-review__group event-review__group--full">
             <label className="event-review__label">Additional Information Link</label>

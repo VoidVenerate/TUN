@@ -21,6 +21,17 @@ const FeatureEventForm = () => {
     if (eventData.featureChoice === "yes-feature" && !eventData.contactValue) {
       return 'Contact Information is needed';
     }
+    if (eventData.phoneNo === "no-feature") {
+      const phone = eventData.phoneNo?.trim()
+      const phoneRegex = /^\+?[0-9]{8,15}$/;
+
+      if (!phone) {
+        return 'Phone number is required'
+      }
+      if (!phoneRegex.test(phone)) {
+        return 'Enter valid phone number'
+      }
+    } 
     return "";
   };
 
@@ -51,7 +62,7 @@ const FeatureEventForm = () => {
       {/* === Feature Choice Section === */}
       <div className="feature-section">
         <h2 className="feature-title">
-          Feature your event on TurnUpLagos *
+          Feature your event on TurnUpLagos<span style={{color:"red"}}>*</span>
         </h2>
         <p className="feature-description">
           Want more eyes on your event? We'll reach out to discuss featuring options and pricing.
@@ -79,7 +90,7 @@ const FeatureEventForm = () => {
       {eventData.featureChoice === "yes-feature" && (
         <div className="contact-section">
           <h3 className="contact-title">
-            📧 We'll need a way to reach you *
+            📧 We'll need a way to reach you<span style={{color:"red"}}>*</span>
           </h3>
           <p className="contact-description">
             Select your preferred contact method so we can discuss pricing and promotion details.
@@ -95,8 +106,6 @@ const FeatureEventForm = () => {
                 }
               >
                 <option value="email">Email Address</option>
-                <option value="phone">Phone Number</option>
-                <option value="whatsapp">WhatsApp</option>
               </select>
             </div>
 
@@ -111,7 +120,25 @@ const FeatureEventForm = () => {
           </div>
         </div>
       )}
+      <div className="contact-section">
+        <h3 className="contact-title">
+          Phone Number (for follow-up or confirmation)<span style={{color:"red"}}>*</span>
+        </h3>
+        <p className="contact-description">
+          Your phone number helps us reach you if we need any clarification about your event.
+        </p>
 
+        <div className="contact-form">
+          <input
+            className="contact-input"
+            placeholder={`Enter your phone number`}
+            value={eventData.phoneNo}
+            onChange={(e) =>
+              setEventData(prev => ({ ...prev, phoneNo: e.target.value }))
+            }
+          />
+        </div>
+      </div>
       {/* === Additional Info Section === */}
       <div className="additional-info-section">
         <h3 className="additional-title">Additional Information Link</h3>
