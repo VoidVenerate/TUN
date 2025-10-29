@@ -311,13 +311,13 @@ const Auth = ({signUpKey}) => {
                   <span></span><p style={{margin:'0px'}}>or</p> <span></span> 
                 </div>
                 <div className="form-fields">
-                  <div className="row">
-                    <div className="form-row">
+                  <div className="row"style={{gap:"0"}}>
+                    <div className="form-row" style={{gap:"0"}}>
                       <label>First Name <span>*</span></label>
                       <input type="text" name="first_name" value={formData.first_name} onChange={handleChange} className={fieldErrors.first_name ? 'error-input' : ''} required placeholder='Enter your first name' style={{marginTop:"10px"}} />
                       {fieldErrors.first_name && <p className="field-error">{fieldErrors.first_name}</p>}
                     </div>
-                    <div className="form-row">
+                    <div className="form-row"style={{gap:"0", marginTop:"0"}}>
                       <label >Last Name <span>*</span></label>
                       <input type="text" name="last_name" value={formData.last_name} onChange={handleChange} className={fieldErrors.last_name ? 'error-input' : ''} required placeholder='Enter your last name' style={{marginTop:"10px"}} />
                       {fieldErrors.last_name && <p className="field-error">{fieldErrors.last_name}</p>}
