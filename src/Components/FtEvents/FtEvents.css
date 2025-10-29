@@ -201,14 +201,16 @@
   }
   .slider ul {
     gap: 0;
-    padding-left: 31px;
+    padding-left: 0px;
   }
   .slider li {
     flex: 0 0 85%;
-    max-width: 284px;
+    max-width: 340px;
     height: auto;
-    margin-left: 16px;
+    margin-left: 0px;
+    margin-right: 16px;
     border: 1px solid #ffffff33;
+    padding: 1rem;
   }
   .event-img {
     width: 100%;
