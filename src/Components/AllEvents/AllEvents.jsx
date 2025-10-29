@@ -27,7 +27,13 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
     if (stateFilter) fetchEvents()
   }, [stateFilter])
 
-
+  const truncateWords = (text, maxWords = 1) => {
+    if(!text) return "";
+    const words = text.split(" ")
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(" ") + "..."
+  }
+  
 
   // client-side pagination
   const start = (page - 1) * limit
@@ -106,8 +112,8 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
               <div className="LagEvents-content">
                 <img src={event.flyer_url} alt={event.event_name} className="LagEvents-img" />
                 <div className="LagEvents-txt">
-                  <h3 className="LagEvents-title">{event.event_name}</h3>
-                  <p className="LagEvents-location">{event.venue}</p>
+                  <h3 className="LagEvents-title">{truncateWords(event.event_name, 1)}</h3>
+                  <p className="LagEvents-location">{event.venue.split(" ").slice(0,4).join(" ") + "..."}</p>
                 </div>
                 <p className="LagEvents-desc">
                   {event.event_description.split(" ").slice(0, 15).join(" ") + '...'}
