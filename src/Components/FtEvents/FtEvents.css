@@ -69,18 +69,19 @@
   width: 385px;
   background-color: #000;
   border-radius: 24px;
-  padding: 1rem;
-  padding-left: 0px;
+  padding: 24px;
   list-style: none;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
   position: relative;
   height: 600px;
+  border: 1px solid #FFFFFF33;
 }
 .slider-info {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  text-align: center;
 }
 
 /* ================================
@@ -303,7 +304,7 @@
 /* ================================
    DESKTOP - NO SCROLL
 ================================ */
-@media (min-width: 1025px) {
+@media (min-width: 1025px) and (max-width: 1350px) {
   .slider {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 🔥 flexible grid */
@@ -318,16 +319,16 @@
   }
 
   .slider li {
-    width: 100%; /* let grid control the width */
-    max-width: 400px;
+    width: auto; /* let grid control the width */
+    max-width: 333px;
     height: auto;
     background-color: #000;
     border-radius: 24px;
-    padding-left: 0px;
     list-style: none;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
     position: relative;
     transition: transform 0.3s ease;
+    margin-left: 2px;
   }
 
   .slider li:hover {

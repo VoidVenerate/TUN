@@ -12,6 +12,8 @@ const FtEvents = () => {
   // Desktop fade sliding
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
 
   const sliderRef = useRef(null);
   const navigate = useNavigate();
@@ -41,11 +43,15 @@ const FtEvents = () => {
   }, []);
 
   // ✅ Auto fade on desktop
+  // ✅ Auto fade on desktop with pause-on-hover
   useEffect(() => {
     if (isMobile || events.length === 0) return;
+    if (isPaused) return; // stop auto-advance when paused
+
     const interval = setInterval(() => handleNext(), 4000);
     return () => clearInterval(interval);
-  }, [isMobile, events, currentIndex]);
+  }, [isMobile, events, currentIndex, isPaused]);
+
 
   const handleNext = () => {
     setIsFading(true);
@@ -84,6 +90,13 @@ const FtEvents = () => {
     return () => slider.removeEventListener("scroll", handleScroll);
   }, [isMobile, events]);
 
+  const truncateWords = (text, maxWords = 1) => {
+    if(!text) return "";
+    const words = text.split(" ")
+    if (words.length <= maxWords) return text;
+    return words.slice(0, maxWords).join(" ") + "..."
+  }
+
   // ✅ Desktop: calculate visible events (3 at a time, CSS handles layout)
   const visibleEvents = isMobile
     ? events
@@ -103,7 +116,8 @@ const FtEvents = () => {
       )}
       </div>
 
-      <div className={`slider ${isMobile ? "mobile-slider" : "fade-slider"} ${isFading ? "fade-out" : "fade-in"}`} ref={sliderRef}>
+      <div className={`slider ${isMobile ? "mobile-slider" : "fade-slider"} ${isFading ? "fade-out" : "fade-in"}`} ref={sliderRef} onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}>
         <ul>
           {visibleEvents.map((event, index) => (
             <li key={`${event.id}-${index}`}>
@@ -115,7 +129,7 @@ const FtEvents = () => {
                     className="event-img"
                   />
                   <div className="event-text">
-                    <p>{event.event_name}</p>
+                    <p>{truncateWords(event.event_name, 1)}</p>
                     <p>{event.state}</p>
                   </div>
                 </div>
