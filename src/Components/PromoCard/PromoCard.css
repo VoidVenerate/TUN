@@ -1,5 +1,5 @@
 .promo-card {
-    width: 90%;
+    width: 100%;
     height: 350px;
     background: rgba(84, 35, 210, 0.25); /* Transparent purple */
     backdrop-filter: blur(15px); /* Glass blur */
