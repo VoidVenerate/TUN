@@ -54,6 +54,13 @@ body {
   background-color: rgba(255, 77, 79, 0.08);
 }
 
+.auth-name-text {
+    margin-top: 10px;
+}
+.auth-text {
+  margin-left: 44px;
+  margin-top: 24px;
+}
 .field-error {
   color: #ff4d4f;
   font-size: 13px;
@@ -523,6 +530,13 @@ body {
     font-size: 13px; 
     margin-top: 8px; 
   }
+  .auth-name-text {
+    margin-top: 10px;
+  }
+  .auth-text {
+    margin-left: 0px;
+    margin-top: 0px;
+  }
 
   /* Toggle links */
   .toggle-link { 
@@ -562,7 +576,13 @@ body {
   .or-span span { 
     width: 16%; 
   }
-
+  .auth-name-text {
+    margin-top: 10px;
+  }
+  .auth-text {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
   .password-input .toggle-icon { 
     top: 18px; 
     right: 8px; 
