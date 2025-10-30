@@ -4,6 +4,8 @@ import axios from 'axios'
 import './AllEvents.css'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const AllEvents = ({ stateFilter, limit, page = 1 }) => {
   const [allEvents, setAllEvents] = useState([])
@@ -110,7 +112,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
           currentEvents.map((event) => (
             <div key={event.id} className='LagEvents-card'>
               <div className="LagEvents-content">
-                <img src={event.flyer_url} alt={event.event_name} className="LagEvents-img" />
+                <LazyLoadImage src={event.flyer_url} alt={event.event_name} effect='blur' className="LagEvents-img" />
                 <div className="LagEvents-txt">
                   <h3 className="LagEvents-title">{truncateWords(event.event_name, 1)}</h3>
                   <p className="LagEvents-location">{event.venue.split(" ").slice(0,4).join(" ") + "..."}</p>

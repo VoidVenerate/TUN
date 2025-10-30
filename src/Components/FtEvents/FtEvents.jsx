@@ -3,6 +3,8 @@ import axios from "axios";
 import "./FtEvents.css";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const FtEvents = () => {
   const [events, setEvents] = useState([]);
@@ -123,10 +125,11 @@ const FtEvents = () => {
             <li key={`${event.id}-${index}`}>
               <div className="slider-info">
                 <div className="event-info">
-                  <img
+                  <LazyLoadImage
                     src={event.flyer_url || event.event_flyer}
                     alt={event.event_name}
                     className="event-img"
+                    effect="blur"
                   />
                   <div className="event-text">
                     <p>{truncateWords(event.event_name, 1)}</p>
