@@ -2,7 +2,7 @@ import React from 'react'
 import Club from '../../assets/Club.svg'
 import Hotel from '../../assets/Hotel.svg'
 import FoodSpot from '../../assets/FoodSpot.svg'
-import Beach from '../../assets/Best-Beaches.jpg'
+import Beach from '../../assets/Best-Beaches.png'
 import { NavLink, useLocation } from 'react-router-dom'
 import './PlacesInLagos.css'
 
