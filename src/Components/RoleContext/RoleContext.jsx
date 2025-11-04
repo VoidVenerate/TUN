@@ -8,41 +8,59 @@ const AuthContext = createContext(null);
 async function fetchUserRules() {
   try {
     const token = localStorage.getItem("token");
-    if (!token) return { role: "guest", permissions: [] };
+    if (!token) {
+      // No token → return guest instantly
+      return { role: "guest", permissions: [] };
+    }
+
     const response = await axios.get("https://lagos-turnup.onrender.com/me", {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
 
-  
     return response.data;
   } catch (error) {
     console.error("Error fetching user rules:", error);
-    // Return guest if not logged in
     return { role: "guest", permissions: [] };
   }
 }
 
 export function AuthProvider({ children }) {
   const [rules, setRules] = useState(() => {
-    // Try to load last known role from localStorage for instant UI render
     const savedRules = localStorage.getItem("user_rules");
-    return savedRules ? JSON.parse(savedRules) : { role: "guest", permissions: [] };
+    return savedRules
+      ? JSON.parse(savedRules)
+      : { role: "guest", permissions: [] };
   });
-  const [loading, setLoading] = useState(true);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const loadRules = async () => {
-      const rulesFromBackend = await fetchUserRules();
-      setRules(rulesFromBackend);
-      localStorage.setItem("user_rules", JSON.stringify(rulesFromBackend));
-      setLoading(false);
+    const loadUserRules = async () => {
+      const token = localStorage.getItem("token");
+
+      // If user has no token, skip backend call
+      if (!token) {
+        setRules({ role: "guest", permissions: [] });
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const rulesFromBackend = await fetchUserRules();
+        setRules(rulesFromBackend);
+        localStorage.setItem("user_rules", JSON.stringify(rulesFromBackend));
+      } catch (error) {
+        console.error("Failed to load user rules:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadRules();
+    loadUserRules();
   }, []);
 
   if (loading) {
-    return <Loader/> ;
+    return <Loader />;
   }
 
   return (
