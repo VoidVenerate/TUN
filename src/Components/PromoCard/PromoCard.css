@@ -12,7 +12,7 @@
     align-items: center; /* center horizontally */
     text-align: center; /* center text inside children */
     margin-top: 2vw;
-    margin-left: 5vw;
+    margin-left: 0vw;
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(84, 35, 210, 0.4);
