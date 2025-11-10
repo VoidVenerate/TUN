@@ -110,26 +110,40 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
             ))
           ): (
           currentEvents.map((event) => (
-            <div key={event.id} className='LagEvents-card'>
-              <div className="LagEvents-content">
-                <LazyLoadImage src={event.flyer_url} alt={event.event_name} effect='blur' className="LagEvents-img" />
-                <div className="LagEvents-txt">
-                  <h3 className="LagEvents-title">{truncateWords(event.event_name, 1)}</h3>
-                  <p className="LagEvents-location">{event.venue.split(" ").slice(0,4).join(" ") + "..."}</p>
-                </div>
-                <p className="LagEvents-desc">
-                  {event.event_description.split(" ").slice(0, 15).join(" ") + '...'}
-                </p>
-                <div className="LagEvents-btns">
-                  <button style={{fontSize: '13px'}}>
-                    <NavLink to={`/viewdetails/${event.id}`}  style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
-                  </button>
-                  <button disabled className='LagEvents-buyBtn' style={{fontSize: '12px'}}>
-                    Buy Tickets
-                  </button>
+            <NavLink 
+              key={event.id} 
+              to={`/viewdetails/${event.id}`}
+              className="LagEvents-card-link"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <div className='LagEvents-card'>
+                <div className="LagEvents-content">
+                  <LazyLoadImage 
+                    src={event.flyer_url} 
+                    alt={event.event_name} 
+                    effect='blur' 
+                    className="LagEvents-img" 
+                  />
+                  <div className="LagEvents-txt">
+                    <h3 className="LagEvents-title">{truncateWords(event.event_name, 1)}</h3>
+                    <p className="LagEvents-location">{event.venue.split(" ").slice(0,4).join(" ") + "..."}</p>
+                  </div>
+                  <p className="LagEvents-desc">
+                    {event.event_description.split(" ").slice(0, 15).join(" ") + '...'}
+                  </p>
+                  <div className="LagEvents-btns">
+                    <button 
+                      disabled 
+                      onClick={(e) => e.preventDefault()} 
+                      className='LagEvents-buyBtn' 
+                      style={{ fontSize: '12px' }}
+                    >
+                      Buy Tickets
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </NavLink>
           ))
         )}
       </div>

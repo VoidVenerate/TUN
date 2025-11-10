@@ -399,3 +399,33 @@ display: flex; width: 100%; justify-content: space-between;  }
     width: 83%;
 }
 }
+.newsletter-list {
+  margin-top: 40px;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.notification-card {
+  width: 89%;
+  margin-left: 4vw;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px;
+  background-color: #1a1a1a;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+.notification-card:hover {
+  background-color: #222;
+}

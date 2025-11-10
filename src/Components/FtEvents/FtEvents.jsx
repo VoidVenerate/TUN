@@ -10,12 +10,9 @@ const FtEvents = () => {
   const [events, setEvents] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [thumbPos, setThumbPos] = useState(0);
-
-  // Desktop fade sliding
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-
 
   const sliderRef = useRef(null);
   const navigate = useNavigate();
@@ -37,30 +34,24 @@ const FtEvents = () => {
 
   // ✅ Handle responsiveness
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ✅ Auto fade on desktop
-  // ✅ Auto fade on desktop with pause-on-hover
+  // ✅ Auto fade (desktop) with pause-on-hover
   useEffect(() => {
-    if (isMobile || events.length === 0) return;
-    if (isPaused) return; // stop auto-advance when paused
-
+    if (isMobile || events.length === 0 || isPaused) return;
     const interval = setInterval(() => handleNext(), 4000);
     return () => clearInterval(interval);
   }, [isMobile, events, currentIndex, isPaused]);
-
 
   const handleNext = () => {
     setIsFading(true);
     setTimeout(() => {
       setCurrentIndex((prev) => (prev + 3) % events.length);
       setIsFading(false);
-    }, 500); // match CSS transition
+    }, 500);
   };
 
   const handlePrev = () => {
@@ -71,7 +62,7 @@ const FtEvents = () => {
     }, 500);
   };
 
-  // ✅ Fake thumb tracker only for mobile
+  // ✅ Mobile scroll tracking
   useEffect(() => {
     if (!isMobile || !sliderRef.current) return;
     const slider = sliderRef.current;
@@ -93,13 +84,13 @@ const FtEvents = () => {
   }, [isMobile, events]);
 
   const truncateWords = (text, maxWords = 1) => {
-    if(!text) return "";
-    const words = text.split(" ")
+    if (!text) return "";
+    const words = text.split(" ");
     if (words.length <= maxWords) return text;
-    return words.slice(0, maxWords).join(" ") + "..."
-  }
+    return words.slice(0, maxWords).join(" ") + "...";
+  };
 
-  // ✅ Desktop: calculate visible events (3 at a time, CSS handles layout)
+  // ✅ Desktop: show 3 events at a time
   const visibleEvents = isMobile
     ? events
     : events.slice(currentIndex, currentIndex + 3).concat(
@@ -111,19 +102,27 @@ const FtEvents = () => {
       <div className="ft-header">
         <p style={{ fontFamily: "Rushon Ground" }}>Featured Events🔥</p>
         {!isMobile && (
-        <div className="slider-controls">
-          <button onClick={handlePrev}><ChevronLeft /></button>
-          <button onClick={handleNext}><ChevronRight /></button>
-        </div>
-      )}
+          <div className="slider-controls">
+            <button onClick={handlePrev}><ChevronLeft /></button>
+            <button onClick={handleNext}><ChevronRight /></button>
+          </div>
+        )}
       </div>
 
-      <div className={`slider ${isMobile ? "mobile-slider" : "fade-slider"} ${isFading ? "fade-out" : "fade-in"}`} ref={sliderRef} onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}>
+      <div
+        className={`slider ${isMobile ? "mobile-slider" : "fade-slider"} ${isFading ? "fade-out" : "fade-in"}`}
+        ref={sliderRef}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
         <ul>
           {visibleEvents.map((event, index) => (
             <li key={`${event.id}-${index}`}>
-              <div className="slider-info">
+              {/* ✅ Whole card clickable */}
+              <div
+                className="slider-info clickable-card"
+                onClick={() => navigate(`/viewdetails/${event.id}`)}
+              >
                 <div className="event-info">
                   <LazyLoadImage
                     src={event.flyer_url || event.event_flyer}
@@ -138,8 +137,13 @@ const FtEvents = () => {
                 </div>
 
                 <div className="slider-btn">
-                  <button onClick={() => navigate(`/viewdetails/${event.id}`)}>View Details</button>
-                  <button disabled className="buy-tickets-btn">Buy Tickets</button>
+                  <button
+                    disabled
+                    className="buy-tickets-btn"
+                    onClick={(e) => e.stopPropagation()} // 🧠 stops click from bubbling up
+                  >
+                    Buy Tickets
+                  </button>
                 </div>
               </div>
             </li>
