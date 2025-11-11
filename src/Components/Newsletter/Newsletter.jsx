@@ -16,17 +16,9 @@ const Newsletter = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; // how many emails per page
+  const itemsPerPage = 12; // how many emails per page
 
   // Form + modal states
-  const [flyer, setFlyer] = useState(null);
-  const [flyerPreview, setFlyerPreview] = useState(null);
-  const [agreed, setAgreed] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [headline, setHeadline] = useState("");
-  const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [modalInfo, setModalInfo] = useState({
     show: false,
     title: '',
@@ -73,7 +65,7 @@ const Newsletter = () => {
         const today = new Date().toDateString();
         const lastUpdate = localStorage.getItem("newsletterLastUpdate");
 
-        const res = await api.get('/event/newsletter?limit=1000&offset=0');
+        const res = await api.get('/event/newsletter?limit=10000000&offset=0');
         const data = res.data;
         const subs = data?.subscriptions || [];
         setSubscriptionsList(subs);
@@ -211,7 +203,7 @@ const Newsletter = () => {
       {/* Subscriber List */}
       <div className="newsletter-list">
         <h3 style={{ marginBottom: "12px", marginLeft: "4vw", color: "#fff", marginTop: "72px" }}>
-          List of Subscribers
+          List of Subscribers: {subscriptions}
         </h3>
 
         <div className="notification-list">

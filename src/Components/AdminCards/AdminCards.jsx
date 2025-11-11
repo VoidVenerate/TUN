@@ -225,7 +225,7 @@ const AdminCards = () => {
           onClick={() => navigate("/adminspots")}
           style={{ color: "#0084FF", fontSize: "14px", cursor: "pointer", fontWeight: '500' }}
         >
-          Upload Events
+          Upload Location
         </p>
       </div>
     </div>
