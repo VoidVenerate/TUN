@@ -92,25 +92,15 @@ const PromoteBanner = () => {
         return;
       }
 
-      
-
       const isAdmin = ["admin", "sub-admin", "super-admin"].includes(role);
 
       const formData = new FormData();
       formData.append("name", bannerData.bannerName);
       formData.append("banner_link", bannerData.bannerLink || "");
+      formData.append("banner", bannerData.flyer);
 
-      if (isAdmin) {
-        // Admin uploads go straight into banner and are auto-approved
-        formData.append("banner", bannerData.flyer);
-        formData.append("is_approved", true);
-      } else {
-        // Normal users → pending storage
-        formData.append("banner", bannerData.flyer);
-        formData.append("is_approved", false);
-      }
-
-      await axios.post(
+      // Note: API ignores `is_approved` on create; it’s decided by PATCH later.
+      const createResponse = await axios.post(
         "https://lagos-turnup.onrender.com/event/banners/create",
         formData,
         {
@@ -121,48 +111,76 @@ const PromoteBanner = () => {
         }
       );
 
-      // ✅ Modal message differs for admins
+      // ✅ Extract banner ID from response
+      const bannerId = createResponse.data?.id;
+
+      if (!bannerId) {
+        throw new Error("Banner ID not returned from server.");
+      }
+
+      // 🟢 Auto-approve for admins
+      if (isAdmin) {
+        await axios.patch(
+          `https://lagos-turnup.onrender.com/event/banners/${bannerId}/approve`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+
+      // 🎉 Success Modal
       setModalInfo({
         show: true,
         title: "Success!",
         message: isAdmin
-          ? "Banner submitted successfully and is pending review."
+          ? "Banner created and approved successfully!"
           : "Banner submitted successfully and is pending review.",
         subMessage: isAdmin
-          ? "YOur team will review it, and if approved, it will go live within 24–48 hours."
-          : "Our team will review it, and if approved, it will go live within 24–48 hours.",
+          ? "Your banner is now live on TurnUpLagos."
+          : "Our team will review it and publish it within 24–48 hours.",
         type: "success",
         footerButtons: (
-           <>
-              <button
+          <>
+            <button
               className="modal-close-btn"
               onClick={() => {
-                navigate(-1);
+                closeModal();
+                navigate(isAdmin ? "/banner" : "/promote");
               }}
-              >
-                Close
-              </button>
-           </>
-          ),
+            >
+              Close
+            </button>
+          </>
+        ),
       });
 
-      // Reset form
+      // 🧹 Reset
       setBannerData({ bannerName: "", flyer: null, bannerLink: "" });
       setFlyerPreview(null);
-
     } catch (err) {
       console.error("Error submitting banner:", err);
       setModalInfo({
         show: true,
         title: "Error!",
         message:
-          err.response?.data?.message || "Failed to submit banner. Please try again.",
+          err.response?.data?.message ||
+          err.response?.data?.detail?.[0]?.msg ||
+          "Failed to submit banner. Please try again.",
         type: "error",
+        footerButtons: (
+          <button className="modal-close-btn" onClick={closeModal}>
+            Close
+          </button>
+        ),
       });
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
 
 

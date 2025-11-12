@@ -61,6 +61,16 @@ const EventReview = () => {
       );
 
       if (response.status === 200 || response.status === 201) {
+        const eventId = response.data?.id || response.data?.event_id;
+
+      // 2️⃣ If admin, approve immediately
+      if (rules.role === 'sub-admin' || rules.role === 'super-admin') {
+        await axios.put(
+          `https://lagos-turnup.onrender.com/event/approve-event/${eventId}`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
         setModalInfo({
           show: true,
           title: '',
