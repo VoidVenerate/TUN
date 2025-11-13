@@ -86,12 +86,6 @@ const PromoteBanner = () => {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        setError("You must be logged in to submit a banner.");
-        setIsSubmitting(false);
-        return;
-      }
-
       const isAdmin = ["admin", "sub-admin", "super-admin"].includes(role);
 
       const formData = new FormData();
@@ -105,7 +99,6 @@ const PromoteBanner = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
