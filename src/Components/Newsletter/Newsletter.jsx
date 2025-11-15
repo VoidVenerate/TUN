@@ -209,9 +209,10 @@ const Newsletter = () => {
         <div className="notification-list">
           {paginatedList.length > 0 ? (
             paginatedList.map((sub, index) => (
-              <div key={index} className="notification-card">
-                <div className="notification-info">
+              <div key={index}>
+                <div>
                   <p style={{ fontWeight: 500 }}>{sub.email}</p>
+                  <hr className="notification-hr" />
                 </div>
               </div>
             ))

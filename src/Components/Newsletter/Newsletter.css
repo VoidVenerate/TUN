@@ -265,6 +265,28 @@ display: flex; width: 100%; justify-content: space-between;  }
 .subscription-data span {
   margin-top: 20px;
 }
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  margin: 4vw;
+}
+
+.notification-item p {
+  margin: 0;
+  padding: 4px 0;
+}
+
+.notification-hr {
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2); /* subtle horizontal line */
+  margin: 4px 0 8px 0;
+}
+
+
 
 /* ============================= */
 /* 📱 RESPONSIVENESS */
