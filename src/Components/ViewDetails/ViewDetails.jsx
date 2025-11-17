@@ -219,7 +219,12 @@ const ViewDetails = () => {
                 <div key={event.id || index} className="similar-event-card">
                   <div className="similar-event-image">
                     {event.flyer_url ? (
-                      <img src={event.flyer_url} alt={event.event_name} />
+                      <img src={event.flyer_url} alt={event.event_name} onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setTimeout(() => {
+                          navigate(`/viewdetails/${event.id}`);
+                        }, 100); // tiny delay for smooth scroll
+                      }} />
                     ) : (
                       <div className="similar-event-placeholder">
                         <span>🎉</span>
@@ -228,14 +233,37 @@ const ViewDetails = () => {
                   </div>
                   <div className="similar-event-info">
                     <div className="similar-event-name-state">
-                      <h4 className="similar-event-name">{event.event_name}</h4>
-                      <p className="similar-event-location">{event.state}</p>
+                      <h4 className="similar-event-name"
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setTimeout(() => {
+                            navigate(`/viewdetails/${event.id}`);
+                          }, 100); // tiny delay for smooth scroll
+                        }}>{event.event_name}</h4>
+                      <p className="similar-event-location"
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setTimeout(() => {
+                            navigate(`/viewdetails/${event.id}`);
+                          }, 100); // tiny delay for smooth scroll
+                        }}>{event.state}</p>
                     </div>
-                    <p className='similar-event-desc'>{truncateWords(event.event_description, 17)}</p>
+                    <p className='similar-event-desc'
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setTimeout(() => {
+                            navigate(`/viewdetails/${event.id}`);
+                          }, 100); // tiny delay for smooth scroll
+                        }}>{truncateWords(event.event_description, 17)}</p>
                     <div className="similar-event-actions">
                       <button 
                         className="view-details-btn"
-                        onClick={() => navigate(`/viewdetails/${event.id}`)}
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setTimeout(() => {
+                            navigate(`/viewdetails/${event.id}`);
+                          }, 100); // tiny delay for smooth scroll
+                        }}
                       >
                         View Details
                       </button>

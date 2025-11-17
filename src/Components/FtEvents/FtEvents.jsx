@@ -121,7 +121,6 @@ const FtEvents = () => {
               {/* ✅ Whole card clickable */}
               <div
                 className="slider-info clickable-card"
-                onClick={() => navigate(`/viewdetails/${event.id}`)}
               >
                 <div className="event-info">
                   <LazyLoadImage
@@ -129,17 +128,20 @@ const FtEvents = () => {
                     alt={event.event_name}
                     className="event-img"
                     effect="blur"
+                    onClick={() => navigate(`/viewdetails/${event.id}`)}
                   />
                   <div className="event-text">
-                    <p>{truncateWords(event.event_name, 1)}</p>
-                    <p>{event.state}</p>
+                    <p onClick={() => navigate(`/viewdetails/${event.id}`)}>{truncateWords(event.event_name, 1)}</p>
+                    <p onClick={() => navigate(`/viewdetails/${event.id}`)}>{event.state}</p>
                   </div>
                 </div>
 
                 <div className="slider-btn">
+                  <button onClick={() => navigate(`/viewdetails/${event.id}`)}>View Details</button>
                   <button
                     disabled
                     className="buy-tickets-btn"
+                    type="button"
                     onClick={(e) => e.stopPropagation()} // 🧠 stops click from bubbling up
                   >
                     Buy Tickets

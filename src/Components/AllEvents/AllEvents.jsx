@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './AllEvents.css'
 import Skeleton from 'react-loading-skeleton'
@@ -10,6 +10,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 const AllEvents = ({ stateFilter, limit, page = 1 }) => {
   const [allEvents, setAllEvents] = useState([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -113,6 +114,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
             <NavLink 
               key={event.id} 
               to={`/viewdetails/${event.id}`}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="LagEvents-card-link"
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
@@ -125,18 +127,26 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
                     className="LagEvents-img" 
                   />
                   <div className="LagEvents-txt">
-                    <h3 className="LagEvents-title">{truncateWords(event.event_name, 1)}</h3>
+                    <h3 className="LagEvents-title" onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                      navigate(`/viewdetails/${event.id}`);
+                    }}>{truncateWords(event.event_name, 1)}</h3>
                     <p className="LagEvents-location">{event.venue.split(" ").slice(0,4).join(" ") + "..."}</p>
                   </div>
                   <p className="LagEvents-desc">
                     {event.event_description.split(" ").slice(0, 15).join(" ") + '...'}
                   </p>
+
                   <div className="LagEvents-btns">
+                    <button style={{fontSize: '13px'}} type='button'>
+                      <NavLink to={`/viewdetails/${event.id}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{color: '#fff', textDecoration: 'none'}}>View Details</NavLink>
+                    </button>
                     <button 
                       disabled 
                       onClick={(e) => e.preventDefault()} 
                       className='LagEvents-buyBtn' 
                       style={{ fontSize: '12px' }}
+                      type='button'
                     >
                       Buy Tickets
                     </button>
