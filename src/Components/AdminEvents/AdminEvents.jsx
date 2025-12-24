@@ -80,7 +80,7 @@ const AdminEvents = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await api.get(`https://lagos-turnup-ecy5.onrender.com.com/event/events?pending=false`);
+        const res = await api.get(`https://lagos-turnup-ecy5.onrender.com/event/events?pending=false`);
 
         const fetched = res.data.events || res.data;
 
