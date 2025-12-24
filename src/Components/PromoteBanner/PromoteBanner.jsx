@@ -95,7 +95,7 @@ const PromoteBanner = () => {
 
       // Note: API ignores `is_approved` on create; it’s decided by PATCH later.
       const createResponse = await axios.post(
-        "https://lagos-turnup.onrender.com/event/banners/create",
+        "https://lagos-turnup-ecy5.onrender.com/event/banners/create",
         formData,
         {
           headers: {
@@ -114,7 +114,7 @@ const PromoteBanner = () => {
       // 🟢 Auto-approve for admins
       if (isAdmin) {
         await axios.patch(
-          `https://lagos-turnup.onrender.com/event/banners/${bannerId}/approve`,
+          `https://lagos-turnup-ecy5.onrender.com/event/banners/${bannerId}/approve`,
           {},
           {
             headers: {

@@ -44,7 +44,7 @@ const LetsTalk = () => {
 
     try {
       // Replace with your backend URL
-      const apiUrl = 'https://lagos-turnup.onrender.com';
+      const apiUrl = 'https://lagos-turnup-ecy5.onrender.com';
 
       const payload = {
         firstName,

@@ -55,7 +55,7 @@ const EventReview = () => {
       
 
       const response = await axios.post(
-        'https://lagos-turnup.onrender.com/event/events/create',
+        'https://lagos-turnup-ecy5.onrender.com/event/events/create',
         formData,
         { headers }
       );
@@ -66,7 +66,7 @@ const EventReview = () => {
       // 2️⃣ If admin, approve immediately
       if (rules.role === 'sub-admin' || rules.role === 'super-admin') {
         await axios.put(
-          `https://lagos-turnup.onrender.com/event/approve-event/${eventId}`,
+          `https://lagos-turnup-ecy5.onrender.com/event/approve-event/${eventId}`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );

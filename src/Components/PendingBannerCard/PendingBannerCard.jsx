@@ -12,7 +12,7 @@ const PendingBannerCard = ({ banner, onAccept, onDelete }) => {
             banner.banner_image
               ? banner.banner_image.startsWith('http')
                 ? banner.banner_image   // absolute → use as-is
-                : `https://lagos-turnup.onrender.com${banner.banner_image}` // relative → prefix
+                : `https://lagos-turnup-ecy5.onrender.com${banner.banner_image}` // relative → prefix
               : placeholder
           }
           alt={banner.name}

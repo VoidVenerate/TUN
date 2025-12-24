@@ -17,7 +17,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
       try {
         setLoading(true)
         // just grab *all* events for that state
-        const url = `https://lagos-turnup.onrender.com/event/events?state=${stateFilter}&pending=false`
+        const url = `https://lagos-turnup-ecy5.onrender.com/event/events?state=${stateFilter}&pending=false`
         const res = await axios.get(url)
         setAllEvents(res.data || [])
       } catch (err) {

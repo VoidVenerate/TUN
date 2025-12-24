@@ -93,7 +93,7 @@ const PendingBanner = () => {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      await api.delete(`https://lagos-turnup.onrender.com/event/banners/${id}`, {
+      await api.delete(`https://lagos-turnup-ecy5.onrender.com/event/banners/${id}`, {
         headers: { Authorization: `Bearer ${token}`},
       });
 

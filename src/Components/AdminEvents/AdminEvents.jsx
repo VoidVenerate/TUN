@@ -45,7 +45,7 @@ const AdminEvents = () => {
 
     // Handle relative paths (uploads/... or /uploads/...)
     if (!url.startsWith("http")) {
-      url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
+      url = `https://lagos-turnup-ecy5.onrender.com.com/${url.replace(/^\/?/, "")}`;
     }
 
     return url;
@@ -80,7 +80,7 @@ const AdminEvents = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await api.get(`https://lagos-turnup.onrender.com/event/events?pending=false`);
+        const res = await api.get(`https://lagos-turnup-ecy5.onrender.com.com/event/events?pending=false`);
 
         const fetched = res.data.events || res.data;
 

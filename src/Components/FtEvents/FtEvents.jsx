@@ -21,7 +21,7 @@ const FtEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get("https://lagos-turnup.onrender.com/event/events", {
+        const res = await axios.get("https://lagos-turnup-ecy5.onrender.com/event/events", {
           params: { is_featured: true, limit: 10 },
         });
         setEvents(res.data || []);

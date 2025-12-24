@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://lagos-turnup.onrender.com',
+        target: 'https://lagos-turnup-ecy5.onrender.com.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

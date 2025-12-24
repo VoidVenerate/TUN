@@ -104,7 +104,7 @@ const TakeAction = ({ role }) => {
           flyerPreview: data.flyer_url
             ? data.flyer_url
             : data.event_flyer
-              ? `https://lagos-turnup.onrender.com/${data.event_flyer.replace(/^\//, '')}`
+              ? `https://lagos-turnup-ecy5.onrender.com/${data.event_flyer.replace(/^\//, '')}`
               : '',
           featureChoice: data.is_featured ? 'yes-feature' : 'no-feature',
           link: data.contact_link || '',

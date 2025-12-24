@@ -71,13 +71,13 @@ const BannerForm = ({ editingBanner, onClose, onRefresh }) => {
 
       if (editingBanner) {
         await api.put(
-          `https://lagos-turnup.onrender.com/event/banners/${editingBanner.id}`,
+          `https://lagos-turnup-ecy5.onrender.com/event/banners/${editingBanner.id}`,
           formData,
           config
         );
       } else {
         await api.post(
-          'https://lagos-turnup.onrender.com/event/banners/create',
+          'https://lagos-turnup-ecy5.onrender.com/event/banners/create',
           formData,
           config
         );

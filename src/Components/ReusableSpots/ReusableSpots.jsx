@@ -38,7 +38,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     let url = path.trim();
     url = url.replace(/\.comuploads/, ".com/uploads");
     if (!url.startsWith("http")) {
-      url = `https://lagos-turnup.onrender.com/${url.replace(/^\/?/, "")}`;
+      url = `https://lagos-turnup-ecy5.onrender.com/${url.replace(/^\/?/, "")}`;
     }
     return url;
   };
@@ -70,7 +70,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
       setError(null);
       try {
         const res = await api.get(
-          `https://lagos-turnup.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
+          `https://lagos-turnup-ecy5.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
         );
 
         const fetched = res.data.spots || res.data[spotType] || res.data;

@@ -37,7 +37,7 @@ const AdminCards = () => {
 
         // ✅ Pending Events
         const pendingRes = await api.get(
-          "https://lagos-turnup.onrender.com/event/events?pending=true",
+          "https://lagos-turnup-ecy5.onrender.com/event/events?pending=true",
           { headers: { Authorization: `Bearer ${token}` } }
         )
         const newPendingEvents = pendingRes.data.length
@@ -61,14 +61,14 @@ const AdminCards = () => {
 
         // ✅ Events (non-pending)
         const eventRes = await axios.get(
-          "https://lagos-turnup.onrender.com/event/events?pending=false",
+          "https://lagos-turnup-ecy5.onrender.com/event/events?pending=false",
           { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
         setTotalEvents(eventRes.data.length)
 
         // ✅ Banners
         const bannerRes = await axios.get(
-          "https://lagos-turnup.onrender.com/event/banners",
+          "https://lagos-turnup-ecy5.onrender.com/event/banners",
           { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
         const bannerData = bannerRes.data.filter((banner) => banner.is_approved)
@@ -97,7 +97,7 @@ const AdminCards = () => {
 
         // ✅ Discover Lagos
         const discoverRes = await axios.get(
-          "https://lagos-turnup.onrender.com/event/spots",
+          "https://lagos-turnup-ecy5.onrender.com/event/spots",
           { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } }
         )
         setDiscoverCount(discoverRes.data.length)

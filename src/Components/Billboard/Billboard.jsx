@@ -14,7 +14,7 @@ const Billboard = () => {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const res = await axios.get("https://lagos-turnup.onrender.com/event/banners", {
+        const res = await axios.get("https://lagos-turnup-ecy5.onrender.com/event/banners", {
           params: { approved_only: true },
         });
         setSlides(res.data || []);

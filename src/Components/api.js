@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://lagos-turnup.onrender.com",
+  baseURL: "https://lagos-turnup-ecy5.onrender.com",
 });
 
 // --- Attach token to every request ---
@@ -71,7 +71,7 @@ api.interceptors.response.use(
           if (!refreshToken) throw new Error("No refresh token");
 
           const res = await axios.post(
-            "https://lagos-turnup.onrender.com/auth/refresh-token",
+            "https://lagos-turnup-ecy5.onrender.com/auth/refresh-token",
             { refreshToken }
           );
 

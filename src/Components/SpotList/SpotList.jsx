@@ -21,7 +21,7 @@ const SpotList = ({ spotType, title }) => {
       setError(null)
       try {
         const res = await axios.get(
-          `https://lagos-turnup.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
+          `https://lagos-turnup-ecy5.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
         )
         const data = Array.isArray(res.data) ? res.data : res.data.items || []
         setSpots(data)

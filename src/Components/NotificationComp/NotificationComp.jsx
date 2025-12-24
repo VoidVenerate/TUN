@@ -34,7 +34,7 @@ const NotificationComp = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await api.get('https://lagos-turnup.onrender.com/event/notifications');
+      const res = await api.get('https://lagos-turnup-ecy5.onrender.com/event/notifications');
       const sorted = res.data.sort(
         (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );

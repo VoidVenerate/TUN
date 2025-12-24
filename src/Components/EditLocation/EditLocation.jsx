@@ -66,7 +66,7 @@ const EditableLocationRHF = () => {
             typeOfSpot: spot.spot_type,
             additionalInfo: spot.additional_info,
             flyerPreview: spot.cover_image
-            ? `https://lagos-turnup.onrender.com/${spot.cover_image}`
+            ? `https://lagos-turnup-ecy5.onrender.com/${spot.cover_image}`
             : "",
           });
         }

@@ -45,7 +45,7 @@ const BannerComponent = () => {
                   console.warn('No token found — user might not be logged in');
                   return;
               }
-      const res = await axios.get('https://lagos-turnup.onrender.com/event/banners', { headers: { 'Content-Type': 'multipart/form-data',Authorization: `Bearer ${token}`  } }); // Adjust to your actual API endpoint
+      const res = await axios.get('https://lagos-turnup-ecy5.onrender.com/event/banners', { headers: { 'Content-Type': 'multipart/form-data',Authorization: `Bearer ${token}`  } }); // Adjust to your actual API endpoint
       setBanners(res.data.filter((banner) => banner.is_approved));
     } catch (err) {
       console.error('Error fetching banners:', err);
@@ -61,7 +61,7 @@ const BannerComponent = () => {
                   console.warn('No token found — user unable to delete ');
                   return;
               }
-    await api.delete(`https://lagos-turnup.onrender.com/event/banners/${id}`, { headers: { 'Content-Type': 'application/json',Authorization: `Bearer ${token}`  } });
+    await api.delete(`https://lagos-turnup-ecy5.onrender.com/event/banners/${id}`, { headers: { 'Content-Type': 'application/json',Authorization: `Bearer ${token}`  } });
     setModalInfo({
       show: true,
       title: 'Banner Deleted',

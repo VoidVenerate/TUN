@@ -9,7 +9,7 @@ async function fetchUserRules() {
   try {
     const token = localStorage.getItem("token");
     if (!token) return { role: "guest", permissions: [] };
-    const response = await axios.get("https://lagos-turnup.onrender.com/me", {
+    const response = await axios.get("https://lagos-turnup-ecy5.onrender.com/me", {
       headers: { Authorization: `Bearer ${token}` }
     });
 

@@ -57,7 +57,7 @@ const ProfileDark = () => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const res = await api.get("https://lagos-turnup.onrender.com/me", {
+        const res = await api.get("https://lagos-turnup-ecy5.onrender.com/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(res.data);
@@ -83,7 +83,7 @@ const ProfileDark = () => {
   const fetchSubAdmins = async () => {
     setManagementLoading(true);
     try {
-      const res = await api.get("https://lagos-turnup.onrender.com/get-sub-admin", {
+      const res = await api.get("https://lagos-turnup-ecy5.onrender.com/get-sub-admin", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -149,7 +149,7 @@ const ProfileDark = () => {
 
         updatePromises.push(
           api.put(
-            `https://lagos-turnup.onrender.com/sub-admin/${userData.id}`,
+            `https://lagos-turnup-ecy5.onrender.com/sub-admin/${userData.id}`,
             formData,
             {
               headers: {
@@ -180,7 +180,7 @@ const ProfileDark = () => {
 
         updatePromises.push(
           api.put(
-            "https://lagos-turnup.onrender.com/update-password",
+            "https://lagos-turnup-ecy5.onrender.com/update-password",
             new URLSearchParams({
               current_password: currentPassword,
               new_password: password,
@@ -258,7 +258,7 @@ const ProfileDark = () => {
       subMessage:"Are you sure you want to deactivate this sub-admin?",
       confirmAction: () =>
         performAction(
-          `https://lagos-turnup.onrender.com/event/deactivate-user/${id}`,
+          `https://lagos-turnup-ecy5.onrender.com/event/deactivate-user/${id}`,
           "put",
           id,
           "inactive"
@@ -273,7 +273,7 @@ const ProfileDark = () => {
       subMessage:"Are you sure you want to reactivate this sub-admin?",
       confirmAction: () =>
         performAction(
-          `https://lagos-turnup.onrender.com/event/activate-user/${id}`,
+          `https://lagos-turnup-ecy5.onrender.com/event/activate-user/${id}`,
           "put",
           id,
           "active"
@@ -289,7 +289,7 @@ const ProfileDark = () => {
       subMessage:"This action is permanent. Continue?",
       confirmAction: () =>
         performAction(
-          `https://lagos-turnup.onrender.com/delete-user/${id}`,
+          `https://lagos-turnup-ecy5.onrender.com/delete-user/${id}`,
           "delete"
         ),
     });

@@ -21,14 +21,14 @@ const ViewDetails = () => {
     const fetchEvent = async () => {
       try {
         const res = await axios.get(
-          `https://lagos-turnup.onrender.com/event/events`,
+          `https://lagos-turnup-ecy5.onrender.com/event/events`,
           { params: { id } }
         );
         setEventData(res.data[0] || null);
 
         // Fetch similar events
         const similarRes = await axios.get(
-          `https://lagos-turnup.onrender.com/event/events`
+          `https://lagos-turnup-ecy5.onrender.com/event/events`
         );
         // Exclude the current event
         const others = similarRes.data.filter(event => event.id !== id);

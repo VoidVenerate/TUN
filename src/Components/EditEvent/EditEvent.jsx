@@ -12,7 +12,7 @@ import axios from 'axios';
 // Constants
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 const MAX_IMAGE_DIMENSIONS = { width: 500, height: 800 };
-const API_BASE_URL = 'https://lagos-turnup.onrender.com';
+const API_BASE_URL = 'https://lagos-turnup-ecy5.onrender.com';
 
 // Form validation rules
 const VALIDATION_RULES = {

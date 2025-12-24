@@ -7,9 +7,9 @@ import { jwtDecode } from 'jwt-decode';
 import Modal from '../Components/Modal/Modal';
 import UploadProfileModal from '../Components/UploadProfileModal/UploadProfileModal';
 import './Auth.css';
-import Logo from '../assets/Logo.svg'
+import Logo from '../assets/Logo.svg';
 
-const Auth = ({signUpKey}) => {
+const Auth = ({ signUpKey }) => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [boost, setBoost] = useState(false);
   const navigate = useNavigate();
@@ -32,23 +32,18 @@ const Auth = ({signUpKey}) => {
 
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
-
   const [loading, setLoading] = useState(false);
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
-
-  // NEW ➡️ deactivated modal
   const [showDeactivatedModal, setShowDeactivatedModal] = useState(false);
 
-  // Password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showResetPassword1, setShowResetPassword1] = useState(false);
   const [showResetPassword2, setShowResetPassword2] = useState(false);
 
-  // Forgot/reset password
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
@@ -58,26 +53,45 @@ const Auth = ({signUpKey}) => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [resetLoading, setResetLoading] = useState(false);
 
-  // Upload modal
   const [showUploadModal, setShowUploadModal] = useState(false);
+
+  /* =========================
+     ERROR MESSAGE EXTRACTOR
+  ========================== */
+  const extractErrorMessage = (err, fallback) => {
+    if (!err.response) return "Network error. Please try again.";
+
+    const data = err.response.data;
+
+    if (typeof data === "string") return data;
+    if (data.message) return data.message;
+    if (data.error) return data.error;
+    if (data.detail) return data.detail;
+
+    if (data.errors) {
+      const firstKey = Object.keys(data.errors)[0];
+      return data.errors[firstKey][0];
+    }
+
+    return fallback;
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const isPasswordStrong = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?`~\-]).{8,}$/.test(password);
-  };
-  const isTurnupEmail = (email) => {
-    return /^[a-zA-Z0-9._%+-]+@turnuplagos\.com$/.test(email);
-  };
+  const isPasswordStrong = (password) =>
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-[\]{};':"\\|,.<>/?`~\-]).{8,}$/.test(password);
 
+  const isTurnupEmail = (email) =>
+    /^[a-zA-Z0-9._%+-]+@turnuplagos\.com$/.test(email);
 
   const validateSignUpFields = () => {
     const errors = {};
 
     if (!formData.first_name.trim()) errors.first_name = "First name is required";
     if (!formData.last_name.trim()) errors.last_name = "Last name is required";
+
     if (!formData.email.trim()) {
       errors.email = "Email is required";
     } else if (!isTurnupEmail(formData.email)) {
@@ -99,34 +113,33 @@ const Auth = ({signUpKey}) => {
     return Object.keys(errors).length === 0;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     if (isSignUp) {
-      const isValid = validateSignUpFields();
-      if (!isValid) return; // stop here if errors exist
+      if (!validateSignUpFields()) return;
       setShowUploadModal(true);
       return;
     }
 
-
-    // Sign In flow
     try {
       setLoading(true);
+
       if (!isTurnupEmail(formData.email)) {
         setError("Only @turnuplagos.com emails are allowed");
         return;
       }
+
       const res = await axios.post(
-        "https://lagos-turnup.onrender.com/sub-admin-login",
+        "https://lagos-turnup-ecy5.onrender.com/sub-admin-login",
         { email: formData.email, password: formData.password }
       );
 
       localStorage.setItem("token", res.data.access_token);
       setModalMessage("Login successful!");
       setShowSuccessModal(true);
+
       setTimeout(() => {
         if (res.data.role === "super-admin") {
           navigate("/super-admin-dashboard");
@@ -136,13 +149,12 @@ const Auth = ({signUpKey}) => {
       }, 1500);
     } catch (err) {
       const status = err.response?.status;
-      const msg = (err.response?.data?.message || '').toLowerCase();
+      const message = extractErrorMessage(err, "");
 
-      // ✅ check for deactivated flag
-      if (status === 403 || msg.includes('deactivated')) {
+      if (status === 403 || message.toLowerCase().includes("deactivated")) {
         setShowDeactivatedModal(true);
       } else {
-        setError(err.response?.data?.message || "Login failed");
+        setError(message || "Login failed");
       }
     } finally {
       setLoading(false);
@@ -152,6 +164,7 @@ const Auth = ({signUpKey}) => {
   const handleFinalSignup = async () => {
     setShowUploadModal(false);
     setLoading(true);
+
     try {
       const signupData = new FormData();
       signupData.append("first_name", formData.first_name);
@@ -160,52 +173,52 @@ const Auth = ({signUpKey}) => {
       signupData.append("password", formData.password);
       signupData.append("role", formData.role);
       signupData.append("secret_key", signUpKey);
+
       if (formData.profile_picture) {
         signupData.append("profile_picture", formData.profile_picture);
       }
 
-      const res = await axios.post(
-        "https://lagos-turnup.onrender.com/sub-admin-signup",
+      await axios.post(
+        "https://lagos-turnup-ecy5.onrender.com/sub-admin-signup",
         signupData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
+
       setModalMessage("Signup successful! Please log in.");
       setShowSuccessModal(true);
+
       setTimeout(() => {
         setIsSignUp(false);
         setShowSuccessModal(false);
       }, 1500);
     } catch (err) {
-      console.error("Signup Error:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Signup failed");
+      setError(extractErrorMessage(err, "Signup failed"));
     } finally {
       setLoading(false);
     }
+
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
 
-      // ✅ Enforce only @turnuplagos.com
       if (!isTurnupEmail(decoded.email)) {
         setError("Only @turnuplagos.com emails are allowed for Google login");
         return;
       }
 
       const res = await axios.post(
-        'https://lagos-turnup.onrender.com/auth/google/login',
+        "https://lagos-turnup-ecy5.onrender.com/auth/google/login",
         { token: credentialResponse.credential }
       );
 
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
-    } catch (error) {
-      setError('Google authentication failed');
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(extractErrorMessage(err, "Google authentication failed"));
     }
   };
-
-
   const handleForgotPassword = async () => {
     if (!forgotEmail) {
       setModalMessage("Please enter your email");
@@ -272,6 +285,7 @@ const Auth = ({signUpKey}) => {
   };
 
   const [showLogoPanel, setShowLogoPanel] = useState(() => window.innerWidth > 900);
+
   useEffect(() => {
     const onResize = () => setShowLogoPanel(window.innerWidth > 900);
     window.addEventListener('resize', onResize);

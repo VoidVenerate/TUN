@@ -87,7 +87,7 @@ const PendingEvents = () => {
                   src={
                     event.flyer_url?.includes("://") && event.flyer_url.includes(".com/")
                       ? event.flyer_url
-                      : `https://lagos-turnup.onrender.com/${event.event_flyer?.replace(/^\//, "")}`
+                      : `https://lagos-turnup-ecy5.onrender.com/${event.event_flyer?.replace(/^\//, "")}`
                   }
                   alt={event.event_name}
                   loading="lazy"

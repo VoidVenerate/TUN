@@ -31,7 +31,7 @@ const AdminNavbar = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get('https://lagos-turnup.onrender.com/event/notifications');
+        const res = await axios.get('https://lagos-turnup-ecy5.onrender.com/event/notifications');
         if (res.data.length > 0) {
           const latestNotification = res.data[0].created_at;
 
@@ -55,7 +55,7 @@ const AdminNavbar = () => {
     const fetchImage = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('https://lagos-turnup.onrender.com/me', {
+        const res = await axios.get('https://lagos-turnup-ecy5.onrender.com/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
