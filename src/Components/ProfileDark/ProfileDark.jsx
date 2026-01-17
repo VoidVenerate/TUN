@@ -475,11 +475,6 @@ const ProfileDark = () => {
                     </div>
                   </div>
                   <div className="sub-admin-actions">
-                    <button
-                      className="action-btn logs"
-                    >
-                      View Admin Activity Logs
-                    </button>
                     {admin.status === "active" ? (
                       <button
                         onClick={() => handleDeactivate(admin.id)}
