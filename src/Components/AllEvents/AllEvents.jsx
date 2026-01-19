@@ -131,7 +131,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                       navigate(`/viewdetails/${event.id}`);
                     }}>{truncateWords(event.event_name, 1)}</h3>
-                    <p className="LagEvents-location">{event.venue.split(" ").slice(0,4).join(" ") + "..."}</p>
+                    <p className="LagEvents-location">{event.venue.split(" ").slice(0,1).join(" ") + "..."}</p>
                   </div>
                   <p className="LagEvents-desc">
                     {event.event_description.split(" ").slice(0, 15).join(" ") + '...'}
