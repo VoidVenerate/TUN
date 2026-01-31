@@ -6,17 +6,19 @@
 
 .LagEvents-header {
   display: flex;
-  margin-left: 2vw;
+  margin-left: 1vw;
   justify-content: space-between;
   margin-top: 3vw;
   align-items: center;
 }
+
 .LagEvents-header p {
   color: #fff;
   font-size: 28px;
   font-weight: 600;
   margin-left: 0;
 }
+
 .LagEvents-header button {
   border: none;
   cursor: pointer;
@@ -29,10 +31,11 @@
   overflow: hidden;
   background-color: #2f2f2f;
   border-radius: 60px;
-  margin-right: 3vw;
-  width: 117px;
-  height: 58px;
+  margin-right: 2vw;
+  width: 89px;
+  height: 36px;
 }
+
 .LagEvents-link.view-more {
   border-radius: 100px;
   color: #fff;
@@ -40,24 +43,38 @@
 }
 
 .LagEvents-list {
-  display: grid;                     /* ← activate grid mode */
-  grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
-  margin-top: 0vw;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem 1.2rem;
+  margin-top: 2rem;
   margin-left: 2vw;
   box-sizing: border-box;
+}
+
+.LagEvents-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
 }
 
 .LagEvents-card {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 20px;
   width: 100%;
-  max-width: 450px;
-  height: 665px;
-  margin-top: 2vw;
+  height: auto;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.LagEvents-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .LagEvents-content {
@@ -70,14 +87,16 @@
 
 .LagEvents-img {
   border-radius: 16px;
-  width: 410px;
+  width: 100%;
   height: 455px;
+  object-fit: inherit;
 }
 
 .LagEvents-txt {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 1rem;
 }
 
 a {
@@ -87,22 +106,34 @@ a {
 
 .LagEvents-title {
   color: #fff;
+  font-size: 1.1rem;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .LagEvents-location {
   color: #6d6d6d;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 .LagEvents-desc {
   color: rgba(255, 255, 255, 0.6);
-  margin-top: -6px;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+  flex: 1;
+  overflow: hidden;
+  height: 3em;
 }
 
 /* Buttons container inside each event card */
 .LagEvents-btns {
   display: flex;
   justify-content: space-between;
-  margin-top: 0px;
+  margin-top: 1rem;
   gap: 10px;
 }
 
@@ -116,12 +147,12 @@ a {
   transition: background 0.3s ease, transform 0.2s ease;
   color: #fff;
   background-color: rgba(255, 255, 255, 0.07);
-  font-size: small;
+  font-size: 13px;
 }
 
 /* First button: View Details */
 .LagEvents-btns > button:first-child {
-  background-color: rgba(255, 255, 255, 0.070); /* default active color */
+  background-color: rgba(255, 255, 255, 0.07);
 }
 
 /* First button hover effect */
@@ -132,12 +163,9 @@ a {
 
 /* Second button: Buy Tickets */
 .LagEvents-btns > button:last-child {
-  background-color: rgba(255, 255, 255, 0.050);
+  background-color: rgba(255, 255, 255, 0.05);
   color: #fff;
 }
-
-
-
 
 /* Disabled button styling */
 .LagEvents-btns > button:disabled {
@@ -145,7 +173,267 @@ a {
   cursor: not-allowed;
 }
 
-/* Small phones like iPhone SE (320px width) */
+/* ===== Skeleton Loader ===== */
+.skeleton {
+  background: #1a1a1a;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Ultra-wide monitors (2560px and above) - 5 columns */
+@media (min-width: 2560px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.8rem 1.5rem;
+    max-width: 2400px;
+    margin: 2rem auto;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 32px;
+  }
+}
+
+/* Large monitors (1920px to 2559px) - 4 columns */
+@media (min-width: 1920px) and (max-width: 2559px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.8rem 1.5rem;
+    max-width: 1800px;
+    margin: 2rem auto;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 30px;
+  }
+}
+
+/* Desktop monitors (1630px to 1919px) - 4 columns */
+@media (min-width: 1630px) and (max-width: 1919px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem 1.2rem;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 28px;
+  }
+
+  .LagEvents-header button {
+    width: 89px;
+    height: 36px;
+    font-size: 1rem;
+  }
+}
+
+/* Standard desktop (1330px to 1629px) - 3 columns */
+@media (min-width: 1330px) and (max-width: 1629px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem 1.2rem;
+    width: 97%;
+    margin: 0;
+    margin-left: 12px;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 26px;
+  }
+}
+
+/* Medium desktop (980px to 1329px) - 3 columns */
+@media (min-width: 980px) and (max-width: 1329px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem 1.2rem;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 24px;
+  }
+
+  .LagEvents-header button {
+    width: 89px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablet landscape (768px to 979px) - 2 columns */
+@media (min-width: 768px) and (max-width: 979px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1.2rem;
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header {
+    margin-left: 3vw;
+  }
+
+  .LagEvents-header p {
+    font-size: 22px;
+  }
+
+  .LagEvents-header button {
+    width: 89px;
+    height: 36px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet portrait (601px to 767px) - 2 columns */
+@media (min-width: 601px) and (max-width: 767px) {
+  .LagEvents-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem 1rem;
+    margin-left: 2vw;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 20px;
+  }
+
+  .LagEvents-btns > button {
+    font-size: 0.85rem;
+    padding: 16px 20px;
+  }
+}
+
+/* Mobile (481px to 600px) - 1 column */
+@media (min-width: 481px) and (max-width: 600px) {
+  .LagEvents-list {
+    grid-template-columns: 1fr;
+    margin-left: 4vw;
+    gap: 1.5rem;
+  }
+
+  .LagEvents-card {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-header p {
+    font-size: 20px;
+  }
+
+  .LagEvents-header button {
+    width: 89px;
+    height: 36px;
+  }
+
+  .LagEvents-btns {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .LagEvents-btns > button {
+    padding: 18px 0;
+    font-size: 0.95rem;
+  }
+}
+
+/* Small mobile (361px to 480px) */
+@media (min-width: 361px) and (max-width: 480px) {
+  .LagEvents-container {
+    margin-left: 3vw;
+    width: 93%;
+  }
+
+  .LagEvents-header {
+    margin-left: 2vw;
+  }
+
+  .LagEvents-header button {
+    margin-right: 2vw;
+    width: 89px;
+    height: 36px;
+    font-size: 0.8rem;
+  }
+
+  .LagEvents-header p {
+    font-size: 18px;
+    margin-left: 2vw;
+  }
+
+  .LagEvents-list {
+    grid-template-columns: 1fr;
+    margin-left: 2vw;
+    gap: 1.5rem;
+  }
+
+  .LagEvents-img {
+    height: 455px;
+  }
+
+  .LagEvents-btns {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .LagEvents-btns > button {
+    padding: 16px 0;
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra small phones (max-width: 360px) */
 @media (max-width: 360px) {
   .LagEvents-container {
     margin-left: 1vw;
@@ -170,347 +458,33 @@ a {
     letter-spacing: 2px;
     font-size: 0.8rem;
     margin-top: 4vw;
+    width: 89px;
+    height: 36px;
   }
 
   .LagEvents-list {
+    grid-template-columns: 1fr;
     justify-content: center;
     margin-left: 0;
+    gap: 1.5rem;
   }
 
   .LagEvents-card {
     width: 90vw;
     margin-left: 0;
-    margin-bottom: 2rem;
-    height: auto;
   }
 
   .LagEvents-img {
-    width: 100%;
-    height: 450px;
-  }
-}
-
-/* Phones up to 480px */
-@media (min-width: 361px) and (max-width: 480px) {
-  .LagEvents-container {
-    margin-left: 3vw;
-    width: 93%;
+    height: 455px;
   }
 
-  .LagEvents-header {
-    margin-left: 2vw;
-  }
-  .LagEvents-header button {
-    margin-right: 2vw;
-  }
-  .LagEvents-header p {
-    font-size: 16px;
-    margin-left: 2vw;
-  }
-
-  .LagEvents-list {
-    margin-left: 2vw;
-  }
-
-  .LagEvents-card {
-    width: 100%;
-    margin-left: -2vw;
-    margin-bottom: 1.5rem;
-  }
-
-  .LagEvents-img {
-    width: 100%;
-    height: 450px;
-  }
-}
-
-/* Tablets (481px to 768px) */
-@media (min-width: 481px) and (max-width: 768px) {
-  .LagEvents-container {
-    margin-left: 3vw;
-    width: 90%;
-  }
-
-  .LagEvents-header {
-    margin-left: 3vw;
-  }
-
-  .LagEvents-list {
-    justify-content: center;
-    margin-left: 0;
-  }
-
-  .LagEvents-card {
-    width: 300px;
-    margin-left: 0;
-    margin-bottom: 2rem;
-  }
-
-  .LagEvents-img {
-    width: 100%;
-    height: 320px;
-  }
-}
-/* --- Small phones (max-width: 360px) --- */
-@media (max-width: 360px) {
   .LagEvents-btns {
-    flex-direction: column; /* stack buttons vertically */
-    gap: 0.5rem;            /* space between buttons */
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .LagEvents-btns > button {
     padding: 15px 0;
     font-size: 0.9rem;
-  }
-}
-
-/* --- Phones up to 480px --- */
-@media (min-width: 361px) and (max-width: 480px) {
-  .LagEvents-btns {
-    flex-direction: row; /* keep horizontal */
-    gap: 0.75rem;
-  }
-
-  .LagEvents-btns > button {
-    padding: 18px 0;
-    font-size: 0.95rem;
-  }
-}
-
-/* --- Optional: Larger screens --- */
-@media (min-width: 769px) {
-  .LagEvents-btns > button {
-    padding: 20px 24px;
-    font-size: 1rem;
-  }
-}
-@media (min-width: 1330px) and (max-width: 1480px) {
-  .LagEvents-list {
-    margin-left: 0vw;
-    width: 100%;
-  }
-  .LagEvents-card {
-    width: 100%;
-    max-width: 450px;
-  }
-  .LagEvents-img {
-    width: 100%;
-    max-width: 410px;
-  }
-}
-@media (min-width: 980px) and (max-width: 1330px) {
-  .LagEvents-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5vw;               /* Add breathing space between cards */
-    justify-content: center;
-    align-items: start;
-    width: 95%;
-    margin: 0 auto;
-  }
-
-  .LagEvents-card {
-    max-width: 380px;         /* Slightly smaller to fit 3 comfortably */
-    height: auto;
-    margin: 1.5vw auto;
-  }
-
-  .LagEvents-img {
-    width: 100%;
-    height: 340px;            /* Shorter image to reduce tall stacking */
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .LagEvents-header p {
-    font-size: 24px;
-  }
-
-  .LagEvents-header button {
-    width: 110px;
-    height: 50px;
-    font-size: 0.95rem;
-  }
-}
-@media (min-width: 768px) and (max-width: 979px) {
-  .LagEvents-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 equal columns */
-    gap: 2vw;                              /* spacing between cards */
-    justify-content: center;
-    align-items: start;
-    width: 95%;
-    margin: 0 auto;
-  }
-
-  .LagEvents-card {
-    max-width: 420px;
-    height: auto;
-    margin: 2vw auto;
-  }
-
-  .LagEvents-img {
-    width: 100%;
-    height: 360px;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .LagEvents-header p {
-    font-size: 22px;
-  }
-
-  .LagEvents-header button {
-    width: 100px;
-    height: 45px;
-    font-size: 0.9rem;
-  }
-}
-@media (max-width: 600px) {
-  .LagEvents-list {
-    grid-template-columns: 1fr; /* phones → single column */
-    margin-left: 4vw;
-  }
-  .LagEvents-header p {
-    font-size: 20px;
-  }
-  .LagEvents-card {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    height: auto;
-  }
-}
-@media (min-width: 481px) and (max-width: 970px) {
-  .LagEvents-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    gap: 2vw;                              /* space between cards */
-    justify-content: center;
-    align-items: start;
-    width: 95%;
-    margin: 0 auto;
-  }
-
-  .LagEvents-card {
-    max-width: 400px;
-    height: auto;
-    margin: 2vw auto;
-    border-radius: 20px;
-  }
-
-  .LagEvents-img {
-    width: 100%;
-    height: 340px;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .LagEvents-header {
-    margin-left: 3vw;
-  }
-
-  .LagEvents-header p {
-    font-size: 22px;
-  }
-
-  .LagEvents-header button {
-    width: 100px;
-    height: 45px;
-    font-size: 0.9rem;
-  }
-
-  .LagEvents-btns {
-    gap: 1rem;
-  }
-
-  .LagEvents-btns > button {
-    font-size: 0.95rem;
-    padding: 16px 0;
-  }
-}
-
-
-/* ===== Skeleton Loader ===== */
-.skeleton {
-  background: #1a1a1a;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-}
-
-.skeleton::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150px;
-  height: 100%;
-  width: 150px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  animation: shimmer 1.2s infinite;
-}
-
-@keyframes shimmer {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.skeleton-card {
-  width: 300px;
-  background: #222;
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 5vw;
-  margin-left: 3vw;
-}
-
-.skeleton-img {
-  height: 150px;
-}
-
-.skeleton-text {
-  height: 15px;
-  width: 80%;
-}
-
-.skeleton-small {
-  height: 12px;
-  width: 60%;
-}
-/* ===== Desktop screens (2030px and above) ===== */
-@media (min-width: 1630px) {
-  .LagEvents-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
-    gap: 1.5vw;
-    justify-content: center;
-    align-items: start;
-    width: 95%;
-    margin: 0 auto;
-  }
-
-  .LagEvents-card {
-    max-width: 360px; /* ensure all 4 cards fit neatly */
-    height: auto;
-    margin: 1.5vw auto;
-  }
-
-  .LagEvents-img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .LagEvents-header p {
-    font-size: 26px;
-  }
-
-  .LagEvents-header button {
-    width: 120px;
-    height: 55px;
-    font-size: 1rem;
   }
 }

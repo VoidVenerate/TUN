@@ -90,6 +90,11 @@ const FtEvents = () => {
     return words.slice(0, maxWords).join(" ") + "...";
   };
 
+  // ✅ Return null if no events
+  if (events.length === 0) {
+    return null;
+  }
+
   // ✅ Desktop: show 3 events at a time
   const visibleEvents = isMobile
     ? events

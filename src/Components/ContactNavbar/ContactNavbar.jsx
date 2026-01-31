@@ -1,13 +1,21 @@
 import React from 'react'
 import './ContactNavbar.css'
-import PromoCard from '../PromoCard/PromoCard'
 
 const ContactNavbar = () => {
   return (
     <div className='contact-container'>
         <div className="contact">
-            <PromoCard title="Get in Touch With Us Anytime" subtitle= "Write To Us" />
-            
+            <picture className="contact-image-wrapper">
+              <source
+                media="(max-width: 768px)"
+                srcSet="/contact-banner-mobile.png"
+              />
+              <img
+                src="/contact-banner-desktop.png"
+                alt="Get in Touch With Us Anytime"
+                className="contact-image"
+              />
+            </picture>
         </div>
     </div>
   )

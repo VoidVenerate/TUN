@@ -30,13 +30,11 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
     if (stateFilter) fetchEvents()
   }, [stateFilter])
 
-  const truncateWords = (text, maxWords = 1) => {
-    if(!text) return "";
-    const words = text.split(" ")
-    if (words.length <= maxWords) return text;
-    return words.slice(0, maxWords).join(" ") + "..."
+  const truncateText = (text, maxChars = 90) => {
+    if (!text) return "";
+    if (text.length <= maxChars) return text;
+    return text.substring(0, maxChars).trim() + "...";
   }
-  
 
   // client-side pagination
   const start = (page - 1) * limit
@@ -48,7 +46,7 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
         <p style={{ fontFamily: 'Rushon Ground' }}>
           {stateFilter === "Lagos" ? "Lagos Events" : "Beyond Lagos Events"}
         </p>
-        {Number(limit) === 9 && (
+        {Number(limit) === 18 && (
           <button>
             <NavLink
               to="/explore"
@@ -68,43 +66,46 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
                 <div className="LagEvents-content">
                   {/* Fake image */}
                   <Skeleton 
-                    height={150} 
-                    borderRadius={8} 
+                    height={455} 
+                    borderRadius={16} 
                     baseColor="#1e1e1e" 
                     highlightColor="#333" 
                   />
 
-                  {/* Title + venue */}
+                  {/* Title */}
                   <div className="LagEvents-txt" style={{ marginTop: '10px' }}>
                     <Skeleton 
-                      height={20} 
-                      width="70%" 
-                      borderRadius={4} 
-                      baseColor="#1e1e1e" 
-                      highlightColor="#333" 
-                    />
-                    <Skeleton 
-                      height={15} 
-                      width="50%" 
+                      height={22} 
+                      width="100%" 
                       borderRadius={4} 
                       baseColor="#1e1e1e" 
                       highlightColor="#333" 
                     />
                   </div>
 
-                  {/* Description */}
-                  <Skeleton 
-                    count={2} 
-                    height={12} 
-                    style={{ marginTop: '8px' }} 
-                    baseColor="#1e1e1e" 
-                    highlightColor="#333" 
-                  />
+                  {/* Description - 2 lines */}
+                  <div style={{ marginTop: '8px' }}>
+                    <Skeleton 
+                      height={12} 
+                      width="100%"
+                      borderRadius={4} 
+                      baseColor="#1e1e1e" 
+                      highlightColor="#333" 
+                      style={{ marginBottom: '4px' }}
+                    />
+                    <Skeleton 
+                      height={12} 
+                      width="85%"
+                      borderRadius={4} 
+                      baseColor="#1e1e1e" 
+                      highlightColor="#333" 
+                    />
+                  </div>
 
                   {/* Buttons */}
                   <div className="LagEvents-btns" style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                    <Skeleton height={30} width={100} borderRadius={6} baseColor="#1e1e1e" highlightColor="#333" />
-                    <Skeleton height={30} width={80} borderRadius={6} baseColor="#1e1e1e" highlightColor="#333" />
+                    <Skeleton height={40} width="48%" borderRadius={100} baseColor="#1e1e1e" highlightColor="#333" />
+                    <Skeleton height={40} width="48%" borderRadius={100} baseColor="#1e1e1e" highlightColor="#333" />
                   </div>
                 </div>
               </div>
@@ -130,11 +131,10 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
                     <h3 className="LagEvents-title" onClick={() => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                       navigate(`/viewdetails/${event.id}`);
-                    }}>{truncateWords(event.event_name, 1)}</h3>
-                    <p className="LagEvents-location">{event.venue.split(" ").slice(0,1).join(" ") + "..."}</p>
+                    }}>{event.event_name}</h3>
                   </div>
                   <p className="LagEvents-desc">
-                    {event.event_description.split(" ").slice(0, 15).join(" ") + '...'}
+                    {truncateText(event.event_description, 90)}
                   </p>
 
                   <div className="LagEvents-btns">

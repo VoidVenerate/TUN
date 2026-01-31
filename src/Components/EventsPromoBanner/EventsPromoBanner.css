@@ -1,52 +1,38 @@
 .promo-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 3vw;
-}
-.gradient-banner {
-  background: linear-gradient(90deg, 
-    #8FB3FF,   
-    #9D6BE8,   
-    #DE2778,   
-    #B03DE2  
-  );
-  border-radius: 24px;
-  color: white;
-  padding: 2rem;
-  text-align: center;
-  width: 89%;
-  margin-left: 0vw;
-  height: 300px;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-.gradient-banner p {
-  margin-top: -1.9vw;
-}
-.promo-btn {
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-  border-radius: 60px;
-  padding: 0.5rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  height: 66px;
+  margin-top: 3vw;
+  width: 100%;
 }
 
-.promo-btn:hover {
-  background: rgba(255,255,255,0.2);
+.promo-banner-link {
+  display: block;
+  width: 89%;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
-.promo-btn a {
-  color: #fff;
-  text-decoration: none;
+
+.promo-banner-link:hover {
+  transform: scale(1.01);
+  opacity: 0.95;
 }
-@media (min-width: 320px) and (max-width:720px) {
-  .gradient-banner {
+
+.promo-banner-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 24px;
+  object-fit: cover;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .promo-banner-link {
+    width: 100%;
+  }
+  
+  .promo-banner-image {
     border-radius: 0px;
   }
 }

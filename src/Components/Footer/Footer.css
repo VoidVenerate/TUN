@@ -21,6 +21,16 @@ body {
 .footer-pt1 {
     width: 400px;
 }
+.footer-pt1 p {
+  font-style: italic;
+}
+.hr-span {
+  display: block;
+  width: 80%;
+  height: 1px;
+  background: #73737333;
+  margin: 0 0 16px 9vw;
+}
 .footer-pt3 {
     width: 400px;
     color: #000;

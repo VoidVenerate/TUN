@@ -1,6 +1,22 @@
-.LagFooter-container .promo-card {
-    margin-top: 6vw;
+.LagFooter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  margin-top: 3vw;
+  margin-left: 5vw;
 }
-.LagFooter-container .promo-card p {
-    width: 300px;
+
+.lagos-footer-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .LagFooter-container {
+    margin-top: 2vw;
+  }
 }

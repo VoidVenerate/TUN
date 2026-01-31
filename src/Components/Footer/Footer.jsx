@@ -76,7 +76,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <hr />
+      <span className='hr-span'></span>
       <div className="footer-logo">
         <NavLink to='' ><img src={fb} alt="Facebook" /></NavLink>
         <NavLink to='https://x.com/TurnUpLag'><img src={x} alt="X (Twitter)" /></NavLink>

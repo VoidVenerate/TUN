@@ -17,8 +17,8 @@ const Home = () => {
         <Billboard />
         <FtEvents />
         <Visit />
-        <AllEvents stateFilter="Lagos" limit = {9} />
-        <AllEvents stateFilter="Outside Lagos" limit = {9} />
+        <AllEvents stateFilter="Lagos" limit = {18} />
+        <AllEvents stateFilter="Outside Lagos" limit = {18} />
         <EventsPromoBanner />
         <Footer />
     </div>

@@ -5,7 +5,7 @@ import Footer from '../../../Components/Footer/Footer';
 import AllEvents from '../../../Components/AllEvents/AllEvents';
 
 const ExploreLagos = () => {
-  const cardsPerPage = 18
+  const cardsPerPage = 27
   const [currentPage, setCurrentPage] = useState(1)
 
   const handleNext = (totalEvents) => {

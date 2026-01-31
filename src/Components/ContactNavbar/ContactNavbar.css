@@ -1,7 +1,23 @@
-.contact {
-    text-align: center;
-}
 .contact-container {
-    margin-left: 4vw;
-    margin-right: 4vw;
+  width: 100%;
+  max-width: 1380px;
+  margin: 2vw auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.contact {
+  width: 100%;
+}
+
+.contact-image-wrapper {
+  display: block;
+  width: 100%;
+}
+
+.contact-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }

@@ -43,12 +43,12 @@
 .navbar-button button {
   padding: 0.6rem 1.2rem;
   border: none;
+  font-family: 'DM Sans';
   cursor: pointer;
   font-weight: 500;
   position: relative;
   color: #ffffff;
   text-transform: uppercase;
-  letter-spacing: 4px;
   overflow: hidden;
   background-color: #000;
   transition: background 0.3s ease;
