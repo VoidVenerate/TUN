@@ -1,7 +1,7 @@
 import React from 'react'
 import Club from '../../assets/Clubs.jpg'
 import Hotel from '../../assets/Hotels.jpg'
-import FoodSpot from '../../assets/FoodS.jpg'
+import FoodSpot from '../../assets/Foods.jpg'
 import Beach from '../../assets/Beaches.jpg'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
@@ -39,7 +39,7 @@ const PlacesInLagos = () => {
             fontFamily: 'Rushon Ground',
             margin: '0'
         }
-        
+
     };
 
     return (

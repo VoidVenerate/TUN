@@ -1,20 +1,29 @@
 /* JavaScript (React JSX) - plain JS, no TypeScript */
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useEvent } from '../EventContext/EventContext'; 
+import { useEvent } from '../EventContext/EventContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
-import './TakeAction.css'
+import './TakeAction.css';
 import Modal from '../Modal/Modal';
 import FeatureDuration from '../FeatureDuration/FeatureDuration';
-import { Check, Trash2, ChevronLeft } from 'lucide-react'; // ⬅️ icons used in PendingEvents
+import { Check, Trash2, ChevronLeft, Pencil } from 'lucide-react';
+
+const API_BASE_URL = 'https://lagos-turnup-ecy5.onrender.com';
 
 const TakeAction = ({ role }) => {
-  const { eventData, updateEvent, setEventData, deleteEvent } = useEvent(); 
+  const { eventData, updateEvent, setEventData, deleteEvent } = useEvent();
   const navigate = useNavigate();
   const { event_id } = useParams();
 
-  const { register, handleSubmit, reset, watch, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { isDirty },
+  } = useForm({
     defaultValues: {
       eventName: '',
       location: '',
@@ -29,10 +38,10 @@ const TakeAction = ({ role }) => {
       link: '',
       flyerFile: null,
       flyerPreview: null,
-    }
+    },
   });
 
-  const [modalInfo, setModalInfo] = useState({ show: false, title: '', message: '', subMessage: '' });
+  const [modalInfo, setModalInfo] = useState({ show: false, title: '', message: '', subMessage: '', type: '', footerButtons: null });
   const [showFeatureDuration, setShowFeatureDuration] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -40,11 +49,16 @@ const TakeAction = ({ role }) => {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showConfirmRejectModal, setShowConfirmRejectModal] = useState(false);
-  const [isPublishHover, setIsPublishHover] = useState(false);
-  const hoverTimeoutRef = useRef(null);
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
+  // pendingAction: what to do after a successful save — 'approve' | 'reject' | null
+  const [pendingAction, setPendingAction] = useState(null);
 
   const flyerFile = watch('flyerFile');
+  const watchedFeatureChoice = watch('featureChoice');
+  const contactMethod = watch('contactMethod');
+  const isFeatured = watchedFeatureChoice === 'yes-feature';
 
+  // ─── File preview ─────────────────────────────────────────────
   useEffect(() => {
     if (flyerFile && flyerFile.length > 0) {
       const file = flyerFile[0];
@@ -60,10 +74,10 @@ const TakeAction = ({ role }) => {
       reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-          if (img.width <= 400 && img.height <= 800) {
+          if (img.width <= 500 && img.height <= 800) {
             setValue('flyerPreview', event.target.result);
           } else {
-            alert('Image must be max 400x800px.');
+            alert('Image must be max 500x800px.');
             setValue('flyerFile', null);
             setValue('flyerPreview', null);
           }
@@ -76,22 +90,28 @@ const TakeAction = ({ role }) => {
     }
   }, [flyerFile, setValue]);
 
+  // ─── Fetch event on mount ─────────────────────────────────────
   useEffect(() => {
     if (!event_id) return;
 
     const fetchEvent = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await api.get(`/event/events`, {
+        const res = await api.get('/event/events', {
           params: { id: event_id },
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = res.data[0];
         if (!data) throw new Error('Event not found');
 
-        const normalizedData = { ...data, id: data.id, flyerPreview: data.flyer_url || data.event_flyer || '' };
-        setEventData(normalizedData);
+        const flyerPreview = data.flyer_url
+          ? data.flyer_url
+          : data.event_flyer
+            ? `${API_BASE_URL}/${data.event_flyer.replace(/^\//, '')}`
+            : '';
+
+        setEventData({ ...data, id: data.id || data.event_id, flyerPreview });
 
         reset({
           eventName: data.event_name || '',
@@ -101,15 +121,11 @@ const TakeAction = ({ role }) => {
           venue: data.venue || '',
           dressCode: data.dress_code || '',
           description: data.event_description || '',
-          flyerPreview: data.flyer_url
-            ? data.flyer_url
-            : data.event_flyer
-              ? `https://lagos-turnup-ecy5.onrender.com/${data.event_flyer.replace(/^\//, '')}`
-              : '',
+          flyerPreview,
           featureChoice: data.is_featured ? 'yes-feature' : 'no-feature',
           link: data.contact_link || '',
           contactMethod: data.contact_method || '',
-          contactValue: data.contact_value || ''
+          contactValue: data.contact_value || '',
         });
 
         setFeatureChoice(data.is_featured ? 'yes-feature' : 'no-feature');
@@ -122,26 +138,23 @@ const TakeAction = ({ role }) => {
     fetchEvent();
   }, [event_id, reset, setEventData]);
 
-  const onSubmit = async (data) => {
-    if (!eventData?.id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No event ID to update.', subMessage: '' });
-      return;
-    }
-
+  // ─── PUT /event/events/{event_id} ─────────────────────────────
+  const saveEdits = async (data) => {
     setSaving(true);
     try {
       const fd = new FormData();
-      fd.append('event_name', data.eventName);
-      fd.append('state', data.location);
-      fd.append('venue', data.venue);
-      fd.append('date', data.date);
-      fd.append('time', data.time);
-      fd.append('dress_code', data.dressCode);
-      fd.append('event_description', data.description);
+      fd.append('event_name', data.eventName || '');
+      fd.append('state', data.location || '');
+      fd.append('venue', data.venue || '');
+      fd.append('date', data.date || '');
+      fd.append('time', data.time || '');
+      fd.append('dress_code', data.dressCode || '');
+      fd.append('event_description', data.description || '');
       fd.append('is_featured', data.featureChoice === 'yes-feature');
-      fd.append('contact_method', data.contactMethod);
-      fd.append('contact_value', data.contactValue);
-      fd.append('contact_link', data.link);
+      fd.append('featured_requested', data.featureChoice === 'yes-feature');
+      fd.append('contact_method', data.contactMethod || '');
+      fd.append('contact_value', data.contactValue || '');
+      fd.append('contact_link', data.link || '');
 
       if (data.flyerFile && data.flyerFile.length > 0) {
         fd.append('event_flyer', data.flyerFile[0]);
@@ -158,123 +171,23 @@ const TakeAction = ({ role }) => {
         updated = res.data;
       }
 
-      setEventData(updated);
-      setModalInfo({ show: true, title: 'Success', message: 'Event updated successfully.', subMessage: '',  });
-
-      if (featureChoice === 'yes-feature') {
-        setShowFeatureDuration(true);
-      }else{
-        navigate('/adminevents');
+      if (updated && typeof updated === 'object') {
+        setEventData(updated);
       }
+
+      return true; // signal success
     } catch (err) {
-      setModalInfo({ show: true, title: 'Error', message: 'Failed to save event. Try again.', subMessage: err?.message || '' });
+      console.error('Save failed', err);
+      setModalInfo({ show: true, title: 'Error', message: 'Failed to save edits. Please try again.', subMessage: err?.message || '' });
+      return false;
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = () => {
-    if (!eventData?.id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No event ID to delete.', subMessage: '' });
-      return;
-    }
-
-    setModalInfo({
-      show: true,
-      type: 'duration',
-      title: '',
-      message: 'Are you sure you want to reject this event?',
-      subMessage: 'The event will not be published. Optionally, you may contact the organizer to provide feedback or a reason for rejection.',
-      footerButtons: (
-        <div className="modal-btn-group">
-          <button
-            className="modal-close-btn"
-            onClick={() => setModalInfo({ show: false })} // cancel just closes
-          >
-            Cancel
-          </button>
-          <button
-            className="modal-btn-danger"
-            onClick={async () => {
-              setDeleting(true);
-              try {
-                if (typeof deleteEvent === 'function') {
-                  await deleteEvent(eventData.id);
-                } else {
-                  await api.delete(`/event/events/${eventData.event_id}`);
-                }
-
-                setModalInfo({
-                  show: true,
-                  type: 'success',
-                  title: '',
-                  message: 'Event deleted successfully.',
-                  subMessage: 'This event has been rejected and will not be shown on TurnUpLagos.',
-                  footerButtons: (
-                    <button
-                      className="modal-close-btn"
-                      onClick={() => {
-                        closeModal();
-                        navigate('/adminevents'); // ✅ only navigate after closing
-                      }}
-                    >
-                      Continue
-                    </button>
-                  ),
-                });
-              } catch (err) {
-                setModalInfo({
-                  show: true,
-                  title: 'Error',
-                  message: 'Failed to delete event. Please try again.',
-                  subMessage: err?.message || '',
-                });
-              } finally {
-                setDeleting(false);
-              }
-            }}
-          >
-            Yes, Delete
-          </button>
-        </div>
-      )
-    });
-  };
-
-  const handleUploadClick = () => setShowConfirmModal(true);
-  const handleRejectClick = () => setShowConfirmRejectModal(true);
-
-  const publishBtnStyle = (hover) => ({
-    backgroundColor: hover ? '#6c43e6' : '#5423D2',
-    color: 'white',
-    border: 'none',
-    marginTop: '10px',
-    padding: '8px 16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-  });
-
-  const closeBtnStyle = {
-    backgroundColor: 'transparent',
-    border: '1px solid #2f2f2fff',
-    color: '#ccc',
-    padding: '8px 16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  };
-
-  const handlePublishMouseEnter = () => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    setIsPublishHover(true);
-  };
-  const handlePublishMouseLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => setIsPublishHover(false), 250);
-  };
-
-  const handleConfirmUpload = async () => {
+  // ─── Approve flow ─────────────────────────────────────────────
+  const runApprove = async () => {
     setShowConfirmModal(false);
-
     if (!event_id) {
       setModalInfo({ show: true, title: 'Error', message: 'No event id available to publish.', subMessage: '' });
       return;
@@ -284,10 +197,10 @@ const TakeAction = ({ role }) => {
     try {
       const token = localStorage.getItem('token');
       await api.put(`/event/approve-event/${event_id}`, null, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (String(featureChoice || eventData?.featureChoice).toLowerCase() === 'yes-feature' || eventData?.is_featured) {
+      if (featureChoice === 'yes-feature' || eventData?.is_featured) {
         setShowFeatureDuration(true);
       } else {
         setModalInfo({ show: true, title: 'Success', message: 'Event uploaded successfully!', subMessage: '' });
@@ -301,9 +214,9 @@ const TakeAction = ({ role }) => {
     }
   };
 
-  const confirmReject = async () => {
+  // ─── Reject flow ──────────────────────────────────────────────
+  const runReject = async () => {
     setShowConfirmRejectModal(false);
-
     if (!event_id) {
       setModalInfo({ show: true, title: 'Error', message: 'No event id available to reject.', subMessage: '' });
       return;
@@ -313,7 +226,7 @@ const TakeAction = ({ role }) => {
     try {
       const token = localStorage.getItem('token');
       await api.delete(`/event/events/${event_id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setModalInfo({ show: true, title: 'Rejected', message: 'Event has been rejected and deleted.', subMessage: '' });
@@ -326,231 +239,312 @@ const TakeAction = ({ role }) => {
     }
   };
 
-  const closeModal = () => setModalInfo(prev => ({ ...prev, show: false }));
+  // ─── Button click handlers ────────────────────────────────────
+  // If the form is dirty, save first then continue to approve/reject.
+  // If it's clean, skip straight to the confirmation modal.
+  const handleApproveClick = () => {
+    if (isDirty) {
+      setPendingAction('approve');
+      setShowSaveConfirm(true);
+    } else {
+      setShowConfirmModal(true);
+    }
+  };
 
+  const handleRejectClick = () => {
+    if (isDirty) {
+      setPendingAction('reject');
+      setShowSaveConfirm(true);
+    } else {
+      setShowConfirmRejectModal(true);
+    }
+  };
+
+  // Called when user confirms "Yes, Save" in the save-first modal
+  const handleSaveAndContinue = async () => {
+    setShowSaveConfirm(false);
+    const ok = await handleSubmit(async (data) => {
+      const success = await saveEdits(data);
+      if (success) {
+        // Now open the actual approve/reject confirmation
+        if (pendingAction === 'approve') setShowConfirmModal(true);
+        if (pendingAction === 'reject') setShowConfirmRejectModal(true);
+      }
+      setPendingAction(null);
+    })();
+  };
+
+  // ─── Feature duration ─────────────────────────────────────────
   const handleFeatureConfirm = (selectedDuration) => {
     setShowFeatureDuration(false);
     setModalInfo({ show: true, title: 'Success', message: `Event featured for ${selectedDuration}.`, subMessage: '' });
     navigate('/adminevents');
   };
 
+  const closeModal = () => setModalInfo((prev) => ({ ...prev, show: false }));
+
+  // ─── Render ───────────────────────────────────────────────────
   return (
     <div className="review-container">
       <header className="review-header">
         <h1 className="review-header-title" style={{ fontFamily: 'Rushon Ground' }}>
-          <ChevronLeft size = {24} onClick={() => navigate(-1)} /> TAKE ACTION
+          <button type="button" onClick={() => navigate(-1)} className="review-back-btn">
+            <ChevronLeft size={24} />
+          </button>
+          <span>TAKE ACTION</span>
         </h1>
       </header>
 
-      <form id='eventForm' onSubmit={handleSubmit(onSubmit)} className="review-content" encType="multipart/form-data">
-        {/* Flyer Upload */}
-        <div className="review-upload-section">
-          <div className="review-upload-label">
-            <span className="review-upload-text">Event Flyer</span>
-            <div className="review-upload-description">Uploaded flyer preview.</div>
+      <form id="eventForm" onSubmit={handleSubmit(saveEdits)} className="review-form-wrapper" encType="multipart/form-data">
+        <div className="review-content">
+          {/* ── Flyer ── */}
+          <div className="review-upload-section">
+            <div className="review-upload-label">
+              <span className="review-upload-text">Event Flyer</span>
+              <div className="review-upload-description">Uploaded flyer preview.</div>
+            </div>
+            <div className="review-upload-area">
+              <img
+                src={watch('flyerPreview') || eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer}
+                alt="Event Flyer Preview"
+                className="review-flyer-preview"
+                onError={(e) => (e.target.src = '/placeholder.png')}
+              />
+            </div>
           </div>
-          <div className="review-upload-area">
-            <img
-              src={watch('flyerPreview') || eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer}
-              alt="Event Flyer Preview"
-              className="review-flyer-preview"
-              onError={(e) => (e.target.src = '/placeholder.png')}
-            />
+
+          {/* ── Editable fields ── */}
+          <div className="review-form">
+            <div className="review-fields">
+              <div className="review-row">
+                <div className="review-group">
+                  <label className="review-label" htmlFor="eventName">Event Name *</label>
+                  <input id="eventName" className="form-input" {...register('eventName', { required: 'Event name is required' })} />
+                </div>
+
+                <div className="review-group">
+                  <label className="review-label" htmlFor="location">State *</label>
+                  <select id="location" className="form-input" {...register('location', { required: 'Location is required' })}>
+                    <option value="">Where in Nigeria is the event?</option>
+                    <option value="Lagos">Within Lagos</option>
+                    <option value="Outside Lagos">Beyond Lagos</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="review-row">
+                <div className="review-group">
+                  <label className="review-label" htmlFor="venue">Venue</label>
+                  <input id="venue" className="form-input" {...register('venue')} />
+                </div>
+                <div className="review-group">
+                  <label className="review-label" htmlFor="date">Date</label>
+                  <input type="date" id="date" className="form-input" {...register('date')} />
+                </div>
+              </div>
+
+              <div className="review-row">
+                <div className="review-group">
+                  <label className="review-label" htmlFor="time">Time</label>
+                  <input type="time" id="time" className="form-input" {...register('time')} />
+                </div>
+                <div className="review-group">
+                  <label className="review-label" htmlFor="dressCode">Gate Fee</label>
+                  <input id="dressCode" className="form-input" {...register('dressCode')} />
+                </div>
+              </div>
+
+              <div className="review-group review-full">
+                <label className="review-label" htmlFor="description">Event Description</label>
+                <textarea id="description" className="form-textarea" {...register('description')} />
+              </div>
+            </div>
           </div>
-          
         </div>
 
-        {/* Event details form */}
-        <div className="review-form">
+        {/* ── Feature toggle + contact + link + actions ── */}
+        <div className="feature-block" style={{ marginTop: 20 }}>
           <div className="review-fields">
+            {/* Feature toggle */}
+            <div className="toggle-group" style={{ marginBottom: 12 }}>
+              <button
+                type="button"
+                className={watchedFeatureChoice === 'no-feature' ? 'active' : ''}
+                onClick={() => {
+                  setValue('featureChoice', 'no-feature', { shouldDirty: true });
+                  setFeatureChoice('no-feature');
+                }}
+              >
+                No, I do not want to feature my event.
+              </button>
+              <button
+                type="button"
+                className={watchedFeatureChoice === 'yes-feature' ? 'active' : ''}
+                onClick={() => {
+                  setValue('featureChoice', 'yes-feature', { shouldDirty: true });
+                  setFeatureChoice('yes-feature');
+                }}
+              >
+                Yes, I want to feature my event.
+              </button>
+            </div>
 
-            <div className="review-row">
-              <div className="review-group">
-                <label className="review-label" htmlFor="eventName">Event Name</label>
-                <input disabled id="eventName" className="form-input" {...register('eventName', { required: true })} />
+            {/* Contact section — only when featured */}
+            {isFeatured && (
+              <div className="contact-section">
+                <h3 className="contact-title">📧 We'll need a way to reach you *</h3>
+                <p className="contact-description">
+                  Select your preferred contact method so we can discuss pricing and promotion details.
+                </p>
+                <div className="contact-form">
+                  <div className="contact-group">
+                    <select className="contact-select" {...register('contactMethod', { required: isFeatured ? 'Contact method is required' : false })}>
+                      <option value="">Choose a method</option>
+                      <option value="email">Email Address</option>
+                      <option value="phone">Phone Number</option>
+                      <option value="whatsapp">WhatsApp</option>
+                    </select>
+                  </div>
+                  <input
+                    className="contact-input"
+                    placeholder={`Enter your ${contactMethod || 'contact info'}`}
+                    {...register('contactValue', { required: isFeatured ? 'Contact information is required' : false })}
+                  />
+                </div>
               </div>
+            )}
 
-              <div className="review-group">
-                <label className="review-label" htmlFor="location">State</label>
-                <select disabled id="location" className="form-input" {...register('location', { required: true })} defaultValue="">
-                  <option value="">Where in Nigeria is the event?</option>
-                  <option value="Lagos">Within Lagos</option>
-                  <option value="Outside Lagos">Beyond Lagos</option>
-                </select>
+            {/* Additional link */}
+            <div className="additional-info-section">
+              <h3 className="additional-title">Additional Information Link</h3>
+              <p className="additional-description">
+                Add any link that gives attendees more context — could be a WhatsApp group, ticket page, Linktree, or Snapchat link.
+              </p>
+              <div className="additional-input-group">
+                <input
+                  type="url"
+                  className="additional-input"
+                  placeholder="Paste a link (WhatsApp, Linktree, etc.) or leave blank"
+                  {...register('link')}
+                />
               </div>
             </div>
 
-            <div className="review-row">
-              <div className="review-group">
-                <label className="review-label" htmlFor="venue">Venue</label>
-                <input disabled id="venue" className="form-input" {...register('venue')} />
-              </div>
+            {/* ── Action buttons ── */}
+            <footer className="review-footer">
+              {/* Save edits (standalone) */}
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <button
+                  type="submit"
+                  className="review-submit-btn review-submit-btn--save"
+                  disabled={saving || !isDirty}
+                >
+                  <Pencil size={16} />
+                  {saving ? 'Saving...' : 'Save Edits'}
+                </button>
 
-              <div className="review-group">
-                <label className="review-label" htmlFor="date">Date</label>
-                <input disabled type="date" id="date" className="form-input" {...register('date')} />
-              </div>
-            </div>
+                {/* Reject */}
+                <button
+                  type="button"
+                  onClick={handleRejectClick}
+                  className="review-submit-btn review-submit-btn--delete"
+                  disabled={deleting || saving}
+                >
+                  <Trash2 size={16} />
+                  {deleting ? 'Rejecting...' : 'Reject Event'}
+                </button>
 
-            <div className="review-row">
-              <div className="review-group">
-                <label className="review-label" htmlFor="time">Time</label>
-                <input disabled type="time" id="time" className="form-input" {...register('time')} />
+                {/* Approve */}
+                <button
+                  type="button"
+                  onClick={handleApproveClick}
+                  className="review-submit-btn review-submit-btn--approve"
+                  disabled={saving}
+                >
+                  <Check size={16} />
+                  {saving ? 'Publishing...' : 'Approve Event'}
+                </button>
               </div>
-
-              <div className="review-group">
-                <label className="review-label" htmlFor="dressCode">Gate Fee</label>
-                <input disabled id="dressCode" className="form-input" {...register('dressCode')} />
-              </div>
-            </div>
-
-            <div className="review-group review-full">
-              <label className="review-label" htmlFor="description">Event Description</label>
-              <textarea disabled id="description" className="form-textarea" {...register('description')} />
-            </div>
+            </footer>
           </div>
         </div>
       </form>
 
-      {/* Footer: accept / reject buttons (using Check / Trash2 like PendingEvents) */}
-      <div className="review-form" style={{ marginTop: 20 }}>
-        <div className="review-fields">
-          <div className="review-group review-full">
-            <label className="review-label" htmlFor="link">Additional Information Link</label>
-            <input disabled id="link" className="form-input" {...register('link')} />
+      {/* ── Modals ── */}
+
+      {/* Save-first modal — shown when form is dirty and user clicks Approve or Reject */}
+      <Modal
+        show={showSaveConfirm}
+        onClose={() => { setShowSaveConfirm(false); setPendingAction(null); }}
+        type="confirmation"
+        message="You have unsaved edits"
+        subMessage={`Save your changes before you ${pendingAction === 'approve' ? 'approve' : 'reject'} this event?`}
+        footerButtons={
+          <div className="modal-btn-group">
+            <button className="modal-close-btn" onClick={() => { setShowSaveConfirm(false); setPendingAction(null); }}>
+              Cancel
+            </button>
+            <button className="modal-close-btn-primary" onClick={handleSaveAndContinue}>
+              Save & Continue
+            </button>
           </div>
+        }
+      />
 
-          <footer className="review-footer">
-            <div style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
-              <button
-                type="button"
-                onClick={handleRejectClick}
-                className="reject-btn"
-                disabled={deleting}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  backgroundColor: 'rgba(255, 60, 60, 0.06)',
-                  color: '#ff3b30',
-                  border: '1px solid rgba(255, 60, 60, 0.18)',
-                  padding: '20px 24px',
-                  borderRadius: "100px",
-                  cursor: deleting ? 'not-allowed' : 'pointer',
-                  opacity: deleting ? 0.6 : 1,
-                }}
-                aria-label="Reject Event"
-              >
-                <Trash2 size={16} />
-                <span>{deleting ? 'Rejecting Event...' : 'Reject Event'}</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleUploadClick}
-                className="accept-btn"
-                disabled={saving}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  backgroundColor: 'transparent',
-                  color: '#fff',
-                  border: '1px solid #292929',
-                  padding: '20px 24px',
-                  borderRadius: "100px",
-                  cursor: saving ? 'not-allowed' : 'pointer',
-                  opacity: saving ? 0.6 : 1,
-                }}
-                aria-label="Approve Event"
-              >
-                <Check size={16} />
-                <span>{saving ? 'Publishing Event...' : 'Approve Event'}</span>
-              </button>
-            </div>
-          </footer>
-        </div>
-      </div>
-
-      {/* Confirm Upload Modal */}
+      {/* Confirm Approve */}
       <Modal
         show={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
-        title=""
-        type='duration'
+        type="duration"
         message="Are you sure you want to upload this event?"
-        subMessage="Once published, the event will go live on TurnUpLagos and be visible to all users. You will not be able to undo this action."
+        subMessage="Once published, the event will go live on TurnUpLagos and be visible to all users."
         footerButtons={
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button className='modal-close-btn' onClick={() => setShowConfirmModal(false)} type="button">Cancel</button>
-            <button
-              onClick={handleConfirmUpload}
-              onMouseEnter={handlePublishMouseEnter}
-              onMouseLeave={handlePublishMouseLeave}
-              type="button"
-              className='modal-close-btn-primary'
-            >
+            <button className="modal-close-btn" onClick={() => setShowConfirmModal(false)} type="button">Cancel</button>
+            <button className="modal-close-btn-primary" onClick={runApprove} type="button">
               Yes, Publish
             </button>
           </div>
         }
       />
 
-      {/* Confirm Reject Modal */}
+      {/* Confirm Reject */}
       <Modal
         show={showConfirmRejectModal}
         onClose={() => setShowConfirmRejectModal(false)}
-        title=""
-        type='duration'
+        type="duration"
         message="Are you sure you want to reject this event?"
         subMessage="The event will not be published. Optionally, you may contact the organizer to provide feedback or a reason for rejection."
         footerButtons={
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <button onClick={() => setShowConfirmRejectModal(false)} type="button" className='modal-close-btn'>Cancel</button>
-            <button
-              onClick={confirmReject}
-              onMouseEnter={handlePublishMouseEnter}
-              onMouseLeave={handlePublishMouseLeave}
-              type="button"
-              className='modal-close-btn-primary'
-            >
+            <button className="modal-close-btn" onClick={() => setShowConfirmRejectModal(false)} type="button">Cancel</button>
+            <button className="modal-close-btn-primary" onClick={runReject} type="button">
               Yes, Reject
             </button>
           </div>
         }
       />
 
-      {/* Feature Duration flow */}
+      {/* Feature Duration */}
       {showFeatureDuration && (
         <FeatureDuration
           role={role}
           onClose={() => setShowFeatureDuration(false)}
-          onConfirm={(selectedDuration) => {
-            setShowFeatureDuration(false);
-            handleFeatureConfirm(selectedDuration);
-          }}
+          onConfirm={handleFeatureConfirm}
         />
       )}
 
-      {/* Final feedback modal */}
+      {/* General feedback modal */}
       <Modal
         show={modalInfo.show}
         onClose={closeModal}
+        type={modalInfo.type}
         title={modalInfo.title}
         message={modalInfo.message}
         subMessage={modalInfo.subMessage}
         footerButtons={
-          modalInfo.onConfirm ? (
-            <>
-              <button onClick={closeModal}>Cancel</button>
-              <button
-                onClick={() => { modalInfo.onConfirm(); closeModal(); }}
-              >
-                Confirm
-              </button>
-            </>
-          ) : (
-            <button onClick={closeModal}>Close</button>
+          modalInfo.footerButtons || (
+            <button onClick={closeModal} className="modal-close-btn-primary">Close</button>
           )
         }
       />
