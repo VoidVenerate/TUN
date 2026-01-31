@@ -5,6 +5,9 @@
   gap: 20px;
   padding: 20px;
   justify-items: center; /* center each image/button combo */
+  margin-left: 3vw;
+  margin-right: 5vw;
+  width: 90%;
 }
 
 /* Make images play nice inside grid */
