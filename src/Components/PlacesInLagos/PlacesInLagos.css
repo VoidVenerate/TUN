@@ -23,8 +23,10 @@
 .PlacesInLagos button {
     margin-top: 1vw;
     background: none;
-    border: none;
     margin-left: 10px;
+    border: 1px solid #FFFFFF33;
+    border-radius: 24px;
+    padding: 0px;
 }
 
 

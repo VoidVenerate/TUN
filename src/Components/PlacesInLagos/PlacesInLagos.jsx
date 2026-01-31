@@ -1,8 +1,8 @@
 import React from 'react'
-import Club from '../../assets/Club.svg'
-import Hotel from '../../assets/Hotel.svg'
-import FoodSpot from '../../assets/FoodSpot.svg'
-import Beach from '../../assets/Best-Beaches.png'
+import Club from '../../assets/Clubs.jpg'
+import Hotel from '../../assets/Hotels.jpg'
+import FoodSpot from '../../assets/FoodS.jpg'
+import Beach from '../../assets/Beaches.jpg'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import './PlacesInLagos.css'
@@ -39,6 +39,7 @@ const PlacesInLagos = () => {
             fontFamily: 'Rushon Ground',
             margin: '0'
         }
+        
     };
 
     return (
@@ -62,7 +63,7 @@ const PlacesInLagos = () => {
                     <h2 style={styles.h2}>Discover Lagos</h2>
                 </div>
             </div>
-            <div className="PlacesInLagos" style={{paddingTop:'0px'}}>
+            <div className="PlacesInLagos" style={{paddingTop:'0px',gap:"0px"}}>
                 <button>
                     <NavLink to="/clubs">
                         <img src={Club} alt="Clubs" />
