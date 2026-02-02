@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './PromoteBanner.css';
 import { useBanner } from '../BannerContext/BannerContext';
 import { ChevronLeft, Upload } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
@@ -7,7 +6,7 @@ import Modal from '../Modal/Modal';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const PromoteBanner = () => {
+const AdminPromoteBanner = () => {
   const [flyerPreview, setFlyerPreview] = useState(null);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,12 +80,15 @@ const PromoteBanner = () => {
     setIsSubmitting(true);
 
     try {
+      const token = localStorage.getItem("token");
+
       const formData = new FormData();
       formData.append("name", bannerData.bannerName);
       formData.append("banner_link", bannerData.bannerLink || "");
       formData.append("banner", bannerData.flyer);
 
-      await axios.post(
+      // Create banner
+      const createResponse = await axios.post(
         "https://lagos-turnup-ecy5.onrender.com/event/banners/create",
         formData,
         {
@@ -96,19 +98,37 @@ const PromoteBanner = () => {
         }
       );
 
+      // Extract banner ID
+      const bannerId = createResponse.data?.id;
+
+      if (!bannerId) {
+        throw new Error("Banner ID not returned from server.");
+      }
+
+      // Auto-approve for admins
+      await axios.patch(
+        `https://lagos-turnup-ecy5.onrender.com/event/banners/${bannerId}/approve`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       // Success Modal
       setModalInfo({
         show: true,
         title: "Success!",
-        message: "Banner submitted successfully and is pending review.",
-        subMessage: "Our team will review it and publish it within 24–48 hours.",
+        message: "Banner created and approved successfully!",
+        subMessage: "Your banner is now live on TurnUpLagos.",
         type: "success",
         footerButtons: (
           <button
             className="modal-close-btn-primary"
             onClick={() => {
               closeModal();
-              navigate("/promote");
+              navigate("/banner");
             }}
           >
             Close
@@ -143,11 +163,11 @@ const PromoteBanner = () => {
   return (
     <div className="banner-form-container">
       <div className="banner-header">
-        <NavLink to="/promote" style={{ marginTop: "5px" }}>
+        <NavLink to="/banner" style={{ marginTop: "5px" }}>
           <ChevronLeft className="event-unique-back" />
         </NavLink>
         <h2 className="banner-header-title" style={{ fontFamily: 'Rushon Ground' }}>
-          PROMOTE A BANNER
+          CREATE BANNER
         </h2>
       </div>
 
@@ -223,7 +243,7 @@ const PromoteBanner = () => {
                 className="banner-submit-btn"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Submitting Your Banner...' : 'Submit Banner'}
+                {isSubmitting ? 'Creating Banner...' : 'Create & Publish Banner'}
               </button>
             </div>
           </form>
@@ -243,4 +263,4 @@ const PromoteBanner = () => {
   );
 };
 
-export default PromoteBanner;
+export default AdminPromoteBanner;

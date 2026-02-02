@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
@@ -23,6 +24,7 @@ const PendingEvents = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
   const truncateWords = (text, maxWords = 20) => {
     if (!text) return "";
     const words = text.split(" ");
@@ -48,7 +50,7 @@ const PendingEvents = () => {
 
   useEffect(() => {
     fetchPendingEvents();
-  }, []);
+  }, [location.state?.refresh]);
 
   // 🔎 Filter by search
   const filteredEvents = events.filter((event) =>

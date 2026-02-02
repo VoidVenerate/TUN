@@ -22,7 +22,7 @@ const FtEvents = () => {
     const fetchEvents = async () => {
       try {
         const res = await axios.get("https://lagos-turnup-ecy5.onrender.com/event/events", {
-          params: { is_featured: true, limit: 10 },
+          params: { is_featured: true, pending: false, limit: 10 },
         });
         setEvents(res.data || []);
       } catch (err) {

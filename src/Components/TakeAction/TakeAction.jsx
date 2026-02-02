@@ -49,9 +49,6 @@ const TakeAction = ({ role }) => {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showConfirmRejectModal, setShowConfirmRejectModal] = useState(false);
-  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
-  // pendingAction: what to do after a successful save — 'approve' | 'reject' | null
-  const [pendingAction, setPendingAction] = useState(null);
 
   const flyerFile = watch('flyerFile');
   const watchedFeatureChoice = watch('featureChoice');
@@ -155,6 +152,9 @@ const TakeAction = ({ role }) => {
       fd.append('contact_method', data.contactMethod || '');
       fd.append('contact_value', data.contactValue || '');
       fd.append('contact_link', data.link || '');
+      
+      // Keep event in pending state when saving edits (not approving yet)
+      fd.append('pending', true);
 
       if (data.flyerFile && data.flyerFile.length > 0) {
         fd.append('event_flyer', data.flyerFile[0]);
@@ -175,13 +175,20 @@ const TakeAction = ({ role }) => {
         setEventData(updated);
       }
 
-      return true; // signal success
+      setSaving(false);
+      setModalInfo({ 
+        show: true, 
+        title: 'Success', 
+        message: 'Event edits saved successfully!', 
+        subMessage: 'Event remains in pending status awaiting approval.' 
+      });
+
+      return true;
     } catch (err) {
       console.error('Save failed', err);
+      setSaving(false);
       setModalInfo({ show: true, title: 'Error', message: 'Failed to save edits. Please try again.', subMessage: err?.message || '' });
       return false;
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -196,21 +203,28 @@ const TakeAction = ({ role }) => {
     setSaving(true);
     try {
       const token = localStorage.getItem('token');
+      // This endpoint should set pending: false on the backend
       await api.put(`/event/approve-event/${event_id}`, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (featureChoice === 'yes-feature' || eventData?.is_featured) {
         setShowFeatureDuration(true);
+        setSaving(false);
       } else {
-        setModalInfo({ show: true, title: 'Success', message: 'Event uploaded successfully!', subMessage: '' });
+        setSaving(false);
+        setModalInfo({ 
+          show: true, 
+          title: 'Success', 
+          message: 'Event published successfully!', 
+          subMessage: 'The event is now live and visible to all users.' 
+        });
         navigate('/adminevents');
       }
     } catch (err) {
       console.error('Publish failed', err);
-      setModalInfo({ show: true, title: 'Error', message: 'Failed to publish event.', subMessage: err?.message || '' });
-    } finally {
       setSaving(false);
+      setModalInfo({ show: true, title: 'Error', message: 'Failed to publish event.', subMessage: err?.message || '' });
     }
   };
 
@@ -225,59 +239,44 @@ const TakeAction = ({ role }) => {
     setDeleting(true);
     try {
       const token = localStorage.getItem('token');
+      // Delete the event entirely
       await api.delete(`/event/events/${event_id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setModalInfo({ show: true, title: 'Rejected', message: 'Event has been rejected and deleted.', subMessage: '' });
+      setDeleting(false);
+      setModalInfo({ 
+        show: true, 
+        title: 'Rejected', 
+        message: 'Event has been rejected and deleted.', 
+        subMessage: 'The event will not be published.' 
+      });
       navigate('/adminevents');
     } catch (err) {
       console.error('Reject failed', err);
-      setModalInfo({ show: true, title: 'Error', message: 'Failed to reject/delete event.', subMessage: err?.message || '' });
-    } finally {
       setDeleting(false);
+      setModalInfo({ show: true, title: 'Error', message: 'Failed to reject/delete event.', subMessage: err?.message || '' });
     }
   };
 
   // ─── Button click handlers ────────────────────────────────────
-  // If the form is dirty, save first then continue to approve/reject.
-  // If it's clean, skip straight to the confirmation modal.
   const handleApproveClick = () => {
-    if (isDirty) {
-      setPendingAction('approve');
-      setShowSaveConfirm(true);
-    } else {
-      setShowConfirmModal(true);
-    }
+    setShowConfirmModal(true);
   };
 
   const handleRejectClick = () => {
-    if (isDirty) {
-      setPendingAction('reject');
-      setShowSaveConfirm(true);
-    } else {
-      setShowConfirmRejectModal(true);
-    }
-  };
-
-  // Called when user confirms "Yes, Save" in the save-first modal
-  const handleSaveAndContinue = async () => {
-    setShowSaveConfirm(false);
-    const ok = await handleSubmit(async (data) => {
-      const success = await saveEdits(data);
-      if (success) {
-        // Now open the actual approve/reject confirmation
-        if (pendingAction === 'approve') setShowConfirmModal(true);
-        if (pendingAction === 'reject') setShowConfirmRejectModal(true);
-      }
-      setPendingAction(null);
-    })();
+    setShowConfirmRejectModal(true);
   };
 
   // ─── Feature duration ─────────────────────────────────────────
   const handleFeatureConfirm = (selectedDuration) => {
     setShowFeatureDuration(false);
-    setModalInfo({ show: true, title: 'Success', message: `Event featured for ${selectedDuration}.`, subMessage: '' });
+    setModalInfo({ 
+      show: true, 
+      title: 'Success', 
+      message: `Event featured for ${selectedDuration}.`, 
+      subMessage: 'The event is now live and featured on TurnUpLagos.' 
+    });
     navigate('/adminevents');
   };
 
@@ -432,8 +431,8 @@ const TakeAction = ({ role }) => {
 
             {/* ── Action buttons ── */}
             <footer className="review-footer">
-              {/* Save edits (standalone) */}
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                {/* Save edits */}
                 <button
                   type="submit"
                   className="review-submit-btn review-submit-btn--save"
@@ -462,7 +461,7 @@ const TakeAction = ({ role }) => {
                   disabled={saving}
                 >
                   <Check size={16} />
-                  {saving ? 'Publishing...' : 'Approve Event'}
+                  {saving ? 'Approving...' : 'Approve Event'}
                 </button>
               </div>
             </footer>
@@ -472,31 +471,12 @@ const TakeAction = ({ role }) => {
 
       {/* ── Modals ── */}
 
-      {/* Save-first modal — shown when form is dirty and user clicks Approve or Reject */}
-      <Modal
-        show={showSaveConfirm}
-        onClose={() => { setShowSaveConfirm(false); setPendingAction(null); }}
-        type="confirmation"
-        message="You have unsaved edits"
-        subMessage={`Save your changes before you ${pendingAction === 'approve' ? 'approve' : 'reject'} this event?`}
-        footerButtons={
-          <div className="modal-btn-group">
-            <button className="modal-close-btn" onClick={() => { setShowSaveConfirm(false); setPendingAction(null); }}>
-              Cancel
-            </button>
-            <button className="modal-close-btn-primary" onClick={handleSaveAndContinue}>
-              Save & Continue
-            </button>
-          </div>
-        }
-      />
-
       {/* Confirm Approve */}
       <Modal
         show={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
         type="duration"
-        message="Are you sure you want to upload this event?"
+        message="Are you sure you want to publish this event?"
         subMessage="Once published, the event will go live on TurnUpLagos and be visible to all users."
         footerButtons={
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

@@ -45,6 +45,7 @@ import EditSpot from './Pages/ADMIN/EditSpot/EditSpot'
 import AdminPendingBanner from './Pages/ADMIN/AdminPendingBanner/AdminPendingBanner'
 import UserEventDetails from './Pages/USERS/UserEventDetails/UserEventDetails'
 import AdminAction from './Pages/ADMIN/AdminAction/AdminAction'
+import AdminPromoteBanner from './Components/AdminPromoteBanner/AdminPromoteBanner'
 
 function App() {
 
@@ -71,6 +72,8 @@ function App() {
         <Route path='/promotebanner' element = {<Banner/>} />
         <Route path='/auth' element = {<ProtectedAuth/>} />
         <Route path='/adminhome' element = {<AdminPendingEvents/>} />
+        <Route path='/adminevents' element = {<AdminEventsPage/>} />
+        <Route path='/adminpromotebanner' element = {<AdminPromoteBanner/>} />
         <Route path='/adminevents' element = {<AdminEventsPage/>} />
         <Route path='/banner' element = {<AdminBanner/>} />
         <Route path='/discover' element = {<AdminDiscover/>} />
