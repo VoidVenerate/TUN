@@ -20,7 +20,7 @@ const BeyondLagos = () => {
     <div>
       <UserNavbar />
 
-      <AllEvents stateFilter="Outside Lagos" page={currentPage} limit={cardsPerPage} />
+      <AllEvents stateFilter="Outside Lagos" page={currentPage} limit={cardsPerPage} showHeader={false}  />
 
       {/* controls — parent can know total events if you lift state, 
           or just leave here as "dumb" prev/next */}

@@ -7,7 +7,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
-const AllEvents = ({ stateFilter, limit, page = 1 }) => {
+const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
   const [allEvents, setAllEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
@@ -42,19 +42,24 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
 
   return (
     <nav className='LagEvents-container'>
-      <div className="LagEvents-header">
-        {Number(limit) === 18 && (
-          <button>
-            <NavLink
-              to="/explore"
-              className={({ isActive }) =>
-                isActive ? 'LagEvents-link active' : 'LagEvents-link view-more'}
-            >
-              View More
-            </NavLink>
-          </button>
-        )}
-      </div>
+      {showHeader && (
+        <div className="LagEvents-header">
+          <p style={{ fontFamily: 'Rushon Ground' }}>
+            {stateFilter === "Lagos" ? "Lagos Events" : "Beyond Lagos Events"}
+          </p>
+          {Number(limit) === 18 && (
+            <button>
+              <NavLink
+                to="/explore"
+                className={({ isActive }) =>
+                  isActive ? 'LagEvents-link active' : 'LagEvents-link view-more'}
+              >
+                View More
+              </NavLink>
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="LagEvents-list">
          {loading ? (

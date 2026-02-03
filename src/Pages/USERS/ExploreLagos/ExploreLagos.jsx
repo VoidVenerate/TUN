@@ -22,7 +22,7 @@ const ExploreLagos = () => {
     <div>
       <UserNavbar />
       <Visit />
-      <AllEvents stateFilter= "Lagos" page={currentPage} limit={cardsPerPage} />
+      <AllEvents stateFilter= "Lagos" page={currentPage} limit={cardsPerPage} showHeader={false} />
       <div className="pagination-controls">
         <button onClick={handlePrev} disabled={currentPage === 1}>
           Prev
