@@ -1,55 +1,221 @@
 .DiscoverLagos-container {
-    background: #00000084;
-    width: 96%;
-    height: auto;
-    margin-top: 2vw;
-    border-radius: 20px;
-    text-align: center;
-    margin-left: 30px;
-}
-/* Header */
-.PlacesInLagos-txt {
-    display: flex;
-    margin-top: 2vw;
-    margin-left: 2vw;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
-}
-.PlacesInLagos-txt h2 {
-  font-size: 1.8rem;
-  margin-left: 50px;
+  background: rgba(0, 0, 0, 0.52);
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-top: 2vw;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 20px;
 }
 
-/* Add Button */
-.PlacesInLagos-txt button {
+/* Header section with title and upload button */
+.DiscoverLagos-header {
   display: flex;
-  align-items: center;      /* Vertically center content */
-  justify-content: center;  /* Horizontally center content if needed */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  gap: 16px;
+}
+
+.DiscoverLagos-header h2 {
+  font-size: 1.8rem;
+  font-family: 'Rushon Ground';
+  margin: 0;
+  color: #fff;
+}
+
+/* Upload button */
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;   
-  background: rgba(0, 132, 255, 0.101);
-  padding: 20px 24px;
+  background: rgba(0, 132, 255, 0.1);
+  padding: 12px 24px;
   font-weight: bold;
   color: #0084ff;
   border-radius: 100px;
-  margin-bottom: 1.5rem;
   cursor: pointer;
-  transition: background 0.3s ease;
-  margin-right: 2vw;
-  border: 0.5px solid rgba(0, 132, 255, 0.204);
-  margin-top: 27px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border: 0.5px solid rgba(0, 132, 255, 0.2);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-@media (max-width:900px) {
-  .DiscoverLagos-container{
-    margin-left: 10px;
+.upload-button:hover {
+  background: rgba(0, 132, 255, 0.15);
+  transform: scale(1.02);
+}
+
+.upload-button:active {
+  transform: scale(0.98);
+}
+
+/* Grid for location cards */
+.DiscoverLagos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.DiscoverLagos-grid button {
+  width: 100%;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  min-width: 0;
+}
+
+.DiscoverLagos-grid button:hover {
+  transform: scale(1.02);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.DiscoverLagos-grid button a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+.DiscoverLagos-grid img {
+  width: 100%;
+  height: auto;
+  min-height: 150px;
+  max-height: 300px;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Desktop & Large screens (1025px+) */
+@media screen and (min-width: 1025px) {
+  .DiscoverLagos-container {
+    width: 94%;
+    margin-left: 3vw;
+    padding: 30px;
+  }
+
+  .DiscoverLagos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .DiscoverLagos-grid img {
+    max-height: 350px;
   }
 }
-@media (max-width:480px) {
-  .PlacesInLagos-txt{
-    margin-top: -10vw;
+
+/* Tablets (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .DiscoverLagos-container {
+    width: 96%;
+    margin-left: 2vw;
+    padding: 24px;
   }
-  .PlacesInLagos-txt h2 {
-    margin-left: 0px;
+
+  .DiscoverLagos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Tablets & Mobile (481px - 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .DiscoverLagos-container {
+    width: 96%;
+    margin: 2vw auto 0;
+    padding: 20px;
+  }
+
+  .DiscoverLagos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .DiscoverLagos-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .upload-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .DiscoverLagos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .DiscoverLagos-grid img {
+    max-height: 200px;
+  }
+}
+
+/* Small phones (≤480px) */
+@media screen and (max-width: 480px) {
+  .DiscoverLagos-container {
+    width: 100%;
+    margin: 2vw 0 0;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .DiscoverLagos-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .DiscoverLagos-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .upload-button {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .DiscoverLagos-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .DiscoverLagos-grid img {
+    min-height: 180px;
+    max-height: 250px;
+  }
+}
+
+/* Very small phones (≤360px) */
+@media screen and (max-width: 360px) {
+  .DiscoverLagos-container {
+    padding: 12px;
+  }
+
+  .DiscoverLagos-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .upload-button {
+    font-size: 0.85rem;
+    padding: 8px 16px;
+  }
+
+  .DiscoverLagos-grid img {
+    min-height: 160px;
+    max-height: 220px;
   }
 }
