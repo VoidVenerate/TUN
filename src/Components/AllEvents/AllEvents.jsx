@@ -43,9 +43,6 @@ const AllEvents = ({ stateFilter, limit, page = 1 }) => {
   return (
     <nav className='LagEvents-container'>
       <div className="LagEvents-header">
-        <p style={{ fontFamily: 'Rushon Ground' }}>
-          {stateFilter === "Lagos" ? "Lagos Events" : "Beyond Lagos Events"}
-        </p>
         {Number(limit) === 18 && (
           <button>
             <NavLink
