@@ -28,7 +28,10 @@ const Event = () => {
       setWordCount(words);
       if (words < 20) {
         setWordError(`Please enter at least 20 words (currently ${words})`);
-      } else {
+      } else if (words > 90) {
+        setWordError(`Please limit your description to 90 words (currently ${words})`);
+      }
+      else {
         setWordError('');
       }
     }

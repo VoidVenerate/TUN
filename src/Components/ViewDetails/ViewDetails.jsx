@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../RoleContext/RoleContext';
-import './ViewDetails.css'; // ✅ Import the CSS file
+import './ViewDetails.css';
 import { ChevronLeft } from 'lucide-react';
 import calendar from '../../assets/calendar.svg'
 import clock from '../../assets/clock.svg'
@@ -65,6 +65,23 @@ const ViewDetails = () => {
     });
   };
 
+  // Function to highlight hashtags in text
+  const highlightHashtags = (text) => {
+    if (!text) return null;
+    
+    const parts = text.split(/(#\w+)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('#')) {
+        return (
+          <span key={index} className="hashtag">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
   if (loading) {
     return (
       <div className="event-details-container">
@@ -87,15 +104,15 @@ const ViewDetails = () => {
       <header className="event-details-header">
         <div className="header-left">
           <button 
-          className="back-btn"
-          onClick={() =>
-            navigate(
-              rules.role === 'sub-admin' || rules.role === 'super-admin'
-                ? '/adminhome'
-                : '/home'
-            )
-          }
-        >
+            className="back-btn"
+            onClick={() =>
+              navigate(
+                rules.role === 'sub-admin' || rules.role === 'super-admin'
+                  ? '/adminhome'
+                  : '/home'
+              )
+            }
+          >
             <ChevronLeft />
           </button>
           <h1 className="page-title" style={{fontFamily:'Rushon Ground'}}>EVENT DETAILS</h1>
@@ -131,7 +148,9 @@ const ViewDetails = () => {
           {/* Event Info */}
           <div className="event-info-section">
             <h2 className="event-title">{eventData.event_name}</h2>
-            <p className="event-description">{eventData.event_description}</p>
+            <p className="event-description">
+              {highlightHashtags(eventData.event_description)}
+            </p>
 
             <div className="event-details-grid">
               <div className="detail-item">
@@ -167,7 +186,7 @@ const ViewDetails = () => {
 
                 <div className="detail-item">
                   <div className="detail-icon">
-                    🎭 {/* or an image for gate fee */}
+                    🎭
                   </div>
                   <div className="detail-content">
                     <span className="detail-label">Gate Fee</span>
@@ -177,7 +196,7 @@ const ViewDetails = () => {
 
                 <div className="detail-item">
                   <div className="detail-icon">
-                    📍 {/* or a location icon */}
+                    📍
                   </div>
                   <div className="detail-content">
                     <span className="detail-label">Location</span>
@@ -185,8 +204,7 @@ const ViewDetails = () => {
                   </div>
                 </div>
               </div>
-              </div>
-
+            </div>
 
             <div className="no-additional-info">
               <span className="info-value">
@@ -201,7 +219,7 @@ const ViewDetails = () => {
                   </a>
                 ) : (
                   <div className="no">
-                    <span>🔗No Additional Information</span>
+                    <span>🔗 No Additional Information</span>
                   </div>
                 )}
               </span>
@@ -219,12 +237,16 @@ const ViewDetails = () => {
                 <div key={event.id || index} className="similar-event-card">
                   <div className="similar-event-image">
                     {event.flyer_url ? (
-                      <img src={event.flyer_url} alt={event.event_name} onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                        setTimeout(() => {
-                          navigate(`/viewdetails/${event.id}`);
-                        }, 100); // tiny delay for smooth scroll
-                      }} />
+                      <img 
+                        src={event.flyer_url} 
+                        alt={event.event_name}
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" });
+                          setTimeout(() => {
+                            navigate(`/viewdetails/${event.id}`);
+                          }, 100);
+                        }} 
+                      />
                     ) : (
                       <div className="similar-event-placeholder">
                         <span>🎉</span>
@@ -232,29 +254,28 @@ const ViewDetails = () => {
                     )}
                   </div>
                   <div className="similar-event-info">
-                    <div className="similar-event-name-state">
-                      <h4 className="similar-event-name"
-                        onClick={() => {
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                          setTimeout(() => {
-                            navigate(`/viewdetails/${event.id}`);
-                          }, 100); // tiny delay for smooth scroll
-                        }}>{event.event_name}</h4>
-                      <p className="similar-event-location"
-                        onClick={() => {
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                          setTimeout(() => {
-                            navigate(`/viewdetails/${event.id}`);
-                          }, 100); // tiny delay for smooth scroll
-                        }}>{event.state}</p>
-                    </div>
-                    <p className='similar-event-desc'
-                        onClick={() => {
-                          window.scrollTo({ top: 0, behavior: "smooth" });
-                          setTimeout(() => {
-                            navigate(`/viewdetails/${event.id}`);
-                          }, 100); // tiny delay for smooth scroll
-                        }}>{truncateWords(event.event_description, 17)}</p>
+                    <h4 
+                      className="similar-event-name"
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setTimeout(() => {
+                          navigate(`/viewdetails/${event.id}`);
+                        }, 100);
+                      }}
+                    >
+                      {event.event_name}
+                    </h4>
+                    <p 
+                      className='similar-event-desc'
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                        setTimeout(() => {
+                          navigate(`/viewdetails/${event.id}`);
+                        }, 100);
+                      }}
+                    >
+                      {truncateWords(event.event_description, 17)}
+                    </p>
                     <div className="similar-event-actions">
                       <button 
                         className="view-details-btn"
@@ -262,7 +283,7 @@ const ViewDetails = () => {
                           window.scrollTo({ top: 0, behavior: "smooth" });
                           setTimeout(() => {
                             navigate(`/viewdetails/${event.id}`);
-                          }, 100); // tiny delay for smooth scroll
+                          }, 100);
                         }}
                       >
                         View Details

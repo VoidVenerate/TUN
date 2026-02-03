@@ -409,7 +409,7 @@ a {
   }
 
   .LagEvents-btns {
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
   }
 
@@ -459,7 +459,7 @@ a {
   }
 
   .LagEvents-btns {
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5rem;
   }
 
