@@ -60,13 +60,17 @@
   .caption p {
     font-size: 14px;
   }
+  .visit-container img{
+    border-radius: 0px;
+  }
 }
 
 /* 📱 Small phones (361px–480px) */
 @media (min-width: 361px) and (max-width: 480px) {
   .visit-container {
     width: 100%;
-    margin: 8px auto;
+    margin: 16px auto;
+    margin-top: 16px;
   }
 
   .visit-container img {
@@ -74,6 +78,7 @@
     max-height: 220px;
     margin-left: 16px;
     width: 92%;
+    border-radius: 0px;
   }
 
   .caption {
@@ -85,13 +90,14 @@
 @media (min-width: 481px) and (max-width: 767px) {
   .visit-container {
     width: 95%;
-    margin: 12px auto;
+    margin: 16px auto;
   }
 
   .visit-container img {
     max-height: 280px;
     margin-left: 16px;
     width: 96%;
+    border-radius: 0px;
   }
 
   .caption {

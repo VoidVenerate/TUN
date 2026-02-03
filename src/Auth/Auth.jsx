@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
+// import { GoogleLogin } from '@react-oauth/google';
+// import { jwtDecode } from 'jwt-decode';
 import Modal from '../Components/Modal/Modal';
 import UploadProfileModal from '../Components/UploadProfileModal/UploadProfileModal';
 import './Auth.css';
@@ -199,26 +199,27 @@ const Auth = ({ signUpKey }) => {
 
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      const decoded = jwtDecode(credentialResponse.credential);
+  // const handleGoogleSuccess = async (credentialResponse) => {
+  //   try {
+  //     const decoded = jwtDecode(credentialResponse.credential);
 
-      if (!isTurnupEmail(decoded.email)) {
-        setError("Only @turnuplagos.com emails are allowed for Google login");
-        return;
-      }
+  //     if (!isTurnupEmail(decoded.email)) {
+  //       setError("Only @turnuplagos.com emails are allowed for Google login");
+  //       return;
+  //     }
 
-      const res = await axios.post(
-        "https://lagos-turnup-ecy5.onrender.com/auth/google/login",
-        { token: credentialResponse.credential }
-      );
+  //     const res = await axios.post(
+  //       "https://lagos-turnup-ecy5.onrender.com/auth/google/login",
+  //       { token: credentialResponse.credential }
+  //     );
 
-      localStorage.setItem("token", res.data.token);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(extractErrorMessage(err, "Google authentication failed"));
-    }
-  };
+  //     localStorage.setItem("token", res.data.token);
+  //     navigate("/dashboard");
+  //   } catch (err) {
+  //     setError(extractErrorMessage(err, "Google authentication failed"));
+  //   }
+  // };
+
   const handleForgotPassword = async () => {
     if (!forgotEmail) {
       setModalMessage("Please enter your email");
@@ -311,19 +312,21 @@ const Auth = ({ signUpKey }) => {
               <h2>Sign Up</h2>
               <p>Sign up to manage events, banners, and more on TurnupLagos.</p>
               <form onSubmit={handleSubmit}>
-                <div className="google-btn">
+                {/* Google Sign Up - Commented Out */}
+                {/* <div className="google-btn">
                   <GoogleLogin
                     onSuccess={handleGoogleSuccess}
                     onError={() => setError("Google sign up failed")}
-                    theme="filled_black"   // this gives the dark button
-                    size="large"           // optional: small | medium | large
-                    shape="rect"           // optional: rect | pill | circle
+                    theme="filled_black"
+                    size="large"
+                    shape="rect"
                     text="signin_with"     
                   />
                 </div>
                 <div className="or-span" style={{marginTop:'15px'}}>
                   <span></span><p style={{margin:'0px'}}>or</p> <span></span> 
-                </div>
+                </div> */}
+
                 <div className="form-fields">
                   <div className="row"style={{gap:"0"}}>
                     <div className="form-row" style={{gap:"0"}}>
@@ -381,6 +384,7 @@ const Auth = ({ signUpKey }) => {
             </div>
           </div>
           </div>
+
         {/* Sign In */}
         <div className="auth-face auth-back">
           {/* only render logo panel on wide screens */}
@@ -396,17 +400,19 @@ const Auth = ({ signUpKey }) => {
               <h2>Sign In</h2>
               <p>Enter your email and password to sign in!.</p>
               <form onSubmit={handleSubmit}>
-                <GoogleLogin
+                {/* Google Sign In - Commented Out */}
+                {/* <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={() => setError("Google sign in failed")}
-                  theme="filled_black"   // this gives the dark button
-                      size="large"           // optional: small | medium | large
-                      shape="rect"           // optional: rect | pill | circle
-                      text="signin_with"
-                  />
-                  <div className="or-span" style={{marginTop:'25px'}}>
-                    <span></span><p style={{margin:'0px'}}>or</p> <span></span> 
-                  </div>
+                  theme="filled_black"
+                  size="large"
+                  shape="rect"
+                  text="signin_with"
+                />
+                <div className="or-span" style={{marginTop:'25px'}}>
+                  <span></span><p style={{margin:'0px'}}>or</p> <span></span> 
+                </div> */}
+
                 <div className="form-fields">
                   <label style={{marginTop:"24px"}}>Email <span>*</span></label>
                   <input type="email" name="email" value={formData.email} onChange={handleChange} required />
@@ -433,66 +439,6 @@ const Auth = ({ signUpKey }) => {
           </div>
         </div>
       </div>
-
-      {/* Forgot Password Modal */}
-      <Modal
-        show={showForgotModal}
-        onClose={() => setShowForgotModal(false)}
-        title="Forgot Password"
-        message="Enter your email to receive a reset OTP."
-        type="info"
-        footerButtons={
-          <>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={forgotEmail}
-              onChange={(e) => setForgotEmail(e.target.value)}
-              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
-            />
-            <button onClick={handleForgotPassword} disabled={forgotLoading}>
-              {forgotLoading ? 'Sending...' : 'Send Reset Email'}
-            </button>
-          </>
-        }
-      />
-
-      {/* Reset Password Modal */}
-      <Modal
-        show={showResetModal}
-        onClose={() => setShowResetModal(false)}
-        title="Reset Your Password"
-        message="Enter the OTP sent to your email and your new password."
-        type="info"
-        footerButtons={
-          <>
-            <input
-              type="text"
-              placeholder="Enter OTP"
-              value={resetOTP}
-              onChange={(e) => setResetOTP(e.target.value)}
-              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
-            />
-            <input
-              type={showResetPassword1 ? "text" : "password"}
-              placeholder="Enter new password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
-            />
-            <input
-              type={showResetPassword2 ? "text" : "password"}
-              placeholder="Confirm new password"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              style={{ padding: '8px', width: '100%', marginBottom: '10px' }}
-            />
-            <button onClick={handleResetPassword} disabled={resetLoading}>
-              {resetLoading ? 'Resetting...' : 'Reset Password'}
-            </button>
-          </>
-        }
-      />
 
       {/* Forgot Password Modal */}
       <Modal
