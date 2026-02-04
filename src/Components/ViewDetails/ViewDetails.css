@@ -396,8 +396,22 @@ hr {
 
 /* ===== RESPONSIVE BREAKPOINTS ===== */
 
-/* Large Desktop (1200px - 1400px) */
-@media (min-width: 1200px) and (max-width: 1400px) {
+/* Extra Large Monitors (1800px+) - 5 columns */
+@media (min-width: 1800px) {
+  .similar-events-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Large Desktop (1500px+) - 4 columns */
+@media (min-width: 1500px) and (max-width: 1799px) {
+  .similar-events-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Medium Desktop adjustments */
+@media (min-width: 1200px) and (max-width: 1499px) {
   .event-main-info {
     grid-template-columns: 380px 1fr;
     gap: 28px;
@@ -470,10 +484,6 @@ hr {
   .event-horizontal-line {
     grid-template-columns: 1fr;
     gap: 12px;
-  }
-
-  .detail-item {
-    padding: 14px;
   }
 
   .similar-events-grid {

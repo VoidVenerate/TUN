@@ -16,6 +16,24 @@ const ViewDetails = () => {
   const [eventData, setEventData] = useState(null);
   const [similarEvents, setSimilarEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [eventCount, setEventCount] = useState(3);
+
+  // Dynamic event count based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1800) {
+        setEventCount(5); // Extra large monitors
+      } else if (window.innerWidth >= 1500) {
+        setEventCount(4); // Large desktops
+      } else {
+        setEventCount(3); // Tablets and below
+      }
+    };
+
+    handleResize(); // Set initial value
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -36,10 +54,10 @@ const ViewDetails = () => {
         // Shuffle the events
         const shuffled = others.sort(() => 0.5 - Math.random());
 
-        // Pick 3 random ones
-        const randomThree = shuffled.slice(0, 3);
+        // Pick dynamic number of events based on screen size
+        const randomEvents = shuffled.slice(0, eventCount);
 
-        setSimilarEvents(randomThree);
+        setSimilarEvents(randomEvents);
       } catch (err) {
         console.error('Failed to fetch event:', err);
       } finally {
@@ -47,7 +65,7 @@ const ViewDetails = () => {
       }
     };
     fetchEvent();
-  }, [id]);
+  }, [id, eventCount]);
 
   const truncateWords = (text, maxWords = 20) => {
     if (!text) return "";
