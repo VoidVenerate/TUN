@@ -62,8 +62,10 @@
 }
 
 .LagEvents-card {
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #0a0a0a;
   border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #333;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -72,15 +74,34 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  overflow: hidden;
 }
 
 .LagEvents-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+  border-color: #555;
+}
+
+/* Image wrapper - matches similar events layout */
+.LagEvents-image {
+  width: 100%;
+  aspect-ratio: 4/4;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.LagEvents-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+/* Fix LazyLoadImage wrapper */
+.LagEvents-image .lazy-load-image-background {
+  display: block !important;
+  width: 100%;
+  height: 100%;
 }
 
 .LagEvents-content {
@@ -89,33 +110,15 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 12px;
   min-width: 0;
   width: 100%;
-}
-
-.LagEvents-img {
-  border-radius: 16px;
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: 3/4;
-  object-fit: cover;
-  display: block;
-}
-
-/* Fix LazyLoadImage wrapper */
-.LagEvents-content .lazy-load-image-background {
-  display: block !important;
-  width: 100%;
-  max-width: 100%;
-  border-radius: 16px;
 }
 
 .LagEvents-txt {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
   min-width: 0;
 }
 
@@ -126,13 +129,20 @@ a {
 
 .LagEvents-title {
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 16px;
+  font-weight: 600;
   margin: 0;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.LagEvents-title:hover {
+  color: #60a5fa;
 }
 
 .LagEvents-location {
@@ -142,21 +152,20 @@ a {
 }
 
 .LagEvents-desc {
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 0.5rem;
+  color: #ccc;
+  font-size: 14px;
   line-height: 1.5;
+  margin: 0;
   flex: 1;
   overflow: hidden;
-  height: 3em;
   word-wrap: break-word;
 }
 
 /* Buttons container inside each event card */
 .LagEvents-btns {
   display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-  gap: 10px;
+  gap: 12px;
+  margin-top: auto;
   width: 100%;
 }
 
@@ -164,14 +173,14 @@ a {
 .LagEvents-btns > button {
   flex: 1;
   min-width: 0;
-  padding: 20px 24px;
+  padding: 20px 20px;
   border: none;
   border-radius: 100px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease;
   color: #fff;
-  background-color: rgba(255, 255, 255, 0.07);
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -183,19 +192,18 @@ a {
 
 /* First button hover effect */
 .LagEvents-btns > button:first-child:hover {
-  background-color: rgba(255, 255, 255, 0.156);
+  background-color: rgba(255, 255, 255, 0.12);
   transform: scale(1.02);
 }
 
 /* Second button: Buy Tickets */
 .LagEvents-btns > button:last-child {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.01);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 /* Disabled button styling */
 .LagEvents-btns > button:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -343,11 +351,11 @@ a {
 
   .LagEvents-btns > button {
     font-size: 0.85rem;
-    padding: 16px 20px;
+    padding: 20px 20px;
   }
 }
 
-/* Mobile (481px to 600px) - 2 columns */
+/* Mobile (481px to 600px) - 1 column */
 @media (min-width: 481px) and (max-width: 600px) {
   .LagEvents-container {
     padding: 0 3vw;
@@ -360,6 +368,9 @@ a {
 
   .LagEvents-card {
     border: 1px solid rgba(255, 255, 255, 0.3);
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .LagEvents-header p {
@@ -377,12 +388,12 @@ a {
   }
 
   .LagEvents-btns > button {
-    padding: 14px 0;
+    padding: 20px;
     font-size: 0.85rem;
   }
 }
 
-/* Small mobile (361px to 480px) - 2 columns */
+/* Small mobile (361px to 480px) - 1 column */
 @media (min-width: 361px) and (max-width: 480px) {
   .LagEvents-container {
     padding: 0 2vw;
@@ -404,6 +415,12 @@ a {
     margin-top: 1rem;
   }
 
+  .LagEvents-card {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
   .LagEvents-content {
     padding: 15px;
   }
@@ -414,7 +431,7 @@ a {
   }
 
   .LagEvents-btns > button {
-    padding: 14px 0;
+    padding: 20px;
     font-size: 0.85rem;
   }
 }
@@ -464,7 +481,7 @@ a {
   }
 
   .LagEvents-btns > button {
-    padding: 12px 0;
+    padding: 18px;
     font-size: 0.8rem;
   }
 }

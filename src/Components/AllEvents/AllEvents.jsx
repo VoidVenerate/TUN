@@ -65,7 +65,7 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
          {loading ? (
             [...Array(limit)].map((_, idx) => (
               <div key={idx} className='LagEvents-card'>
-                <div className="LagEvents-content">
+                <div className="LagEvents-image">
                   {/* Fake image */}
                   <Skeleton 
                     height={455} 
@@ -73,7 +73,8 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
                     baseColor="#1e1e1e" 
                     highlightColor="#333" 
                   />
-
+                </div>
+                <div className="LagEvents-content">
                   {/* Title */}
                   <div className="LagEvents-txt" style={{ marginTop: '10px' }}>
                     <Skeleton 
@@ -122,13 +123,15 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
               style={{ textDecoration: 'none', color: 'inherit' }}
             >
               <div className='LagEvents-card'>
-                <div className="LagEvents-content">
+                <div className="LagEvents-image">
                   <LazyLoadImage 
                     src={event.flyer_url} 
                     alt={event.event_name} 
                     effect='blur' 
                     className="LagEvents-img" 
                   />
+                </div>
+                <div className="LagEvents-content">
                   <div className="LagEvents-txt">
                     <h3 className="LagEvents-title" onClick={() => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
