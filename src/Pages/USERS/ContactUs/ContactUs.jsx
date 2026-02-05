@@ -10,7 +10,6 @@ const ContactUs = () => {
     <div>
         <UserNavbar/>
         <ContactNavbar />
-        <GetInTouch/>
         <LetsTalk/>
         <Footer/>
     </div>
