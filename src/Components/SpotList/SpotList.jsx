@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import './SpotList.css' // you can rename to SpotList.css if using for multiple types
+import './SpotList.css'
 import { ChevronLeft } from 'lucide-react'
 
 const SpotList = ({ spotType, title }) => {
   const [spots, setSpots] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [totalPages, setTotalPages] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(false)
 
   // optional filters
   const [currentPage, setCurrentPage] = useState(1)
@@ -23,11 +25,31 @@ const SpotList = ({ spotType, title }) => {
         const res = await axios.get(
           `https://lagos-turnup-ecy5.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
         )
-        const data = Array.isArray(res.data) ? res.data : res.data.items || []
+        
+        // Handle different response structures
+        let data = []
+        let pagination = {}
+        
+        if (Array.isArray(res.data)) {
+          data = res.data
+          // If it's just an array, assume no more pages if empty
+          setHasNextPage(res.data.length > 0)
+        } else {
+          data = res.data.items || res.data.data || []
+          pagination = res.data.pagination || {}
+          setTotalPages(pagination.totalPages || 1)
+          setHasNextPage(pagination.hasNextPage || false)
+        }
+        
         setSpots(data)
+        
+        // If no results and not on first page, go back to first page
+        if (data.length === 0 && currentPage > 1) {
+          setCurrentPage(1)
+        }
       } catch (err) {
         console.error('Error fetching spots:', err)
-        setError('Could not load spots')
+        setError('Could not load spots. Please try again later.')
       } finally {
         setLoading(false)
       }
@@ -36,18 +58,69 @@ const SpotList = ({ spotType, title }) => {
     fetchSpots()
   }, [spotType, currentPage, searchTerm])
 
-  if (loading) return <p className="club-loading">Loading {spotType}s...</p>
-  if (error) return <p className="club-error">{error}</p>
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1)
+    }
+  }, [searchTerm])
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(p => p - 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  const handleNextPage = () => {
+    if (hasNextPage || spots.length > 0) {
+      setCurrentPage(p => p + 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="club-container">
+        <div className="club-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading {spotType}s...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="club-container">
+        <div className="club-error">
+          <p>{error}</p>
+          <button 
+            className="retry-button" 
+            onClick={() => window.location.reload()}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='club-container'>
       <div className="club-header">
         <div className="club-header-title">
-          <ChevronLeft size={24} onClick={() => {navigate(-1)}}/>
-          <h2 style={{fontFamily:"Rushon Ground"}}>{title || `Best ${spotType}s in Lagos`}</h2>
+          <ChevronLeft 
+            size={24} 
+            onClick={() => navigate(-1)}
+            style={{ cursor: 'pointer' }}
+          />
+          <h2 style={{ fontFamily: "Rushon Ground" }}>
+            {title || `Best ${spotType}s in Lagos`}
+          </h2>
         </div>
 
-        {/* 🔍 optional search box */}
+        {/* 🔍 Search box */}
         <input 
           type="text" 
           placeholder={`Search ${spotType}s...`} 
@@ -59,33 +132,58 @@ const SpotList = ({ spotType, title }) => {
 
       <div className="lag-clubs">
         {spots.length === 0 ? (
-          <p style={{textAlign: 'center', width: '100%', display: 'flex', alignItems: 'center', justifyContent:'center'}}>No {spotType}s found.</p>
+          <div className="no-results">
+            <p>No {spotType}s found.</p>
+            {searchTerm && (
+              <button 
+                className="clear-search-button"
+                onClick={() => setSearchTerm('')}
+              >
+                Clear search
+              </button>
+            )}
+          </div>
         ) : (
           spots.map((spot) => (
             <div className="club-card" key={spot.id}>
               <div className="clubs">
-                <img src={spot.cover_image} alt={spot.location_name} />
+                <img 
+                  src={spot.cover_image} 
+                  alt={spot.location_name}
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/400x250?text=No+Image'
+                  }}
+                />
                 <div className="club-text">
                   <h3>{spot.location_name}</h3>
                   <p>{spot.city}</p>
                 </div>
-                <p style={{width:"100%"}}>{spot.additional_info.split(" ").slice(0, 15).join(" ")+'...'}</p>
+                <p className="club-description">
+                  {spot.additional_info 
+                    ? spot.additional_info.split(" ").slice(0, 15).join(" ") + '...'
+                    : 'No description available'
+                  }
+                </p>
               </div>
             </div>
           ))
         )}
       </div>
 
-      {/* 🔄 Pagination (optional) */}
+      {/* 🔄 Pagination - always visible */}
       <div className="club-pagination">
         <button 
           disabled={currentPage === 1} 
-          onClick={() => setCurrentPage(p => p - 1)}
+          onClick={handlePrevPage}
         >
           Prev
         </button>
         <span>Page {currentPage}</span>
-        <button onClick={() => setCurrentPage(p => p + 1)}>Next</button>
+        <button 
+          onClick={handleNextPage}
+        >
+          Next
+        </button>
       </div>
     </div>
   )
