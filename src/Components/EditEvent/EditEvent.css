@@ -32,6 +32,9 @@
   font-family: 'Rushon Ground', cursive;
   font-weight: 500;
   color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .review-back-btn {
@@ -40,10 +43,17 @@
   color: #bbb;
   cursor: pointer;
   font-size: 1.2rem;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .review-back-btn:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Form layout: left image preview + right form */
@@ -59,16 +69,22 @@
   max-width: 550px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   border-radius: 8px;
   background: #000000;
-  padding: 12px;
-  height: 783px;
+  padding: 16px;
+  min-height: 783px;
 }
 
 .review-upload-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.review-upload-text {
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   color: #eee;
 }
 
@@ -79,19 +95,86 @@
 
 .review-upload-area {
   border-radius: 6px;
-  max-width: 550px;
-  overflow: hidden;
+  width: 100%;
+  overflow: visible;
   background: #000000;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  height: 700px;
+  flex: 1;
 }
 
-.review-upload-section img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+/* Flyer Preview Container with Edit Overlay */
+.flyer-preview-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.review-flyer-preview {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  border-radius: 16px;
+}
+
+.flyer-edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+}
+
+.flyer-preview-container:hover .flyer-edit-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 1;
+}
+
+.flyer-edit-btn {
+  background: #5423D2;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  transform: translateY(10px);
+}
+
+.flyer-preview-container:hover .flyer-edit-btn {
+  transform: translateY(0);
+}
+
+.flyer-edit-btn:hover {
+  background: #6534E2;
+  transform: scale(1.05) translateY(0);
+}
+
+.flyer-requirements {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 12px;
+  margin-bottom: 0;
 }
 
 /* Right side form */
@@ -157,108 +240,9 @@
 /* Radio toggle group */
 .toggle-group {
   display: flex;
-  gap: 16px;
-}
-
-.toggle-group label {
-  cursor: pointer;
-  font-weight: 500;
-  color: #ccc;
-}
-
-.toggle-group input[type="radio"] {
-  margin-right: 6px;
-  accent-color: #7a5af8;
-}
-
-/* Contact info inputs */
-.review-group.review-full {
-  margin-top: 12px;
-}
-
-/* Submit Button */
-.review-footer {
-  margin-top: 24px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.review-submit-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 20px 24px;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: bold;
-  transition: all 0.2s ease-in-out;
-  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
-}
-.review-submit-btn--save {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-  transition: background 0.3s ease;
-}
-.review-submit-btn--save:hover{
-  background: rgba(255, 255, 255, 0.114);
-  color: #ffffff;
-}
-.review-submit-btn--delete {
-  background-color: #ff3c3c1a;
-  color: #ff3b30;
-  border: 0.5px solid #ff3c3c42;
-}
-.review-submit-btn--delete:hover{
-  background-color: rgba(255, 60, 60, 0.2);
-}
-
-.review-submit-btn:disabled {
-  cursor: not-allowed;
-}
-
-
-/* Edit and Delete buttons - you can add these styles to your buttons */
-
-.edit-event-btn {
-  background-color: #444;
-  border: none;
-  color: #eee;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-right: 8px;
-}
-
-.delete-event-btn {
-  background-color: #d9534f;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Responsive for smaller screens */
-@media (max-width: 768px) {
-  .review-content {
-    flex-direction: column;
-  }
-  
-  .review-upload-section, .review-form {
-    max-width: 100%;
-  }
-  
-  .review-row {
-    flex-direction: column;
-  }
-}
-
-.toggle-group {
-  display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-bottom: 12px;
 }
 
 .toggle-group button {
@@ -280,44 +264,249 @@
   background: #6d28d9;
   border-color: #6d28d9;
 }
-.upload-icon-btn {
-  display: inline-flex;
-  align-items: center;
-  background-color: transparent;
-  border: 2px solid #7a5af8;
-  padding: 8px 12px;
-  border-radius: 6px;
-  color: #7a5af8;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-  margin-top: 12px;
-  font-size: 12px;
-  user-select: none;
+
+/* Contact Section */
+.contact-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
 }
 
-.upload-icon-btn:hover {
-  background-color: #7a5af8;
+.contact-title {
+  font-size: 16px;
+  font-weight: 600;
   color: #fff;
+  margin: 0 0 8px 0;
 }
 
-.upload-icon-btn svg {
+.contact-description {
+  font-size: 13px;
+  color: #999;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-select,
+.contact-input {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #eee;
+  padding: 12px 16px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.contact-select:focus,
+.contact-input:focus {
+  border-color: #5423D2;
+  box-shadow: 0 0 6px #5423D2aa;
+}
+
+/* Additional Info Section */
+.additional-info-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.additional-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 8px 0;
+}
+
+.additional-description {
+  font-size: 13px;
+  color: #999;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.additional-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.additional-input {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #eee;
+  padding: 12px 16px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.additional-input:focus {
+  border-color: #5423D2;
+  box-shadow: 0 0 6px #5423D2aa;
+}
+
+/* Error Messages */
+.error-message {
+  color: #ff3b30;
+  font-size: 12px;
+  margin-top: 4px;
   display: block;
 }
-.review-delete-btn {
-  background-color: #d9534f;
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+
+/* Contact info inputs */
+.review-group.review-full {
+  margin-top: 12px;
 }
 
-.review-delete-btn:disabled {
-  opacity: 0.6;
+/* Submit Button */
+.review-footer {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.review-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 20px 24px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+
+.review-submit-btn--save {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  transition: background 0.3s ease;
+}
+
+.review-submit-btn--save:hover {
+  background: rgba(255, 255, 255, 0.114);
+  color: #ffffff;
+}
+
+.review-submit-btn--save:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
-@media (min-width:300px) and (max-width: 800px) {
+
+.review-submit-btn--delete {
+  background-color: #ff3c3c1a;
+  color: #ff3b30;
+  border: 0.5px solid #ff3c3c42;
+}
+
+.review-submit-btn--delete:hover {
+  background-color: rgba(255, 60, 60, 0.2);
+}
+
+.review-submit-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* Feature Block */
+.feature-block {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 16px;
+  color: #888;
+}
+
+/* Modal Button Group */
+.modal-btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 1024px) {
+  .review-content {
+    flex-direction: column;
+  }
+  
+  .review-upload-section {
+    max-width: 100%;
+    min-height: auto;
+  }
+  
+  .review-form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-container {
+    width: 100%;
+    padding: 12px;
+    margin-left: 0;
+  }
+
+  .review-content {
+    flex-direction: column;
+  }
+  
+  .review-upload-section, .review-form {
+    max-width: 100%;
+  }
+  
+  .review-row {
+    flex-direction: column;
+  }
+
+  .flyer-preview-container {
+    max-width: 100%;
+  }
+
+  .flyer-edit-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+
+  .review-footer {
+    flex-direction: column;
+  }
+
+  .review-submit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 300px) and (max-width: 800px) {
   .review-header h1 {
     display: flex;
     align-items: center;

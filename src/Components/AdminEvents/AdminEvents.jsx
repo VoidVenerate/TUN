@@ -107,12 +107,11 @@ const AdminEvents = () => {
     fetchEvents();
   }, [currentPage, searchTerm]);
 
-  // Sort events client-side by title
+  // Sort events client-side by date (most recent first)
   const sortedEvents = [...events].sort((a, b) => {
-    if (!a.event_name || !b.event_name) return 0;
-    return sortAsc
-      ? a.event_name.localeCompare(b.event_name)
-      : b.event_name.localeCompare(a.event_name);
+    const dateA = new Date(a.created_at || a.date || 0);
+    const dateB = new Date(b.created_at || b.date || 0);
+    return sortAsc ? dateB - dateA : dateA - dateB; // Descending by default (newest first)
   });
 
   const handleConfirmDelete = async () => {

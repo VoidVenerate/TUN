@@ -11,7 +11,7 @@ import axios from 'axios';
 
 // Constants
 const ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
-const MAX_IMAGE_DIMENSIONS = { width: 500, height: 800 };
+const MAX_IMAGE_DIMENSIONS = { width: 10500, height: 10800 };
 const API_BASE_URL = 'https://lagos-turnup-ecy5.onrender.com';
 
 // Form validation rules
@@ -65,7 +65,6 @@ const DEFAULT_FORM_VALUES = {
 const useFilePreview = (file, setValue) => {
   useEffect(() => {
     if (!file || !file.length) {
-      setValue('flyerPreview', null);
       return;
     }
 
@@ -74,7 +73,6 @@ const useFilePreview = (file, setValue) => {
     if (!ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
       alert('Invalid file type. Only PNG and JPEG are allowed.');
       setValue('flyerFile', null);
-      setValue('flyerPreview', null);
       return;
     }
 
@@ -87,7 +85,6 @@ const useFilePreview = (file, setValue) => {
         } else {
           alert(`Image must be max ${MAX_IMAGE_DIMENSIONS.width}x${MAX_IMAGE_DIMENSIONS.height}px.`);
           setValue('flyerFile', null);
-          setValue('flyerPreview', null);
         }
       };
       img.src = event.target.result;
@@ -462,15 +459,35 @@ const EditableEventReviewRHF = ({ role }) => {
           <div className="review-upload-section">
             <div className="review-upload-label">
               <span className="review-upload-text">Event Flyer</span>
-              <div className="review-upload-description">Current flyer preview.</div>
+              <div className="review-upload-description">
+                {watch('flyerPreview') ? 'Click below to change flyer' : 'Current flyer preview'}
+              </div>
             </div>
             <div className="review-upload-area">
-              <img
-                src={eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer}
-                alt="Event Flyer Preview"
-                className="review-flyer-preview"
-                onError={(e) => (e.target.src = '/placeholder.png')}
-              />
+              <div className="flyer-preview-container">
+                <img
+                  src={watch('flyerPreview') || eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer}
+                  alt="Event Flyer Preview"
+                  className="review-flyer-preview"
+                  onError={(e) => (e.target.src = '/placeholder.png')}
+                />
+                <div className="flyer-edit-overlay">
+                  <label htmlFor="flyerFileInput" className="flyer-edit-btn">
+                    <Pencil size={20} />
+                    <span>Change Flyer</span>
+                    <input
+                      type="file"
+                      id="flyerFileInput"
+                      accept="image/png, image/jpeg, image/jpg"
+                      {...register('flyerFile')}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                </div>
+              </div>
+              <p className="flyer-requirements">
+                Max size: 500x800px • Format: PNG, JPEG, JPG
+              </p>
             </div>
           </div>
 
