@@ -83,7 +83,6 @@ const SpotList = ({ spotType, title }) => {
     return (
       <div className="club-container">
         <div className="club-loading">
-          <div className="loading-spinner"></div>
           <p>Loading {spotType}s...</p>
         </div>
       </div>
@@ -181,6 +180,7 @@ const SpotList = ({ spotType, title }) => {
         <span>Page {currentPage}</span>
         <button 
           onClick={handleNextPage}
+          disabled={!hasNextPage && spots.length === 0}
         >
           Next
         </button>
