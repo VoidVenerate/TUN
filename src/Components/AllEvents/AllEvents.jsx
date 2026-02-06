@@ -6,7 +6,6 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import calendar from '../../assets/calendar.svg'
 import { CalendarDays } from 'lucide-react'
 
 const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
@@ -47,17 +46,25 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
       year: 'numeric' 
     });
   }
+  
   const formatTime = (time) => {
-    const [hour, minute] =  time.split(":")
+    const [hour, minute] = time.split(":")
     const h = Number(hour)
-    const ampm = h > 12 ? "AM" : "PM"
-    const hour12 = h%12 || 12
+    const ampm = h < 12 ? "AM" : "PM"
+    const hour12 = h % 12 || 12
     return `${hour12}:${minute} ${ampm}`
   }
 
-  // client-side pagination
+  // Sort events by date (newest first by default)
+  const sortedEvents = [...allEvents].sort((a, b) => {
+    const dateA = new Date(a.created_at || a.date || 0);
+    const dateB = new Date(b.created_at || b.date || 0);
+    return dateB - dateA; // Descending order (newest first)
+  });
+
+  // Client-side pagination using sorted events
   const start = (page - 1) * limit
-  const currentEvents = allEvents.slice(start, start + limit)
+  const currentEvents = sortedEvents.slice(start, start + limit)
 
   return (
     <nav className='LagEvents-container'>

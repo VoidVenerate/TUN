@@ -8,7 +8,7 @@ const BestFoodspots = () => {
   return (
     <div>
         <UserNavbar/>
-        <SpotList spotType="foodspot" title="Best Clubs in Lagos" />
+        <SpotList spotType="foodspot" title="Best Food Spots in Lagos" />
         <Footer/>
     </div>
   )

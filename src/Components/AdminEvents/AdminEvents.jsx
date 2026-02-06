@@ -10,6 +10,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Loader from "../Loader/Loader";
 import SearchBar from "../SearchBar/SearchBar";
+import { CalendarDays } from "lucide-react";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -57,6 +58,23 @@ const AdminEvents = () => {
     if (words.length <= maxWords) return text;
     return words.slice(0, maxWords).join(" ") + "...";
   };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Date TBA";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  }
+  const formatTime = (time) => {
+    const [hour, minute] =  time.split(":")
+    const h = Number(hour)
+    const ampm = h < 12 ? "AM" : "PM"
+    const hour12 = h%12 || 12
+    return `${hour12}:${minute} ${ampm}`
+  }
 
 
   const handleClick = (index, type, eventId) => {
@@ -206,9 +224,12 @@ const AdminEvents = () => {
                   No image
                 </div>
               )}
-              <div className="event-txt">
+              <div className="LagEvents-txt">
                 <h3>{event.event_name}</h3>
-                <p>{event.state}</p>
+                <div className="LagEvents-date">
+                  <CalendarDays size={16} />
+                  <span>{formatDate(event.date)}</span>|<span>{formatTime(event.time)}</span>
+                </div>
               </div>
               <p>{truncateWords(event.event_description,17)}</p>
               <div className="slider-btn">
