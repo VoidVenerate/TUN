@@ -68,24 +68,34 @@
 
 .PlacesInLagos button {
   width: 100%;
-  background: none;
+  background: transparent;
+  border: none;
   border-radius: 24px;
   padding: 0;
   cursor: pointer;
   overflow: hidden;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.3s ease;
   min-width: 0;
+  position: relative;
+  outline: none;
 }
 
 .PlacesInLagos button:hover {
   transform: scale(1.02);
-  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.PlacesInLagos button:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 2px;
 }
 
 .PlacesInLagos button a {
   display: block;
   width: 100%;
   height: 100%;
+  text-decoration: none;
+  border-radius: 24px;
+  overflow: hidden;
 }
 
 .PlacesInLagos img {
@@ -96,6 +106,12 @@
   border-radius: 24px;
   object-fit: cover;
   display: block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.PlacesInLagos button:hover img {
+  opacity: 0.9;
+  transform: scale(1.03);
 }
 
 /* === RESPONSIVE DESIGN === */
@@ -120,6 +136,7 @@
   .PlacesInLagos {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    margin-top: 0px;
   }
 
   .PlacesInLagos img {
@@ -155,7 +172,13 @@
 
   .PlacesInLagos button {
     width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 16px;
+    height: auto;
+    min-height: 180px;
+  }
+
+  .PlacesInLagos button a {
     border-radius: 16px;
   }
 
@@ -163,10 +186,9 @@
     width: 100%;
     height: auto;
     min-height: 180px;
-    max-height: 250px;
+    max-height: 350px;
     border-radius: 16px;
     opacity: 0;
-    transform: translateY(10px);
     animation: fadeIn 0.5s ease forwards;
   }
 
@@ -182,6 +204,12 @@
   }
   .PlacesInLagos button:nth-child(4) img {
     animation-delay: 0.4s;
+  }
+  .PlacesInLagos button:nth-child(5) img {
+    animation-delay: 0.5s;
+  }
+  .PlacesInLagos button:nth-child(6) img {
+    animation-delay: 0.6s;
   }
 }
 
@@ -205,6 +233,11 @@
   }
 
   .PlacesInLagos button {
+    border-radius: 12px;
+    min-height: 160px;
+  }
+
+  .PlacesInLagos button a {
     border-radius: 12px;
   }
 
@@ -236,6 +269,10 @@
     border-radius: 10px;
   }
 
+  .PlacesInLagos button a {
+    border-radius: 10px;
+  }
+
   .PlacesInLagos img {
     min-height: 140px;
     max-height: 200px;
@@ -245,6 +282,10 @@
 
 /* Fade-in animation */
 @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
   to {
     opacity: 1;
     transform: translateY(0);

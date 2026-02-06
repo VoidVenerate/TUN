@@ -59,7 +59,7 @@ const SpotList = ({ spotType, title }) => {
 
       <div className="lag-clubs">
         {spots.length === 0 ? (
-          <p>No {spotType}s found.</p>
+          <p style={{textAlign: 'center', width: '100%', display: 'flex', alignItems: 'center', justifyContent:'center'}}>No {spotType}s found.</p>
         ) : (
           spots.map((spot) => (
             <div className="club-card" key={spot.id}>
