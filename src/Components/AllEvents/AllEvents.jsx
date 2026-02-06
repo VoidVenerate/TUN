@@ -6,6 +6,8 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import calendar from '../../assets/calendar.svg'
+import { CalendarDays } from 'lucide-react'
 
 const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
   const [allEvents, setAllEvents] = useState([])
@@ -34,6 +36,23 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
     if (!text) return "";
     if (text.length <= maxChars) return text;
     return text.substring(0, maxChars).trim() + "...";
+  }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Date TBA";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  }
+  const formatTime = (time) => {
+    const [hour, minute] =  time.split(":")
+    const h = Number(hour)
+    const ampm = h > 12 ? "AM" : "PM"
+    const hour12 = h%12 || 12
+    return `${hour12}:${minute} ${ampm}`
   }
 
   // client-side pagination
@@ -80,6 +99,17 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
                     <Skeleton 
                       height={22} 
                       width="100%" 
+                      borderRadius={4} 
+                      baseColor="#1e1e1e" 
+                      highlightColor="#333" 
+                    />
+                  </div>
+
+                  {/* Date skeleton */}
+                  <div style={{ marginTop: '6px' }}>
+                    <Skeleton 
+                      height={14} 
+                      width="60%"
                       borderRadius={4} 
                       baseColor="#1e1e1e" 
                       highlightColor="#333" 
@@ -137,6 +167,10 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                       navigate(`/viewdetails/${event.id}`);
                     }}>{event.event_name}</h3>
+                    <div className="LagEvents-date">
+                      <CalendarDays size={16} />
+                      <span>{formatDate(event.date)}</span>|<span>{formatTime(event.time)}</span>
+                    </div>
                   </div>
                   <p className="LagEvents-desc">
                     {truncateText(event.event_description, 90)}
