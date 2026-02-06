@@ -7,7 +7,7 @@ const BestHotels = () => {
   return (
     <div>
         <UserNavbar/>
-        <SpotList spotType="hotel" title="Best Clubs in Lagos" />
+        <SpotList spotType="hotel" title="Best Hotels in Lagos" />
         <Footer/>
     </div>
   )
