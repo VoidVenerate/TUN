@@ -83,7 +83,7 @@ const SpotList = ({ spotType, title }) => {
     return (
       <div className="club-container">
         <div className="club-loading">
-          <p>Loading {spotType}s...</p>
+          <p>Loading {spotType}...</p>
         </div>
       </div>
     )
@@ -132,7 +132,7 @@ const SpotList = ({ spotType, title }) => {
       <div className="lag-clubs">
         {spots.length === 0 ? (
           <div className="no-results">
-            <p>No {spotType}s found.</p>
+            <p>No {spotType} found.</p>
             {searchTerm && (
               <button 
                 className="clear-search-button"
