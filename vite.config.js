@@ -12,6 +12,9 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
-  }
+  },
+  build: {
+    chunkSizeWarningLimit: 5000, // 5MB (adjust as needed)
+  },
 })
 
