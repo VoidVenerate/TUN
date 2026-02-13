@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import './SpotList.css'
 import { ChevronLeft } from 'lucide-react'
 
 const SpotList = ({ spotType, title }) => {
@@ -79,11 +78,260 @@ const SpotList = ({ spotType, title }) => {
     }
   }
 
+  const styles = {
+    clubContainer: {
+      padding: '2rem',
+      backgroundColor: '#0a0a0a',
+      color: 'white',
+      minHeight: '50vh',
+      marginLeft: '3vw',
+    },
+    clubHeader: {
+      marginBottom: '2rem',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: '1rem',
+      width: '100%',
+    },
+    clubHeaderTitle: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem',
+    },
+    clubHeaderH2: {
+      fontSize: '2rem',
+      fontWeight: 'bold',
+      color: '#fff',
+      margin: 0,
+      fontFamily: 'Rushon Ground',
+    },
+    lagClubs: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+      gap: '1.5rem',
+      width: '100%',
+      minHeight: '300px',
+    },
+    clubCard: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+    },
+    clubs: {
+      backgroundColor: '#111',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      width: '100%',
+      padding: '0.8rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+      transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
+      cursor: 'pointer',
+    },
+    clubsImg: {
+      width: '100%',
+      height: '400px',
+      objectFit: 'cover',
+      borderRadius: '8px',
+      marginBottom: '1rem',
+      backgroundColor: '#1a1a1a',
+    },
+    clubText: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      marginBottom: '0.5rem',
+    },
+    clubTextH3: {
+      fontSize: '1.2rem',
+      margin: 0,
+      fontWeight: 'bold',
+      color: 'white',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      flex: 1,
+      paddingRight: '0.5rem',
+    },
+    clubTextP: {
+      fontSize: '0.9rem',
+      fontWeight: 500,
+      color: '#999',
+      margin: 0,
+      flexShrink: 0,
+    },
+    clubDescription: {
+      fontSize: '0.85rem',
+      color: '#aaa',
+      lineHeight: '1.6',
+      width: '100%',
+      margin: 0,
+      textAlign: 'left',
+    },
+    clubSearch: {
+      width: '100%',
+      maxWidth: '400px',
+      padding: '12px 16px',
+      borderRadius: '10px',
+      border: '1px solid #333',
+      backgroundColor: '#111',
+      color: '#fff',
+      fontSize: '14px',
+      outline: 'none',
+      transition: 'all 0.2s ease-in-out',
+    },
+    noResults: {
+      gridColumn: '1 / -1',
+      textAlign: 'center',
+      padding: '4rem 2rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1rem',
+    },
+    noResultsP: {
+      fontSize: '1.2rem',
+      color: '#999',
+      margin: 0,
+    },
+    clearSearchButton: {
+      backgroundColor: '#5423D2',
+      color: 'white',
+      border: 'none',
+      padding: '10px 24px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+    },
+    clubPagination: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '12px',
+      marginTop: '32px',
+      paddingBottom: '2rem',
+    },
+    paginationButton: {
+      backgroundColor: '#1a1a1a',
+      color: '#fff',
+      border: '1px solid #333',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease-in-out',
+      minWidth: '80px',
+    },
+    paginationButtonDisabled: {
+      backgroundColor: '#1a1a1a',
+      color: '#fff',
+      border: '1px solid #333',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'not-allowed',
+      minWidth: '80px',
+      opacity: 0.4,
+    },
+    paginationSpan: {
+      fontSize: '14px',
+      fontWeight: 500,
+      color: '#ddd',
+      background: '#1a1a1a',
+      padding: '10px 16px',
+      borderRadius: '8px',
+      border: '1px solid #333',
+      minWidth: '100px',
+      textAlign: 'center',
+    },
+    clubLoading: {
+      textAlign: 'center',
+      padding: '4rem 1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1rem',
+      minHeight: '50vh',
+    },
+    clubLoadingP: {
+      fontSize: '1.1rem',
+      color: '#aaa',
+      margin: 0,
+    },
+    clubError: {
+      textAlign: 'center',
+      padding: '4rem 1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '1rem',
+      minHeight: '50vh',
+      color: '#ff6b6b',
+    },
+    clubErrorP: {
+      fontSize: '1.1rem',
+      color: '#ff6b6b',
+      margin: 0,
+    },
+    retryButton: {
+      backgroundColor: '#5423D2',
+      color: 'white',
+      border: 'none',
+      padding: '12px 28px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      marginTop: '0.5rem',
+    },
+  }
+
+  // Responsive styles
+  const getResponsiveStyles = () => {
+    const width = typeof window !== 'undefined' ? window.innerWidth : 1024
+    
+    if (width <= 480) {
+      return {
+        clubContainer: { ...styles.clubContainer, padding: '1rem', marginLeft: 0 },
+        clubHeader: { ...styles.clubHeader, flexDirection: 'column', alignItems: 'flex-start', gap: '0.75rem' },
+        clubHeaderH2: { ...styles.clubHeaderH2, fontSize: '1.3rem' },
+        lagClubs: { ...styles.lagClubs, gridTemplateColumns: '1fr', gap: '1rem', minHeight: '200px' },
+        clubsImg: { ...styles.clubsImg, height: '150px' },
+        clubTextH3: { ...styles.clubTextH3, fontSize: '1rem' },
+      }
+    } else if (width <= 768) {
+      return {
+        clubContainer: { ...styles.clubContainer, marginLeft: 0, padding: '1.5rem' },
+        clubHeader: { ...styles.clubHeader, flexDirection: 'column', alignItems: 'flex-start' },
+        lagClubs: { ...styles.lagClubs, gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.2rem' },
+        clubsImg: { ...styles.clubsImg, height: '160px' },
+      }
+    }
+    return {}
+  }
+
+  const responsiveStyles = getResponsiveStyles()
+
   if (loading) {
     return (
-      <div className="club-container">
-        <div className="club-loading">
-          <p>Loading {spotType}...</p>
+      <div style={{ ...styles.clubContainer, ...responsiveStyles.clubContainer }}>
+        <div style={styles.clubLoading}>
+          <p style={styles.clubLoadingP}>Loading {spotType}...</p>
         </div>
       </div>
     )
@@ -91,12 +339,22 @@ const SpotList = ({ spotType, title }) => {
 
   if (error) {
     return (
-      <div className="club-container">
-        <div className="club-error">
-          <p>{error}</p>
+      <div style={{ ...styles.clubContainer, ...responsiveStyles.clubContainer }}>
+        <div style={styles.clubError}>
+          <p style={styles.clubErrorP}>{error}</p>
           <button 
-            className="retry-button" 
+            style={styles.retryButton}
             onClick={() => window.location.reload()}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = '#6634e2'
+              e.target.style.transform = 'translateY(-2px)'
+              e.target.style.boxShadow = '0 4px 12px rgba(84, 35, 210, 0.4)'
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = '#5423D2'
+              e.target.style.transform = 'translateY(0)'
+              e.target.style.boxShadow = 'none'
+            }}
           >
             Try Again
           </button>
@@ -106,15 +364,15 @@ const SpotList = ({ spotType, title }) => {
   }
 
   return (
-    <div className='club-container'>
-      <div className="club-header">
-        <div className="club-header-title">
+    <div style={{ ...styles.clubContainer, ...responsiveStyles.clubContainer }}>
+      <div style={{ ...styles.clubHeader, ...responsiveStyles.clubHeader }}>
+        <div style={styles.clubHeaderTitle}>
           <ChevronLeft 
             size={24} 
             onClick={() => navigate(-1)}
             style={{ cursor: 'pointer' }}
           />
-          <h2 style={{ fontFamily: "Rushon Ground" }}>
+          <h2 style={{ ...styles.clubHeaderH2, ...responsiveStyles.clubHeaderH2 }}>
             {title || `Best ${spotType}s in Lagos`}
           </h2>
         </div>
@@ -125,18 +383,38 @@ const SpotList = ({ spotType, title }) => {
           placeholder={`Search ${spotType}s...`} 
           value={searchTerm} 
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="club-search"
+          style={styles.clubSearch}
+          onFocus={(e) => {
+            e.target.style.borderColor = '#5423D2'
+            e.target.style.boxShadow = '0 0 8px rgba(84, 35, 210, 0.4)'
+            e.target.style.backgroundColor = '#1a1a1a'
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = '#333'
+            e.target.style.boxShadow = 'none'
+            e.target.style.backgroundColor = '#111'
+          }}
         />
       </div>
 
-      <div className="lag-clubs">
+      <div style={{ ...styles.lagClubs, ...responsiveStyles.lagClubs }}>
         {spots.length === 0 ? (
-          <div className="no-results">
-            <p>No {spotType} found.</p>
+          <div style={styles.noResults}>
+            <p style={styles.noResultsP}>No {spotType} found.</p>
             {searchTerm && (
               <button 
-                className="clear-search-button"
+                style={styles.clearSearchButton}
                 onClick={() => setSearchTerm('')}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = '#6634e2'
+                  e.target.style.transform = 'translateY(-2px)'
+                  e.target.style.boxShadow = '0 4px 12px rgba(84, 35, 210, 0.4)'
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = '#5423D2'
+                  e.target.style.transform = 'translateY(0)'
+                  e.target.style.boxShadow = 'none'
+                }}
               >
                 Clear search
               </button>
@@ -144,24 +422,34 @@ const SpotList = ({ spotType, title }) => {
           </div>
         ) : (
           spots.map((spot) => (
-            <div className="club-card" key={spot.id}>
-              <div className="clubs">
+            <div style={styles.clubCard} key={spot.id}>
+              <div 
+                style={styles.clubs}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-5px)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.5)'
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
+                }}
+              >
                 <img 
                   src={spot.cover_image} 
                   alt={spot.location_name}
+                  style={{ ...styles.clubsImg, ...responsiveStyles.clubsImg }}
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/400x250?text=No+Image'
+                    e.target.src = 'https://via.placeholder.com/400x180?text=No+Image'
                   }}
                 />
-                <div className="club-text">
-                  <h3>{spot.location_name}</h3>
-                  <p>{spot.city}</p>
+                <div style={styles.clubText}>
+                  <h3 style={{ ...styles.clubTextH3, ...responsiveStyles.clubTextH3 }}>{spot.location_name}</h3>
+                  <p style={styles.clubTextP}>{spot.city}</p>
                 </div>
-                <p className="club-description">
-                  {spot.additional_info 
-                    ? spot.additional_info.split(" ").slice(0, 15).join(" ") + '...'
-                    : 'No description available'
-                  }
+                <p style={styles.clubDescription}>
+                  {spot.additional_info || 'No description available'}
                 </p>
               </div>
             </div>
@@ -170,17 +458,47 @@ const SpotList = ({ spotType, title }) => {
       </div>
 
       {/* 🔄 Pagination - always visible */}
-      <div className="club-pagination">
+      <div style={styles.clubPagination}>
         <button 
           disabled={currentPage === 1} 
           onClick={handlePrevPage}
+          style={currentPage === 1 ? styles.paginationButtonDisabled : styles.paginationButton}
+          onMouseOver={(e) => {
+            if (currentPage !== 1) {
+              e.target.style.backgroundColor = '#333'
+              e.target.style.borderColor = '#5423D2'
+              e.target.style.transform = 'translateY(-2px)'
+            }
+          }}
+          onMouseOut={(e) => {
+            if (currentPage !== 1) {
+              e.target.style.backgroundColor = '#1a1a1a'
+              e.target.style.borderColor = '#333'
+              e.target.style.transform = 'translateY(0)'
+            }
+          }}
         >
           Prev
         </button>
-        <span>Page {currentPage}</span>
+        <span style={styles.paginationSpan}>Page {currentPage}</span>
         <button 
           onClick={handleNextPage}
           disabled={!hasNextPage && spots.length === 0}
+          style={(!hasNextPage && spots.length === 0) ? styles.paginationButtonDisabled : styles.paginationButton}
+          onMouseOver={(e) => {
+            if (hasNextPage || spots.length > 0) {
+              e.target.style.backgroundColor = '#333'
+              e.target.style.borderColor = '#5423D2'
+              e.target.style.transform = 'translateY(-2px)'
+            }
+          }}
+          onMouseOut={(e) => {
+            if (hasNextPage || spots.length > 0) {
+              e.target.style.backgroundColor = '#1a1a1a'
+              e.target.style.borderColor = '#333'
+              e.target.style.transform = 'translateY(0)'
+            }
+          }}
         >
           Next
         </button>

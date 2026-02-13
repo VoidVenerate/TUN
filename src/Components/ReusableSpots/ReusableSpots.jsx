@@ -6,7 +6,6 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
 import api from "../api";
 import Loader from "../Loader/Loader";
-import './ReusableSpots.css'
 
 const ReusableSpots = ({ spotType, addPath, editPath }) => {
   const [spots, setSpots] = useState([]);
@@ -26,10 +25,11 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     title: "",
     message: "",
     footerButtons: null,
-    onConfirm: null, // 🔑 for confirmation modals
+    onConfirm: null,
   });
 
   const [deleting, setDeleting] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const navigate = useNavigate();
 
   // ✅ Centralized URL normalization
@@ -43,7 +43,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     return url;
   };
 
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
   const handleClick = (index, type, spotId) => {
     if (activeBtn.index === index && activeBtn.type === type) {
@@ -55,13 +55,6 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     if (type === "details" && spotId) {
       navigate(`${editPath}/${spotId}`);
     }
-  };
-
-  const truncateWords = (text, maxWords = 20) => {
-    if (!text) return "";
-    const words = text.split(" ");
-    if (words.length <= maxWords) return text;
-    return words.slice(0, maxWords).join(" ") + "...";
   };
 
   useEffect(() => {
@@ -96,6 +89,16 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
 
     fetchSpots();
   }, [spotType, currentPage, searchTerm]);
+
+  // Listen for window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Sort spots by name
   const sortedSpots = [...spots].sort((a, b) => {
@@ -135,7 +138,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
               try {
                 await api.delete(`/event/spots/${spot_id}`, {
                   headers: { Authorization: `Bearer ${token}` },
-                } );
+                });
                 setSpots((prev) => prev.filter((s) => s.spot_id !== spot_id));
                 setModalFeedback({
                   show: true,
@@ -187,54 +190,276 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
 
+  // Internal styles
+  const styles = {
+    adminEventsHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '2rem',
+      padding: '0 5rem',
+    },
+    sortBar: {
+      backgroundColor: '#1a1a1a',
+      color: '#fff',
+      border: '1px solid #333',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+    },
+    adminEvents: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: '1.5rem',
+      width: '90%',
+      minHeight: '300px',
+      marginLeft: '5rem',
+    },
+    eventCard: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+    },
+    events: {
+      backgroundColor: '#111',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      borderRadius: '12px',
+      overflow: 'hidden',
+      width: '100%',
+      padding: '0.8rem',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+      transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
+    },
+    eventsImg: {
+      width: '100%',
+      height: '400px',
+      objectFit: 'cover',
+      borderRadius: '8px',
+      marginBottom: '1rem',
+      backgroundColor: '#1a1a1a',
+    },
+    eventTxt: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      marginBottom: '0.5rem',
+    },
+    eventTxtH3: {
+      fontSize: '1.2rem',
+      margin: 0,
+      fontWeight: 'bold',
+      color: 'white',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+      flex: 1,
+      paddingRight: '0.5rem',
+    },
+    eventTxtP: {
+      fontSize: '0.9rem',
+      fontWeight: 500,
+      color: '#999',
+      margin: 0,
+      flexShrink: 0,
+    },
+    eventDescription: {
+      fontSize: '0.85rem',
+      color: '#aaa',
+      lineHeight: '1.6',
+      width: '100%',
+      margin: '0 0 1rem 0',
+      textAlign: 'left',
+    },
+    sliderBtn: {
+      display: 'flex',
+      gap: '0.5rem',
+      width: '100%',
+      marginTop: '0.5rem',
+    },
+    deleteButton: {
+      backgroundColor: 'rgba(255, 60, 60, 0.1)',
+      color: '#ff3b30',
+      border: '0.5px solid rgba(255, 60, 60, 0.26)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '10px 16px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      width: '100%',
+    },
+    paginationControls: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: '12px',
+      marginTop: '32px',
+      paddingBottom: '2rem',
+      flexWrap: 'wrap',
+    },
+    paginationButton: {
+      backgroundColor: '#1a1a1a',
+      color: '#fff',
+      border: '1px solid #333',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      minWidth: '80px',
+    },
+    paginationButtonDisabled: {
+      backgroundColor: '#1a1a1a',
+      color: '#fff',
+      border: '1px solid #333',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'not-allowed',
+      minWidth: '80px',
+      opacity: 0.4,
+    },
+    paginationButtonActive: {
+      backgroundColor: '#5423D2',
+      color: '#fff',
+      border: '1px solid #5423D2',
+      padding: '10px 20px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      minWidth: '40px',
+    },
+    noImagePlaceholder: {
+      width: '100%',
+      height: '400px',
+      background: '#ccc',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '8px',
+      marginBottom: '1rem',
+    },
+  };
+
+  // Responsive adjustments
+  const getResponsiveStyles = () => {
+    if (windowWidth <= 480) {
+      return {
+        adminEventsHeader: { ...styles.adminEventsHeader, padding: '0 1rem', flexDirection: 'column', gap: '1rem', alignItems: 'flex-start' },
+        adminEvents: { ...styles.adminEvents, gridTemplateColumns: '1fr', gap: '1rem', marginLeft: '1rem' },
+        eventsImg: { ...styles.eventsImg, height: '200px' },
+        noImagePlaceholder: { ...styles.noImagePlaceholder, height: '200px' },
+      };
+    } else if (windowWidth <= 768) {
+      return {
+        adminEventsHeader: { ...styles.adminEventsHeader, padding: '0 2rem' },
+        adminEvents: { ...styles.adminEvents, gridTemplateColumns: 'repeat(2, 1fr)', marginLeft: '2rem' },
+        eventsImg: { ...styles.eventsImg, height: '250px' },
+        noImagePlaceholder: { ...styles.noImagePlaceholder, height: '250px' },
+      };
+    } else if (windowWidth <= 1024) {
+      return {
+        adminEventsHeader: { ...styles.adminEventsHeader, padding: '0 3rem' },
+        adminEvents: { ...styles.adminEvents, marginLeft: '3rem' },
+        eventsImg: { ...styles.eventsImg, height: '300px' },
+        noImagePlaceholder: { ...styles.noImagePlaceholder, height: '300px' },
+      };
+    }
+    return {};
+  };
+
+  const responsiveStyles = getResponsiveStyles();
+
   if (error) return <p>{error}</p>;
-  if (loading) return <Loader/>
+  if (loading) return <Loader />;
 
   return (
     <div>
-      <div className="adminEvents-header">
-        <p style={{ fontFamily: "Rushon Ground" }}>
+      <div style={{ ...styles.adminEventsHeader, ...responsiveStyles.adminEventsHeader }}>
+        <p style={{ fontFamily: "Rushon Ground", margin: 0, fontSize: '1.5rem', fontWeight: 'bold' }}>
           {spotType.charAt(0).toUpperCase() + spotType.slice(1)}s
         </p>
-        <button className="sort-bar" onClick={() => setSortAsc((prev) => !prev)}>
+        <button 
+          style={styles.sortBar} 
+          onClick={() => setSortAsc((prev) => !prev)}
+          onMouseOver={(e) => {
+            e.target.style.backgroundColor = '#333';
+            e.target.style.borderColor = '#5423D2';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor = '#1a1a1a';
+            e.target.style.borderColor = '#333';
+          }}
+        >
           Sort Name {sortAsc ? "↑" : "↓"}
         </button>
       </div>
 
-      <div className="admin-Events">
+      <div style={{ ...styles.adminEvents, ...responsiveStyles.adminEvents }}>
         {sortedSpots.length === 0 && <p>No {spotType}s found.</p>}
         {sortedSpots.map((spot, index) => (
-          <div key={spot.spot_id || index} className="event-card">
-            <div className="events">
+          <div key={spot.spot_id || index} style={styles.eventCard}>
+            <div 
+              style={styles.events}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.5)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+              }}
+            >
               {spot.flyerSrc ? (
-                <LazyLoadImage
+                <img
                   src={spot.flyerSrc}
                   alt={spot.name}
                   loading="lazy"
-                  effect="blur"
+                  style={{ ...styles.eventsImg, ...responsiveStyles.eventsImg }}
                   onError={(e) => {
                     e.currentTarget.src = "/placeholder.png";
                   }}
                 />
               ) : (
-                <div style={{ width: "100%", height: "150px", background: "#ccc" }}>No image</div>
+                <div style={{ ...styles.noImagePlaceholder, ...responsiveStyles.noImagePlaceholder }}>
+                  No image
+                </div>
               )}
-              <div className="event-txt">
-                <h3>{spot.name}</h3>
-                <p>{spot.location}</p>
+              <div style={styles.eventTxt}>
+                <h3 style={styles.eventTxtH3}>{spot.name}</h3>
+                <p style={styles.eventTxtP}>{spot.location}</p>
               </div>
-              <p>{truncateWords(spot.description, 17)}</p>
-              <div className="slider-btn">
+              <p style={styles.eventDescription}>
+                {spot.description || 'No description available'}
+              </p>
+              <div style={styles.sliderBtn}>
                 <button
-                  className={activeBtn.index === index && activeBtn.type === "details" ? "active" : ""}
                   onClick={() => handleDelete(spot.spot_id)}
-                  style={{
-                    backgroundColor: "rgba(255, 60, 60, 0.1)",
-                    color: "#ff3b30",
-                    border: "0.5px solid rgba(255, 60, 60, 0.26)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                  style={styles.deleteButton}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 60, 60, 0.2)';
+                    e.target.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = 'rgba(255, 60, 60, 0.1)';
+                    e.target.style.transform = 'translateY(0)';
                   }}
                 >
                   <Trash2 size="16" style={{ marginRight: "10px" }} />
@@ -247,15 +472,43 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
       </div>
 
       {/* Pagination */}
-      <div className="pagination-controls">
-        <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+      <div style={styles.paginationControls}>
+        <button 
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} 
+          disabled={currentPage === 1}
+          style={currentPage === 1 ? styles.paginationButtonDisabled : styles.paginationButton}
+          onMouseOver={(e) => {
+            if (currentPage !== 1) {
+              e.target.style.backgroundColor = '#333';
+              e.target.style.borderColor = '#5423D2';
+            }
+          }}
+          onMouseOut={(e) => {
+            if (currentPage !== 1) {
+              e.target.style.backgroundColor = '#1a1a1a';
+              e.target.style.borderColor = '#333';
+            }
+          }}
+        >
           Previous
         </button>
         {pageNumbers.map((num) => (
           <button
             key={num}
             onClick={() => setCurrentPage(num)}
-            className={num === currentPage ? "active-page" : ""}
+            style={num === currentPage ? styles.paginationButtonActive : styles.paginationButton}
+            onMouseOver={(e) => {
+              if (num !== currentPage) {
+                e.target.style.backgroundColor = '#333';
+                e.target.style.borderColor = '#5423D2';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (num !== currentPage) {
+                e.target.style.backgroundColor = '#1a1a1a';
+                e.target.style.borderColor = '#333';
+              }
+            }}
           >
             {num}
           </button>
@@ -263,6 +516,19 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         <button
           onClick={() => setCurrentPage((p) => (totalPages ? Math.min(p + 1, totalPages) : p + 1))}
           disabled={totalPages ? currentPage === totalPages : false}
+          style={totalPages && currentPage === totalPages ? styles.paginationButtonDisabled : styles.paginationButton}
+          onMouseOver={(e) => {
+            if (!totalPages || currentPage !== totalPages) {
+              e.target.style.backgroundColor = '#333';
+              e.target.style.borderColor = '#5423D2';
+            }
+          }}
+          onMouseOut={(e) => {
+            if (!totalPages || currentPage !== totalPages) {
+              e.target.style.backgroundColor = '#1a1a1a';
+              e.target.style.borderColor = '#333';
+            }
+          }}
         >
           Next
         </button>
