@@ -365,7 +365,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
         eventsImg: { ...styles.eventsImg, height: '200px' },
         noImagePlaceholder: { ...styles.noImagePlaceholder, height: '200px' },
       };
-    } else if (windowWidth <= 768) {
+    } else if (windowWidth <= 900) {
       return {
         adminEventsHeader: { ...styles.adminEventsHeader, padding: '0 2rem' },
         adminEvents: { ...styles.adminEvents, gridTemplateColumns: 'repeat(2, 1fr)', marginLeft: '2rem' },
