@@ -41,6 +41,8 @@ const UploadLocation = () => {
       setWordCount(words);
       if (words < 20) {
         setWordError(`Please enter at least 20 words (currently ${words})`);
+      } else if (words > 25) {
+        setWordError(`Please enter at most 25 words (currently ${words})`);
       } else {
         setWordError('');
       }
@@ -90,7 +92,7 @@ const UploadLocation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (wordCount < 20) return; // prevent submission if min words not met
+    if (wordCount < 20 || wordCount > 25) return; // prevent submission if min words not met
     setIsSubmitting(true);
 
     try {
@@ -317,7 +319,7 @@ const UploadLocation = () => {
                 style={{minHeight:'200px'}}
               />
               <div className="word-info">
-                <span className={`word-count ${wordCount >= 20 ? 'valid' : ''}`}>
+                <span className={`word-count ${wordCount <= 25 ? 'valid' : ''}`}>
                   {wordCount} words
                 </span> / 20 required
               </div>
