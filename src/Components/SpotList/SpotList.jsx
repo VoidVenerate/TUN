@@ -13,6 +13,7 @@ const SpotList = ({ spotType, title }) => {
   // optional filters
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
 
   const navigate = useNavigate()
 
@@ -63,6 +64,16 @@ const SpotList = ({ spotType, title }) => {
       setCurrentPage(1)
     }
   }, [searchTerm])
+
+  // Listen for window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -135,7 +146,7 @@ const SpotList = ({ spotType, title }) => {
     },
     clubsImg: {
       width: '100%',
-      height: '400px',
+      height: '180px',
       objectFit: 'cover',
       borderRadius: '8px',
       marginBottom: '1rem',
@@ -176,7 +187,7 @@ const SpotList = ({ spotType, title }) => {
       textAlign: 'left',
     },
     clubSearch: {
-      width: '100%',
+      width: '90%',
       maxWidth: '400px',
       padding: '12px 16px',
       borderRadius: '10px',
@@ -303,23 +314,25 @@ const SpotList = ({ spotType, title }) => {
 
   // Responsive styles
   const getResponsiveStyles = () => {
-    const width = typeof window !== 'undefined' ? window.innerWidth : 1024
-    
-    if (width <= 480) {
+    if (windowWidth <= 480) {
       return {
         clubContainer: { ...styles.clubContainer, padding: '1rem', marginLeft: 0 },
         clubHeader: { ...styles.clubHeader, flexDirection: 'column', alignItems: 'flex-start', gap: '0.75rem' },
         clubHeaderH2: { ...styles.clubHeaderH2, fontSize: '1.3rem' },
         lagClubs: { ...styles.lagClubs, gridTemplateColumns: '1fr', gap: '1rem', minHeight: '200px' },
-        clubsImg: { ...styles.clubsImg, height: '150px' },
+        clubsImg: { ...styles.clubsImg, height: '200px' },
         clubTextH3: { ...styles.clubTextH3, fontSize: '1rem' },
       }
-    } else if (width <= 768) {
+    } else if (windowWidth <= 768) {
       return {
         clubContainer: { ...styles.clubContainer, marginLeft: 0, padding: '1.5rem' },
         clubHeader: { ...styles.clubHeader, flexDirection: 'column', alignItems: 'flex-start' },
-        lagClubs: { ...styles.lagClubs, gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.2rem' },
-        clubsImg: { ...styles.clubsImg, height: '160px' },
+        lagClubs: { ...styles.lagClubs, gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.2rem' },
+        clubsImg: { ...styles.clubsImg, height: '250px' },
+      }
+    } else if (windowWidth <= 1024) {
+      return {
+        clubsImg: { ...styles.clubsImg, height: '300px' },
       }
     }
     return {}
