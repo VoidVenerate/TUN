@@ -195,36 +195,57 @@ const TakeAction = ({ role }) => {
   // ─── Approve flow ─────────────────────────────────────────────
   const runApprove = async () => {
     setShowConfirmModal(false);
+
     if (!event_id) {
-      setModalInfo({ show: true, title: 'Error', message: 'No event id available to publish.', subMessage: '' });
+      setModalInfo({
+        show: true,
+        title: 'Error',
+        message: 'No event id available to publish.',
+        subMessage: '',
+      });
       return;
     }
 
     setSaving(true);
+
     try {
       const token = localStorage.getItem('token');
-      // This endpoint should set pending: false on the backend
-      await api.put(`/event/approve-event/${event_id}`, null, {
+
+      const endpoint =
+        featureChoice === 'yes-feature' || eventData?.is_featured
+          ? `/event/events/${event_id}/approve-featured`
+          : `/event/approve-event/${event_id}`;
+
+      await api.put(endpoint, null, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (featureChoice === 'yes-feature' || eventData?.is_featured) {
-        setShowFeatureDuration(true);
-        setSaving(false);
-      } else {
-        setSaving(false);
-        setModalInfo({ 
-          show: true, 
-          title: 'Success', 
-          message: 'Event published successfully!', 
-          subMessage: 'The event is now live and visible to all users.' 
-        });
-        navigate('/adminevents');
-      }
-    } catch (err) {
-      console.error('Publish failed', err);
       setSaving(false);
-      setModalInfo({ show: true, title: 'Error', message: 'Failed to publish event.', subMessage: err?.message || '' });
+
+      setModalInfo({
+        show: true,
+        title: 'Success',
+        message:
+          featureChoice === 'yes-feature'
+            ? 'Featured event approved successfully!'
+            : 'Event published successfully!',
+        subMessage:
+          featureChoice === 'yes-feature'
+            ? 'The event is now live and featured.'
+            : 'The event is now live and visible to all users.',
+      });
+
+      navigate('/adminevents');
+    } catch (err) {
+      console.error('Approval failed', err);
+      setSaving(false);
+
+      setModalInfo({
+        show: true,
+        title: 'Error',
+        message: 'Failed to approve event.',
+        subMessage: err?.response?.data?.detail || err?.message || '',
+      });
     }
   };
 
