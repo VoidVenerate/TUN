@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 const styles = {
   page: {
@@ -227,7 +229,7 @@ const AIChatPage = () => {
         <ArrowLeft
           size={22}
           onClick={() => navigate(-1)}
-          style={{ cursor: 'pointer', color: '#fff', flexShrink: 0, transition: 'opacity 0.2s' }}
+          style={{ cursor: 'pointer', color: '#fff', flexShrink: 0, transition: 'npm opacity 0.2s' }}
           onMouseEnter={e => e.currentTarget.style.opacity = '0.6'}
           onMouseLeave={e => e.currentTarget.style.opacity = '1'}
         />
@@ -249,7 +251,13 @@ const AIChatPage = () => {
         {messages.map((msg, i) => (
           <div key={i} style={styles.bubble(msg.role)}>
             <div style={styles.bubbleInner(msg.role)}>
-              {msg.content}
+              {msg.role === 'assistant' ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {msg.content}
+                </ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}
