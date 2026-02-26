@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { ArrowLeft, Sparkles, Send, AlertCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
 
 // ==========================================
 // DESIGN TOKENS - Clean, No Glow
@@ -553,7 +556,13 @@ const AIChatPage = () => {
         {messages.map((msg, idx) => (
           <div key={idx} style={styles.messageGroup(msg.role)}>
             <div style={styles.messageBubble(msg.role)}>
-              {msg.content}
+              {msg.role === 'assistant' ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {msg.content}
+                </ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
             <span style={styles.messageMeta}>
               {formatTime(msg.timestamp || new Date())}

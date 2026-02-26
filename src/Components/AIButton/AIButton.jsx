@@ -273,7 +273,7 @@ const AIButton = () => {
 
           {/* Text with gradient effect */}
           <span className="gradient-text">
-            Ask AI
+            Ask TUL
           </span>
 
           {/* Optional badge/indicator
