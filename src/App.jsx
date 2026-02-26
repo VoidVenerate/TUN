@@ -46,8 +46,8 @@ import AdminPendingBanner from './Pages/ADMIN/AdminPendingBanner/AdminPendingBan
 import UserEventDetails from './Pages/USERS/UserEventDetails/UserEventDetails'
 import AdminAction from './Pages/ADMIN/AdminAction/AdminAction'
 import AdminPromoteBanner from './Components/AdminPromoteBanner/AdminPromoteBanner'
-// import AIChatPage from './Components/AIChatPage/AIChatPage'
-import AIChatPage from './Components/AIChatPage copy/AIChatPage'
+import AIChatPage from './Components/AIChatPage/AIChatPage'
+// import AIChatPage from './Components/AIChatPage copy/AIChatPage'
 
 function App() {
 
@@ -72,7 +72,6 @@ function App() {
         <Route path='/eventdetails' element = {<UserEventDetails/>} />
         <Route path='/viewdetails/:id' element = {<ViewEventDetails/>} />
         <Route path='/promotebanner' element = {<Banner/>} />
-        {/* <Route path='/chat' element = {<AIChatPage/>} /> */}
         <Route path='/chat' element = {<AIChatPage/>} />
         <Route path='/auth' element = {<ProtectedAuth/>} />
         <Route path='/adminhome' element = {<AdminPendingEvents/>} />

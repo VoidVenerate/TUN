@@ -9,8 +9,8 @@ import BlEvents from '../../../Components/BlEvents/BlEvents'
 import EventsPromoBanner from '../../../Components/EventsPromoBanner/EventsPromoBanner'
 import Footer from '../../../Components/Footer/Footer'
 import AllEvents from '../../../Components/AllEvents/AllEvents'
-// import AIButton from '../../../Components/AIButton/AIButton'
-import AIButton from '../../../Components/AIButton copy/AIButton'
+import AIButton from '../../../Components/AIButton/AIButton'
+// import AIButton from '../../../Components/AIButton copy/AIButton'
 
 const Home = () => {
   return (
