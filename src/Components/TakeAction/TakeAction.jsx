@@ -7,14 +7,15 @@ import api from '../api';
 import './TakeAction.css';
 import Modal from '../Modal/Modal';
 import FeatureDuration from '../FeatureDuration/FeatureDuration';
-import { Check, Trash2, ChevronLeft, Pencil } from 'lucide-react';
+import { Check, Trash2, ChevronLeft, Pencil, Upload } from 'lucide-react';
 
-const API_BASE_URL = 'https://lagos-turnup-ecy5.onrender.com';
+const API_BASE_URL = 'https://lagos-turnup-ecy5.onrender.com ';
 
 const TakeAction = ({ role }) => {
   const { eventData, updateEvent, setEventData, deleteEvent } = useEvent();
   const navigate = useNavigate();
   const { event_id } = useParams();
+  const fileInputRef = useRef(null);
 
   const {
     register,
@@ -71,7 +72,7 @@ const TakeAction = ({ role }) => {
       reader.onload = (event) => {
         const img = new Image();
         img.onload = () => {
-          if (img.width <= 500 && img.height <= 800) {
+          if (img.width <= 50000 && img.height <= 80000) {
             setValue('flyerPreview', event.target.result);
           } else {
             alert('Image must be max 500x800px.');
@@ -82,8 +83,6 @@ const TakeAction = ({ role }) => {
         img.src = event.target.result;
       };
       reader.readAsDataURL(file);
-    } else {
-      setValue('flyerPreview', null);
     }
   }, [flyerFile, setValue]);
 
@@ -134,6 +133,26 @@ const TakeAction = ({ role }) => {
 
     fetchEvent();
   }, [event_id, reset, setEventData]);
+
+  // ─── Handle flyer file selection ──────────────────────────────
+  const handleFlyerClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setValue('flyerFile', files, { shouldDirty: true });
+    }
+  };
+
+  const handleRemoveFlyer = () => {
+    setValue('flyerFile', null);
+    setValue('flyerPreview', null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   // ─── PUT /event/events/{event_id} ─────────────────────────────
   const saveEdits = async (data) => {
@@ -317,20 +336,44 @@ const TakeAction = ({ role }) => {
 
       <form id="eventForm" onSubmit={handleSubmit(saveEdits)} className="review-form-wrapper" encType="multipart/form-data">
         <div className="review-content">
-          {/* ── Flyer ── */}
+          {/* ── Editable Flyer ── */}
           <div className="review-upload-section">
             <div className="review-upload-label">
               <span className="review-upload-text">Event Flyer</span>
-              <div className="review-upload-description">Uploaded flyer preview.</div>
+              <div className="review-upload-description">Click to upload a new flyer (max 500x800px, PNG/JPEG only)</div>
             </div>
-            <div className="review-upload-area">
+            <div className="review-upload-area editable-flyer" onClick={handleFlyerClick}>
+              <input
+                type="file"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                accept="image/png,image/jpeg,image/jpg"
+                onChange={handleFileChange}
+              />
               <img
-                src={watch('flyerPreview') || eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer}
+                src={watch('flyerPreview') || eventData?.flyerPreview || eventData?.flyer_url || eventData?.event_flyer || '/placeholder.png'}
                 alt="Event Flyer Preview"
                 className="review-flyer-preview"
                 onError={(e) => (e.target.src = '/placeholder.png')}
               />
+              <div className="flyer-overlay">
+                <Upload size={32} color="white" />
+                <span>Click to change flyer</span>
+              </div>
             </div>
+            {(watch('flyerFile') || watch('flyerPreview')) && (
+              <button
+                type="button"
+                className="remove-flyer-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFlyer();
+                }}
+              >
+                <Trash2 size={16} />
+                Remove Flyer
+              </button>
+            )}
           </div>
 
           {/* ── Editable fields ── */}

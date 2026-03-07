@@ -331,7 +331,7 @@ const EditableEventReviewRHF = ({ role }) => {
       if (isFeatured) {
         setShowFeatureDuration(true);
       } else {
-        navigate('/adminevents');
+        navigate('/adminhome');
       }
     } catch (error) {
       console.error('Save failed:', error);
