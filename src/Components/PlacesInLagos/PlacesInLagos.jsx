@@ -18,12 +18,6 @@ const PlacesInLagos = () => {
         <div className='PlacesInLagos-container'>
             <div className="PlacesInLagos-txt">
                 <div className="discover-title-section">
-                    <button 
-                        className="back-button"
-                        onClick={handleGoBack}
-                    >
-                        <ArrowLeft size={20} />
-                    </button>
                     <h2>Discover Lagos</h2>
                 </div>
             </div>
