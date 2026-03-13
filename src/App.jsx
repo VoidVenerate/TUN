@@ -47,6 +47,8 @@ import UserEventDetails from './Pages/USERS/UserEventDetails/UserEventDetails'
 import AdminAction from './Pages/ADMIN/AdminAction/AdminAction'
 import AdminPromoteBanner from './Components/AdminPromoteBanner/AdminPromoteBanner'
 import AIChatPage from './Components/AIChatPage/AIChatPage'
+import SpotDetails from './Components/SpotDetails/SpotDetails'
+import AdminSpotDetails from './Components/AdminSpotDetails/AdminSpotDetails'
 // import AIChatPage from './Components/AIChatPage copy/AIChatPage'
 
 function App() {
@@ -62,6 +64,7 @@ function App() {
         <Route path='/contact' element = {<ContactUs/>} />
         <Route path='/promote' element = {<PromoteWithUs/>} />
         <Route path='/lagvisit' element = {<LagVisit/>} />
+        <Route path="/spotdetails/:id" element={<SpotDetails />} />
         <Route path='/clubs' element = {<BestClubs/>} />
         <Route path='/hotels' element = {<BestHotels/>} />
         <Route path='/foodspots' element = {<BestFoodspots/>} />
@@ -91,6 +94,7 @@ function App() {
         <Route path='/editevent/:event_id' element = {<AdminEditEvent/>} />
         <Route path='/profile' element = {<Profile/>} />
         <Route path='/adminviewdetails/:id' element = {<AdminViewEventDetails/>} />
+        <Route path="/adminspotdetails/:id" element={<AdminSpotDetails />} />
         <Route path='/adminclubs' element = {<AdminClubs/>} />
         <Route path='/adminhotels' element = {<AdminHotels/>} />
         <Route path='/adminfoodspots' element = {<AdminFood/>} />

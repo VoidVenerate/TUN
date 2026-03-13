@@ -41,8 +41,8 @@ const UploadLocation = () => {
       setWordCount(words);
       if (words < 20) {
         setWordError(`Please enter at least 20 words (currently ${words})`);
-      } else if (words > 25) {
-        setWordError(`Please enter at most 25 words (currently ${words})`);
+      } else if (words > 90) {
+        setWordError(`Please enter at most 90 words (currently ${words})`);
       } else {
         setWordError('');
       }
@@ -92,7 +92,7 @@ const UploadLocation = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (wordCount < 20 || wordCount > 25) return; // prevent submission if min words not met
+    if (wordCount < 20 || wordCount > 90) return; // prevent submission if min words not met
     setIsSubmitting(true);
 
     try {
@@ -163,7 +163,7 @@ const UploadLocation = () => {
     }
   };
 
-  // Required fields validation including word count
+ // Required fields validation including word count
   const isFormValid =
     locationData.locationName &&
     locationData.city &&
@@ -171,7 +171,8 @@ const UploadLocation = () => {
     locationData.typeOfSpot &&
     locationData.additionalInformation &&
     locationData.flyer &&
-    wordCount >= 20;
+    wordCount >= 20 &&
+    wordCount <= 90;  // Changed from wordCount <= 25 to wordCount <= 90
 
   return (
     <div className="event-form-container">
@@ -319,9 +320,9 @@ const UploadLocation = () => {
                 style={{minHeight:'200px'}}
               />
               <div className="word-info">
-                <span className={`word-count ${wordCount <= 25 ? 'valid' : ''}`}>
+                <span className={`word-count ${wordCount >= 20 && wordCount <= 90 ? 'valid' : ''}`}>
                   {wordCount} words
-                </span> / 20 required
+                </span> / 20-90 words required
               </div>
               {wordError && <p className="word-error">{wordError}</p>}
             </div>

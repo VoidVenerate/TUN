@@ -65,6 +65,15 @@ const UserNavbar = () => {
         </li>
         <li>
           <NavLink
+            to="/lagvisit"
+            className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
+            onClick={() => setMenuOpen(false)}
+          >
+            Discover Lagos
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
             to="/contact"
             className={({ isActive }) => (isActive ? 'navbar-link active' : 'navbar-link')}
             onClick={() => setMenuOpen(false)}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, MapPin } from 'lucide-react'
 
 const SpotList = ({ spotType, title }) => {
   const [spots, setSpots] = useState([])
@@ -32,7 +32,6 @@ const SpotList = ({ spotType, title }) => {
         
         if (Array.isArray(res.data)) {
           data = res.data
-          // If it's just an array, assume no more pages if empty
           setHasNextPage(res.data.length > 0)
         } else {
           data = res.data.items || res.data.data || []
@@ -43,7 +42,6 @@ const SpotList = ({ spotType, title }) => {
         
         setSpots(data)
         
-        // If no results and not on first page, go back to first page
         if (data.length === 0 && currentPage > 1) {
           setCurrentPage(1)
         }
@@ -87,6 +85,21 @@ const SpotList = ({ spotType, title }) => {
       setCurrentPage(p => p + 1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
+  }
+
+  // Navigate to spot details
+  const handleSpotClick = (spotId) => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+    setTimeout(() => {
+      navigate(`/spotdetails/${spotId}`)
+    }, 100)
+  }
+
+  const truncateWords = (text, maxWords = 15) => {
+    if (!text) return ""
+    const words = text.split(" ")
+    if (words.length <= maxWords) return text
+    return words.slice(0, maxWords).join(" ") + "..."
   }
 
   const styles = {
@@ -151,6 +164,7 @@ const SpotList = ({ spotType, title }) => {
       borderRadius: '8px',
       marginBottom: '1rem',
       backgroundColor: '#1a1a1a',
+      pointerEvents: 'none', // Prevent image from capturing clicks separately
     },
     clubText: {
       display: 'flex',
@@ -159,6 +173,7 @@ const SpotList = ({ spotType, title }) => {
       alignItems: 'center',
       width: '100%',
       marginBottom: '0.5rem',
+      pointerEvents: 'none', // Let clicks pass through to parent
     },
     clubTextH3: {
       fontSize: '1.2rem',
@@ -177,6 +192,9 @@ const SpotList = ({ spotType, title }) => {
       color: '#999',
       margin: 0,
       flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
     },
     clubDescription: {
       fontSize: '0.85rem',
@@ -185,6 +203,7 @@ const SpotList = ({ spotType, title }) => {
       width: '100%',
       margin: 0,
       textAlign: 'left',
+      pointerEvents: 'none', // Let clicks pass through to parent
     },
     clubSearch: {
       width: '90%',
@@ -310,6 +329,23 @@ const SpotList = ({ spotType, title }) => {
       transition: 'all 0.2s ease',
       marginTop: '0.5rem',
     },
+    // Overlay hint for clickability
+    clickHint: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      backgroundColor: 'rgba(84, 35, 210, 0.9)',
+      color: 'white',
+      padding: '8px 16px',
+      borderRadius: '20px',
+      fontSize: '12px',
+      fontWeight: '600',
+      opacity: 0,
+      transition: 'opacity 0.3s ease',
+      pointerEvents: 'none',
+      zIndex: 10,
+    },
   }
 
   // Responsive styles
@@ -390,7 +426,6 @@ const SpotList = ({ spotType, title }) => {
           </h2>
         </div>
 
-        {/* 🔍 Search box */}
         <input 
           type="text" 
           placeholder={`Search ${spotType}s...`} 
@@ -437,20 +472,35 @@ const SpotList = ({ spotType, title }) => {
           spots.map((spot) => (
             <div style={styles.clubCard} key={spot.id}>
               <div 
-                style={styles.clubs}
+                style={{
+                  ...styles.clubs,
+                  position: 'relative',
+                }}
+                onClick={() => handleSpotClick(spot.id)}
                 onMouseOver={(e) => {
                   e.currentTarget.style.transform = 'translateY(-5px)'
                   e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
                   e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.5)'
+                  // Show click hint
+                  const hint = e.currentTarget.querySelector('.click-hint')
+                  if (hint) hint.style.opacity = '1'
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
+                  // Hide click hint
+                  const hint = e.currentTarget.querySelector('.click-hint')
+                  if (hint) hint.style.opacity = '0'
                 }}
               >
+                {/* Click hint overlay */}
+                <div className="click-hint" style={styles.clickHint}>
+                  Click to view
+                </div>
+
                 <img 
-                  src={spot.cover_image} 
+                  src={spot.cover_image || 'https://via.placeholder.com/400x180?text=No+Image'} 
                   alt={spot.location_name}
                   style={{ ...styles.clubsImg, ...responsiveStyles.clubsImg }}
                   onError={(e) => {
@@ -458,11 +508,16 @@ const SpotList = ({ spotType, title }) => {
                   }}
                 />
                 <div style={styles.clubText}>
-                  <h3 style={{ ...styles.clubTextH3, ...responsiveStyles.clubTextH3 }}>{spot.location_name}</h3>
-                  <p style={styles.clubTextP}>{spot.city}</p>
+                  <h3 style={{ ...styles.clubTextH3, ...responsiveStyles.clubTextH3 }}>
+                    {spot.location_name}
+                  </h3>
+                  <p style={styles.clubTextP}>
+                    <MapPin size={14} />
+                    {spot.city}
+                  </p>
                 </div>
                 <p style={styles.clubDescription}>
-                  {spot.additional_info || 'No description available'}
+                  {truncateWords(spot.additional_info, 20) || 'Click to view more details'}
                 </p>
               </div>
             </div>
@@ -470,7 +525,7 @@ const SpotList = ({ spotType, title }) => {
         )}
       </div>
 
-      {/* 🔄 Pagination - always visible */}
+      {/* Pagination */}
       <div style={styles.clubPagination}>
         <button 
           disabled={currentPage === 1} 

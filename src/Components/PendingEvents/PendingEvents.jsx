@@ -47,6 +47,7 @@ const PendingEvents = () => {
       console.error("Error fetching pending events:", err);
     }
   };
+  
 
   useEffect(() => {
     fetchPendingEvents();

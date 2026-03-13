@@ -426,6 +426,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
                 e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
                 e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
               }}
+              onClick={() => navigate(`/adminspotdetails/${spot.spot_id}`)}
             >
               {spot.flyerSrc ? (
                 <img
