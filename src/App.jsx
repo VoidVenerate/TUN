@@ -49,13 +49,14 @@ import AdminPromoteBanner from './Components/AdminPromoteBanner/AdminPromoteBann
 import AIChatPage from './Components/AIChatPage/AIChatPage'
 import SpotDetails from './Components/SpotDetails/SpotDetails'
 import AdminSpotDetails from './Components/AdminSpotDetails/AdminSpotDetails'
+import Analytics from './Components/Analytics'
 // import AIChatPage from './Components/AIChatPage copy/AIChatPage'
 
 function App() {
 
   return (
     <div>
-      
+      <Analytics />
       <Routes>
         <Route path='/' element = {<IntroAnimation/>} />
         <Route path='/home' element = {<Home/>} />
