@@ -57,6 +57,12 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     }
   };
 
+  const truncateText = (text, maxChars = 90) => {
+    if (!text) return "";
+    if (text.length <= maxChars) return text;
+    return text.substring(0, maxChars).trim() + "...";
+  }
+
   useEffect(() => {
     const fetchSpots = async () => {
       setLoading(true);
@@ -463,7 +469,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
                 <p style={styles.eventTxtP}>{spot.location}</p>
               </div>
               <p style={styles.eventDescription}>
-                {spot.description || 'No description available'}
+                {truncateText(spot.description) || 'No description available'}
               </p>
               <div style={styles.sliderBtn}>
                 <button
