@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Upload, Trash2 } from "lucide-react";
+import { Upload, Trash2, Edit3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -284,6 +284,21 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
       width: '100%',
       marginTop: '0.5rem',
     },
+    editButton: {
+      backgroundColor: 'rgba(84, 35, 210, 0.1)',
+      color: '#a78bfa',
+      border: '0.5px solid rgba(167, 139, 250, 0.3)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '10px 16px',
+      borderRadius: '8px',
+      fontSize: '14px',
+      fontWeight: 500,
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      width: '100%',
+    },
     deleteButton: {
       backgroundColor: 'rgba(255, 60, 60, 0.1)',
       color: '#ff3b30',
@@ -452,7 +467,28 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
               </p>
               <div style={styles.sliderBtn}>
                 <button
-                  onClick={() => handleDelete(spot.spot_id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`${editPath}/${spot.spot_id}`);
+                  }}
+                  style={styles.editButton}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = 'rgba(84, 35, 210, 0.2)';
+                    e.target.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = 'rgba(84, 35, 210, 0.1)';
+                    e.target.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <Edit3 size="16" style={{ marginRight: "10px" }} />
+                  Edit
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(spot.spot_id);
+                  }}
                   style={styles.deleteButton}
                   onMouseOver={(e) => {
                     e.target.style.backgroundColor = 'rgba(255, 60, 60, 0.2)';

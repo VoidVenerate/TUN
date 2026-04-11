@@ -1,0 +1,521 @@
+/* ============================================
+   EDIT LOCATION PAGE STYLESHEET - FIXED
+   Component: EditableLocationRHF
+   ============================================ */
+
+/* Container */
+.editlocation-container {
+  padding: 24px 32px;
+  background-color: #0a0a0a;
+  color: #eee;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Header */
+.editlocation-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #222;
+}
+
+.editlocation-header-title {
+  font-family: 'Rushon Ground', cursive;
+  font-weight: 500;
+  font-size: 28px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.editlocation-back-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #333;
+  color: #bbb;
+  cursor: pointer;
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.editlocation-back-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #444;
+  transform: translateX(-2px);
+}
+
+/* Main Content Layout */
+.editlocation-content {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Left Side - Image Upload */
+.editlocation-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+.editlocation-upload-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.editlocation-upload-text {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editlocation-upload-description {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Image Container - Fixed to ensure visibility */
+.editlocation-flyer-preview-container {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #111;
+  border: 2px dashed #333;
+  transition: all 0.3s ease;
+  aspect-ratio: 3/4;
+}
+
+.editlocation-flyer-preview-container:hover {
+  border-color: #5423D2;
+}
+
+/* Image - Fixed sizing */
+.editlocation-flyer-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #0a0a0a;
+}
+
+/* Placeholder styling when no image */
+.editlocation-flyer-preview[src='/placeholder.png'],
+.editlocation-flyer-preview[src*='placeholder'] {
+  object-fit: contain;
+  padding: 40px;
+  opacity: 0.5;
+}
+
+.editlocation-flyer-edit-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.editlocation-flyer-preview-container:hover .editlocation-flyer-edit-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 1;
+}
+
+.editlocation-flyer-edit-btn {
+  background: #5423D2;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  transform: translateY(10px);
+  box-shadow: 0 4px 20px rgba(84, 35, 210, 0.4);
+}
+
+.editlocation-flyer-preview-container:hover .editlocation-flyer-edit-btn {
+  transform: translateY(0);
+}
+
+.editlocation-flyer-edit-btn:hover {
+  background: #6534E2;
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(84, 35, 210, 0.6);
+}
+
+/* Hidden file input in overlay */
+.editlocation-file-input {
+  display: none;
+}
+
+/* Visible file input below image */
+.editlocation-file-input-visible {
+  margin-top: 8px;
+  color: #888;
+  font-size: 13px;
+  padding: 12px;
+  background: #111;
+  border-radius: 10px;
+  border: 1px solid #222;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.editlocation-file-input-visible::file-selector-button {
+  background: #222;
+  border: 1px solid #333;
+  color: #eee;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.editlocation-file-input-visible::file-selector-button:hover {
+  background: #333;
+  border-color: #5423D2;
+}
+
+/* Right Side - Form */
+.editlocation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.editlocation-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Rows */
+.editlocation-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.editlocation-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.editlocation-full {
+  grid-column: 1 / -1;
+}
+
+/* Labels */
+.editlocation-label {
+  font-weight: 500;
+  color: #aaa;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs */
+.editlocation-input,
+.editlocation-textarea,
+.editlocation-select {
+  background-color: #111;
+  border: 1px solid #222;
+  border-radius: 10px;
+  color: #fff;
+  padding: 14px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.editlocation-input:hover,
+.editlocation-textarea:hover,
+.editlocation-select:hover {
+  border-color: #333;
+}
+
+.editlocation-input:focus,
+.editlocation-textarea:focus,
+.editlocation-select:focus {
+  border-color: #5423D2;
+  box-shadow: 0 0 0 3px rgba(84, 35, 210, 0.1);
+  background-color: #0a0a0a;
+}
+
+.editlocation-textarea {
+  resize: vertical;
+  min-height: 180px;
+  line-height: 1.6;
+}
+
+.editlocation-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.editlocation-select option {
+  background: #111;
+  color: #eee;
+  padding: 12px;
+}
+
+/* Read-only input */
+.editlocation-input[readonly] {
+  background-color: #0a0a0a;
+  color: #666;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+/* Action Buttons */
+.editlocation-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 24px;
+  margin-top: 8px;
+  border-top: 1px solid #222;
+}
+
+.editlocation-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 200px;
+}
+
+.editlocation-btn-icon {
+  font-size: 16px;
+}
+
+.editlocation-btn--save {
+  background: linear-gradient(135deg, #5423D2 0%, #6534E2 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(84, 35, 210, 0.3);
+}
+
+.editlocation-btn--save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(84, 35, 210, 0.5);
+}
+
+.editlocation-btn--save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.editlocation-btn--delete {
+  background: transparent;
+  color: #ff3b30;
+  border: 1px solid #ff3c3c42;
+  background-color: rgba(255, 60, 60, 0.05);
+}
+
+.editlocation-btn--delete:hover:not(:disabled) {
+  background-color: rgba(255, 60, 60, 0.15);
+  border-color: rgba(255, 60, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.editlocation-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Error Messages */
+.editlocation-error {
+  color: #ff3b30;
+  font-size: 12px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.editlocation-error::before {
+  content: "⚠";
+}
+
+/* Loading Spinner */
+.editlocation-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+  color: #666;
+  font-size: 14px;
+}
+
+.editlocation-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #222;
+  border-top-color: #5423D2;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Modal Buttons */
+.editlocation-modal-btn-group {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.editlocation-modal-close-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.editlocation-modal-close-btn:hover {
+  border-color: #555;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.editlocation-modal-confirm-btn {
+  background: #5423D2;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.editlocation-modal-confirm-btn:hover {
+  background: #6534E2;
+  transform: translateY(-1px);
+}
+
+.editlocation-modal-confirm-btn.danger {
+  background: #ff3b30;
+}
+
+.editlocation-modal-confirm-btn.danger:hover {
+  background: #ff5449;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .editlocation-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .editlocation-upload-section {
+    position: static;
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .editlocation-flyer-preview-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .editlocation-container {
+    padding: 16px;
+  }
+
+  .editlocation-header-title {
+    font-size: 22px;
+  }
+
+  .editlocation-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .editlocation-actions {
+    flex-direction: column;
+  }
+
+  .editlocation-btn {
+    max-width: 100%;
+  }
+
+  .editlocation-textarea {
+    min-height: 150px;
+  }
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.editlocation-form {
+  animation: fadeIn 0.3s ease;
+}

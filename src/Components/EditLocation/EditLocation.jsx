@@ -3,12 +3,13 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
 import Modal from '../Modal/Modal';
+import './EditLocation.css';
 
 const EditableLocationRHF = () => {
   const navigate = useNavigate();
-  const { spot_id } = useParams(); // 👈 grab spot_id from URL
+  const { spot_id } = useParams();
 
-  const { register, handleSubmit, reset, watch, setValue } = useForm({
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
       locationName: '',
       city: '',
@@ -20,14 +21,21 @@ const EditableLocationRHF = () => {
     },
   });
 
-  const [modalInfo, setModalInfo] = useState({ show: false, title: '', message: '', subMessage: '' });
+  const [modalInfo, setModalInfo] = useState({ 
+    show: false, 
+    title: '', 
+    message: '', 
+    subMessage: '',
+    footerButtons: null 
+  });
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const previewUrlRef = useRef(null);
   const flyerFile = watch('flyerFile');
 
-  // ✅ Flyer preview
+  // Flyer preview handler
   useEffect(() => {
     if (flyerFile && flyerFile.length > 0) {
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
@@ -40,48 +48,98 @@ const EditableLocationRHF = () => {
     };
   }, [flyerFile, setValue]);
 
-  // ✅ Fetch spot details
+  // Helper to construct proper image URL
+  const getImageUrl = (coverImage) => {
+    if (!coverImage) return '/placeholder.png';
+
+    // If it's already a full URL, return it
+    if (coverImage.startsWith('http')) return coverImage;
+
+    // Remove leading slash if present to avoid double slashes
+    const cleanPath = coverImage.startsWith('/') ? coverImage.slice(1) : coverImage;
+    return `https://lagos-turnup-ecy5.onrender.com/${cleanPath}`;
+  };
+
+  // Fetch spot details
   useEffect(() => {
     const fetchSpot = async () => {
       try {
         const token = localStorage.getItem("token");
+
+        // Fetch all spots and find the one we need
         const res = await api.get("/event/spots", {
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         const spots = (Array.isArray(res.data) ? res.data : []).map((s) => ({
           ...s,
-          id: String(s.id), // keep IDs safe as strings
+          id: String(s.id),
         }));
-
 
         const spot = spots.find((s) => s.id === spot_id);
 
-
         if (spot) {
+          console.log("Found spot:", spot);
+          console.log("Cover image:", spot.cover_image);
+
           reset({
             locationName: spot.location_name,
             city: spot.city,
             state: spot.state,
             typeOfSpot: spot.spot_type,
-            additionalInfo: spot.additional_info,
-            flyerPreview: spot.cover_image
-            ? `https://lagos-turnup-ecy5.onrender.com/${spot.cover_image}`
-            : "",
+            additionalInfo: spot.additional_info || '',
+            flyerPreview: getImageUrl(spot.cover_image),
+          });
+        } else {
+          setModalInfo({
+            show: true,
+            title: 'Not Found',
+            message: 'Spot not found.',
+            footerButtons: (
+              <button onClick={() => navigate('/discoverlagos')} className="editlocation-modal-confirm-btn">
+                Go Back
+              </button>
+            ),
           });
         }
       } catch (err) {
         console.error("Error fetching spot:", err);
+        setModalInfo({
+          show: true,
+          title: 'Error',
+          message: 'Failed to load spot details.',
+          subMessage: err?.response?.data?.detail || err?.message || 'Please try again.',
+          footerButtons: (
+            <button onClick={() => navigate(-1)} className="editlocation-modal-confirm-btn">
+              Go Back
+            </button>
+          ),
+        });
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchSpot();
-  }, [spot_id, reset]);
 
+    if (spot_id) {
+      fetchSpot();
+    } else {
+      setIsLoading(false);
+      setModalInfo({
+        show: true,
+        title: 'Error',
+        message: 'No spot ID provided.',
+        footerButtons: (
+          <button onClick={() => navigate(-1)} className="editlocation-modal-confirm-btn">
+            Go Back
+          </button>
+        ),
+      });
+    }
+  }, [spot_id, reset, navigate]);
 
-
-
-  // ✅ Save changes
+  // Save changes - PUT /event/spots/edit/{spot_id}
   const onSubmit = async (data) => {
+    setSaving(true);
     try {
       const token = localStorage.getItem("token");
       const formData = new FormData();
@@ -89,49 +147,63 @@ const EditableLocationRHF = () => {
       formData.append("city", data.city);
       formData.append("state", data.state);
       formData.append("spot_type", data.typeOfSpot);
-      formData.append("additional_info", data.additionalInfo);
+      formData.append("additional_info", data.additionalInfo || '');
+
+      // Only append cover_image if a new file was selected
       if (data.flyerFile && data.flyerFile[0]) {
-         formData.append("cover_image", data.flyerFile[0]);
+        formData.append("cover_image", data.flyerFile[0]);
       }
 
+      console.log("Submitting to:", `/event/spots/edit/${spot_id}`);
+
+      // PUT request with spot_id as path parameter
       await api.put(`/event/spots/edit/${spot_id}`, formData, {
-        headers: {
+        headers: { 
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       });
 
-      // Redirect to new spot type admin page
-      let redirectPath = "/discoverlagos";
-      switch (data.typeOfSpot) {
-        case "club":
-          redirectPath = "/adminclubs";
-          break;
-        case "hotel":
-          redirectPath = "/adminhotels";
-          break;
-        case "food_spot":
-          redirectPath = "/adminfoodspots";
-          break;
-        case "beach":
-          redirectPath = "/adminbeaches";
-          break;
-      }
-      navigate(redirectPath);
+      // Redirect based on spot type
+      const redirectMap = {
+        "club": "/adminclubs",
+        "hotel": "/adminhotels",
+        "food_spot": "/adminfoodspots",
+        "beach": "/adminbeaches"
+      };
+
+      navigate(redirectMap[data.typeOfSpot] || "/discoverlagos");
+
     } catch (err) {
       console.error("Error updating spot:", err);
+      setModalInfo({
+        show: true,
+        title: 'Error',
+        message: 'Failed to update spot.',
+        subMessage: err?.response?.data?.detail?.[0]?.msg || err?.response?.data?.message || err?.message || '',
+        footerButtons: (
+          <button onClick={closeModal} className="editlocation-modal-close-btn">
+            Close
+          </button>
+        ),
+      });
+    } finally {
+      setSaving(false);
     }
   };
 
-
-    // ✅ Delete spot
+  // Delete spot
   const handleDelete = () => {
     if (!spot_id) {
       setModalInfo({
         show: true,
         title: 'Error',
         message: 'No spot ID to delete.',
-        subMessage: '',
-        footerButtons: <button onClick={closeModal}>Close</button>,
+        footerButtons: (
+          <button onClick={closeModal} className="editlocation-modal-close-btn">
+            Close
+          </button>
+        ),
       });
       return;
     }
@@ -140,10 +212,12 @@ const EditableLocationRHF = () => {
       show: true,
       title: 'Confirm Delete',
       message: 'Are you sure you want to delete this spot?',
-      subMessage: '',
+      subMessage: 'This action cannot be undone.',
       footerButtons: (
-        <>
-          <button onClick={closeModal} className='modal-close-btn'>Cancel</button>
+        <div className="editlocation-modal-btn-group">
+          <button onClick={closeModal} className="editlocation-modal-close-btn">
+            Cancel
+          </button>
           <button
             onClick={async () => {
               setDeleting(true);
@@ -154,102 +228,237 @@ const EditableLocationRHF = () => {
                   title: 'Deleted',
                   message: 'Spot deleted successfully.',
                   subMessage: '',
-                  footerButtons: <button onClick={closeModal}>Close</button>,
+                  footerButtons: (
+                    <button 
+                      onClick={() => navigate('/discoverlagos')} 
+                      className="editlocation-modal-confirm-btn"
+                    >
+                      Close
+                    </button>
+                  ),
                 });
-                navigate('/discoverlagos');
               } catch (err) {
                 setModalInfo({
                   show: true,
                   title: 'Error',
                   message: 'Failed to delete spot.',
-                  subMessage: err?.message || '',
-                  footerButtons: <button onClick={closeModal}>Close</button>,
+                  subMessage: err?.response?.data?.detail || err?.message || '',
+                  footerButtons: (
+                    <button onClick={closeModal} className="editlocation-modal-close-btn">
+                      Close
+                    </button>
+                  ),
                 });
               } finally {
                 setDeleting(false);
               }
             }}
+            className="editlocation-modal-confirm-btn danger"
+            disabled={deleting}
           >
-            Confirm
+            {deleting ? 'Deleting…' : 'Delete'}
           </button>
-        </>
+        </div>
       ),
     });
   };
 
-
   const closeModal = () => setModalInfo(prev => ({ ...prev, show: false }));
 
+  if (isLoading) {
+    return (
+      <div className="editlocation-container">
+        <div className="editlocation-loading">
+          <div className="editlocation-spinner"></div>
+          <span>Loading spot details...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="review-container">
-      <header className="review-header">
-        <h1 className="review-header-title">
-          <button onClick={() => navigate(-1)} className="review-back-btn">←</button>
-          EDIT LOCATION
+    <div className="editlocation-container">
+      <header className="editlocation-header">
+        <h1 className="editlocation-header-title">
+          <button onClick={() => navigate(-1)} className="editlocation-back-btn">
+            ←
+          </button>
+          Edit Location
         </h1>
       </header>
 
-      <form id="spotForm" onSubmit={handleSubmit(onSubmit)} className="review-content" encType="multipart/form-data">
-        {/* Flyer Upload */}
-        <div className="review-upload-section">
-          <div className="review-upload-label">
-            <span className="review-upload-text">Location Flyer</span>
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className="editlocation-content"
+        encType="multipart/form-data"
+      >
+        {/* Left Side - Image Upload */}
+        <div className="editlocation-upload-section">
+          <div className="editlocation-upload-label">
+            <span className="editlocation-upload-text">Location Image</span>
+            <span className="editlocation-upload-description">
+              Click on the image to change the flyer
+            </span>
           </div>
-          <div className="review-upload-area">
+
+          <div className="editlocation-flyer-preview-container">
             <img
               src={watch('flyerPreview') || '/placeholder.png'}
               alt="Spot Flyer Preview"
-              className="review-flyer-preview"
-              onError={(e) => (e.target.src = '/placeholder.png')}
+              className="editlocation-flyer-preview"
+              onError={(e) => {
+                console.log("Image failed to load:", e.target.src);
+                e.target.src = '/placeholder.png';
+              }}
             />
-          </div>
-          <input type="file" accept="image/*" {...register('flyerFile')} className="review-file-input" />
-        </div>
-
-        {/* Location details form */}
-        <div className="review-form">
-          <div className="review-fields">
-            <div className="review-group">
-              <label className="review-label" htmlFor="locationName">Location Name</label>
-              <input id="locationName" className="form-input" {...register('locationName', { required: true })} />
-            </div>
-
-            <div className="review-group">
-              <label className="review-label" htmlFor="city">City</label>
-              <input id="city" className="form-input" {...register('city', { required: true })} />
-            </div>
-
-            <div className="review-group">
-              <label className="review-label" htmlFor="state">State</label>
-              <input id="state" className="form-input" {...register('state', { required: true })} readOnly />
-            </div>
-
-            <div className="review-group">
-              <label className="review-label" htmlFor="typeOfSpot">Type of Spot</label>
-              <select id="typeOfSpot" className="form-select" {...register('typeOfSpot', { required: true })}>
-                <option value="">Select One</option>
-                <option value="club">Club</option>
-                <option value="hotel">Hotel</option>
-                <option value="food_spot">Food Spot</option>
-                <option value="beach">Beach</option>
-              </select>
-            </div>
-
-            <div className="review-group review-full">
-              <label className="review-label" htmlFor="additionalInfo">Additional Info</label>
-              <textarea id="additionalInfo" className="form-textarea" {...register('additionalInfo')} />
+            <div className="editlocation-flyer-edit-overlay">
+              <label className="editlocation-flyer-edit-btn">
+                📷 Change Image
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  {...register('flyerFile')} 
+                  className="editlocation-file-input"
+                />
+              </label>
             </div>
           </div>
+
+          <input 
+            type="file" 
+            accept="image/*" 
+            {...register('flyerFile')} 
+            className="editlocation-file-input-visible"
+          />
         </div>
 
-        <footer className="review-footer">
-          <button type="submit" className="review-submit-btn" disabled={saving}>
-            {saving ? 'Saving…' : 'Save'}
-          </button>
-          <button type="button" className="review-submit-btn" disabled={deleting} onClick={handleDelete}>
-            {deleting ? 'Deleting…' : 'Delete'}
-          </button>
-        </footer>
+        {/* Right Side - Form Fields */}
+        <div className="editlocation-form">
+          <div className="editlocation-fields">
+            {/* Row 1: Location Name & City */}
+            <div className="editlocation-row">
+              <div className="editlocation-group">
+                <label className="editlocation-label" htmlFor="locationName">
+                  Location Name *
+                </label>
+                <input 
+                  id="locationName" 
+                  className="editlocation-input" 
+                  placeholder="Enter location name"
+                  {...register('locationName', { required: 'Location name is required' })} 
+                />
+                {errors.locationName && (
+                  <span className="editlocation-error">{errors.locationName.message}</span>
+                )}
+              </div>
+
+              <div className="editlocation-group">
+                <label className="editlocation-label" htmlFor="city">
+                  City *
+                </label>
+                <input 
+                  id="city" 
+                  className="editlocation-input" 
+                  placeholder="Enter city"
+                  {...register('city', { required: 'City is required' })} 
+                />
+                {errors.city && (
+                  <span className="editlocation-error">{errors.city.message}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Row 2: State & Type */}
+            <div className="editlocation-row">
+              <div className="editlocation-group">
+                <label className="editlocation-label" htmlFor="state">
+                  State
+                </label>
+                <input 
+                  id="state" 
+                  className="editlocation-input" 
+                  {...register('state')} 
+                  readOnly 
+                />
+              </div>
+
+              <div className="editlocation-group">
+                <label className="editlocation-label" htmlFor="typeOfSpot">
+                  Type of Spot *
+                </label>
+                <select 
+                  id="typeOfSpot" 
+                  className="editlocation-select" 
+                  {...register('typeOfSpot', { required: 'Please select a spot type' })}
+                >
+                  <option value="">Select a type</option>
+                  <option value="club">Club</option>
+                  <option value="hotel">Hotel</option>
+                  <option value="food_spot">Food Spot</option>
+                  <option value="beach">Beach</option>
+                </select>
+                {errors.typeOfSpot && (
+                  <span className="editlocation-error">{errors.typeOfSpot.message}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Row 3: Additional Info (Full Width) */}
+            <div className="editlocation-row">
+              <div className="editlocation-group editlocation-full">
+                <label className="editlocation-label" htmlFor="additionalInfo">
+                  Additional Information
+                </label>
+                <textarea 
+                  id="additionalInfo" 
+                  className="editlocation-textarea" 
+                  placeholder="Add any extra details about this location..."
+                  {...register('additionalInfo')} 
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons - Below the form fields */}
+          <div className="editlocation-actions">
+            <button 
+              type="submit" 
+              className="editlocation-btn editlocation-btn--save" 
+              disabled={saving}
+            >
+              {saving ? (
+                <>
+                  <span className="editlocation-btn-icon">⏳</span> 
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <span className="editlocation-btn-icon">💾</span> 
+                  <span>Save Changes</span>
+                </>
+              )}
+            </button>
+
+            <button 
+              type="button" 
+              className="editlocation-btn editlocation-btn--delete" 
+              disabled={deleting} 
+              onClick={handleDelete}
+            >
+              {deleting ? (
+                <>
+                  <span className="editlocation-btn-icon">⏳</span> 
+                  <span>Deleting...</span>
+                </>
+              ) : (
+                <>
+                  <span className="editlocation-btn-icon">🗑</span> 
+                  <span>Delete Spot</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </form>
 
       {/* Feedback Modal */}
@@ -261,7 +470,6 @@ const EditableLocationRHF = () => {
         subMessage={modalInfo.subMessage}
         footerButtons={modalInfo.footerButtons}
       />
-
     </div>
   );
 };
