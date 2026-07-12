@@ -1,32 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 import "./Billboard.css";
+import { useApprovedBanners } from "../../hooks/queries/useBanners";
 
 const Billboard = () => {
-  const [slides, setSlides] = useState([]);
+  const { data: slides = [] } = useApprovedBanners();
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const timeoutRef = useRef(null);
 
-  // ===== FETCH BANNERS FROM API =====
-  useEffect(() => {
-    const fetchSlides = async () => {
-      try {
-        const res = await axios.get("https://lagos-turnup-ecy5.onrender.com/event/banners", {
-          params: { approved_only: true },
-        });
-        setSlides(res.data || []);
-      } catch (error) {
-        console.error("Failed to load banners:", error);
-      }
-    };
-
-    fetchSlides();
-  }, []);
-
-  // ===== AUTO SLIDE =====
   useEffect(() => {
     if (!paused && slides.length > 0) {
       timeoutRef.current = setTimeout(() => {
@@ -60,7 +43,6 @@ const Billboard = () => {
           </a>
         ))
       ) : (
-        // Skeleton placeholders (like YouTube shimmer)
         [...Array(3)].map((_, idx) => (
           <div key={idx} className="slide fade active">
             <Skeleton

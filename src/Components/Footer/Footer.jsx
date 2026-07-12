@@ -1,37 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import logodark from '../../assets/LogoDark.svg';
 import { NavLink } from 'react-router-dom';
 import './Footer.css';
 import fb from '../../assets/fb.svg';
 import x from '../../assets/x.svg';
 import ig from '../../assets/ig.svg';
-import api from '../api'; // make sure your axios instance is exported from ../api
+import { useSubscribeNewsletter } from '../../hooks/queries/useNewsletter';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const subscribeTimeoutRef = useRef(null);
+
+  const subscribeMutation = useSubscribeNewsletter();
+
+  useEffect(() => {
+    return () => {
+      if (subscribeTimeoutRef.current) clearTimeout(subscribeTimeoutRef.current);
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setMessage('');
 
     try {
-      const res = await api.post('/event/newsletter', { email });
-      setMessage('');
-      setIsSubscribed(true)
-
-      setInterval(() => {
-        setIsSubscribed(false)
-      }, 3000);
+      await subscribeMutation.mutateAsync(email);
+      setIsSubscribed(true);
       setEmail('');
+
+      if (subscribeTimeoutRef.current) clearTimeout(subscribeTimeoutRef.current);
+      subscribeTimeoutRef.current = setTimeout(() => {
+        setIsSubscribed(false);
+      }, 3000);
     } catch (err) {
       console.error(err);
-      setIsSubscribed(false)
-    } finally {
-      setIsLoading(false);
+      setIsSubscribed(false);
     }
   };
 
@@ -68,8 +73,8 @@ const Footer = () => {
                 required
                 className="email-ftinput"
               />
-              <button type="submit" disabled={isLoading || isSubscribed}>
-                {isLoading ? 'Subscribing...' : isSubscribed ? 'Subscribed' : 'Subscribe'}
+              <button type="submit" disabled={subscribeMutation.isPending || isSubscribed}>
+                {subscribeMutation.isPending ? 'Subscribing...' : isSubscribed ? 'Subscribed' : 'Subscribe'}
               </button>
             </form>
             {message && <p className="subscribe-message">{message}</p>}

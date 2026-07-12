@@ -1,48 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Bell, ImagePlus, CalendarPlus, Star, ImageMinus,
-  Send, Edit, Trash2, LogIn, LogOut
+  Bell, ImagePlus, CalendarPlus, Star,
+  Send, Edit, Trash2,
 } from 'lucide-react';
-import api from '../api';
 import './NotificationComp.css';
+import { useNotifications } from '../../hooks/queries/useNotifications';
 
 const NotificationComp = () => {
-  const [notifications, setNotifications] = useState([]);
+  const { data: notifications = [] } = useNotifications();
   const [currentPage, setCurrentPage] = useState(1);
 
   const itemsPerPage = 20;
 
-  useEffect(() => {
-    fetchNotifications(); // Initial fetch
-
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(() => {
-      fetchNotifications();
-    }, 30000);
-
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, []);
-
-  // Inside NotificationComp.jsx useEffect after fetching
   useEffect(() => {
     if (notifications.length > 0) {
       const latestTime = notifications[0].created_at;
       localStorage.setItem('lastSeenNotification', latestTime);
     }
   }, [notifications]);
-
-
-  const fetchNotifications = async () => {
-    try {
-      const res = await api.get('https://lagos-turnup-ecy5.onrender.com/event/notifications');
-      const sorted = res.data.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-      setNotifications(sorted);
-    } catch (error) {
-      console.error('Error fetching Notifications', error);
-    }
-  };
 
   const formatTimeAgo = (dateString) => {
     const diff = Math.floor((new Date() - new Date(dateString)) / 1000);

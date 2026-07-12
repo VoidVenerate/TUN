@@ -1,69 +1,38 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, MapPin } from 'lucide-react'
+import { useDebounce } from '../../hooks/useDebounce'
+import { useSpotsByType } from '../../hooks/queries/useSpots'
 
 const SpotList = ({ spotType, title }) => {
-  const [spots, setSpots] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [totalPages, setTotalPages] = useState(1)
-  const [hasNextPage, setHasNextPage] = useState(false)
-
-  // optional filters
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
+  const debouncedSearch = useDebounce(searchTerm)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const fetchSpots = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const res = await axios.get(
-          `https://lagos-turnup-ecy5.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
-        )
-        
-        // Handle different response structures
-        let data = []
-        let pagination = {}
-        
-        if (Array.isArray(res.data)) {
-          data = res.data
-          setHasNextPage(res.data.length > 0)
-        } else {
-          data = res.data.items || res.data.data || []
-          pagination = res.data.pagination || {}
-          setTotalPages(pagination.totalPages || 1)
-          setHasNextPage(pagination.hasNextPage || false)
-        }
-        
-        setSpots(data)
-        
-        if (data.length === 0 && currentPage > 1) {
-          setCurrentPage(1)
-        }
-      } catch (err) {
-        console.error('Error fetching spots:', err)
-        setError('Could not load spots. Please try again later.')
-      } finally {
-        setLoading(false)
-      }
-    }
+  const { data, isLoading, isError, refetch } = useSpotsByType({
+    spotType,
+    page: currentPage,
+    search: debouncedSearch,
+  })
 
-    fetchSpots()
-  }, [spotType, currentPage, searchTerm])
+  const spots = data?.data ?? []
+  const totalPages = Math.max(1, data?.totalPages ?? 1)
+  const hasPrevPage = currentPage > 1
+  const hasNextPage = currentPage < totalPages
 
-  // Reset to page 1 when search term changes
   useEffect(() => {
-    if (currentPage !== 1) {
+    setCurrentPage(1)
+  }, [debouncedSearch])
+
+  useEffect(() => {
+    if (spots.length === 0 && currentPage > 1) {
       setCurrentPage(1)
     }
-  }, [searchTerm])
+  }, [spots.length, currentPage])
 
-  // Listen for window resize
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth)
@@ -74,20 +43,19 @@ const SpotList = ({ spotType, title }) => {
   }, [])
 
   const handlePrevPage = () => {
-    if (currentPage > 1) {
+    if (hasPrevPage) {
       setCurrentPage(p => p - 1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   const handleNextPage = () => {
-    if (hasNextPage || spots.length > 0) {
+    if (hasNextPage) {
       setCurrentPage(p => p + 1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
-  // Navigate to spot details
   const handleSpotClick = (spotId) => {
     window.scrollTo({ top: 0, behavior: "smooth" })
     setTimeout(() => {
@@ -164,7 +132,7 @@ const SpotList = ({ spotType, title }) => {
       borderRadius: '8px',
       marginBottom: '1rem',
       backgroundColor: '#1a1a1a',
-      pointerEvents: 'none', // Prevent image from capturing clicks separately
+      pointerEvents: 'none',
     },
     clubText: {
       display: 'flex',
@@ -173,7 +141,7 @@ const SpotList = ({ spotType, title }) => {
       alignItems: 'center',
       width: '100%',
       marginBottom: '0.5rem',
-      pointerEvents: 'none', // Let clicks pass through to parent
+      pointerEvents: 'none',
     },
     clubTextH3: {
       fontSize: '1.2rem',
@@ -203,7 +171,7 @@ const SpotList = ({ spotType, title }) => {
       width: '100%',
       margin: 0,
       textAlign: 'left',
-      pointerEvents: 'none', // Let clicks pass through to parent
+      pointerEvents: 'none',
     },
     clubSearch: {
       width: '90%',
@@ -329,7 +297,6 @@ const SpotList = ({ spotType, title }) => {
       transition: 'all 0.2s ease',
       marginTop: '0.5rem',
     },
-    // Overlay hint for clickability
     clickHint: {
       position: 'absolute',
       top: '50%',
@@ -348,7 +315,6 @@ const SpotList = ({ spotType, title }) => {
     },
   }
 
-  // Responsive styles
   const getResponsiveStyles = () => {
     if (windowWidth <= 480) {
       return {
@@ -376,7 +342,7 @@ const SpotList = ({ spotType, title }) => {
 
   const responsiveStyles = getResponsiveStyles()
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div style={{ ...styles.clubContainer, ...responsiveStyles.clubContainer }}>
         <div style={styles.clubLoading}>
@@ -386,14 +352,14 @@ const SpotList = ({ spotType, title }) => {
     )
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div style={{ ...styles.clubContainer, ...responsiveStyles.clubContainer }}>
         <div style={styles.clubError}>
-          <p style={styles.clubErrorP}>{error}</p>
+          <p style={styles.clubErrorP}>Could not load spots. Please try again later.</p>
           <button 
             style={styles.retryButton}
-            onClick={() => window.location.reload()}
+            onClick={() => refetch()}
             onMouseOver={(e) => {
               e.target.style.backgroundColor = '#6634e2'
               e.target.style.transform = 'translateY(-2px)'
@@ -481,7 +447,6 @@ const SpotList = ({ spotType, title }) => {
                   e.currentTarget.style.transform = 'translateY(-5px)'
                   e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)'
                   e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.5)'
-                  // Show click hint
                   const hint = e.currentTarget.querySelector('.click-hint')
                   if (hint) hint.style.opacity = '1'
                 }}
@@ -489,12 +454,10 @@ const SpotList = ({ spotType, title }) => {
                   e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
-                  // Hide click hint
                   const hint = e.currentTarget.querySelector('.click-hint')
                   if (hint) hint.style.opacity = '0'
                 }}
               >
-                {/* Click hint overlay */}
                 <div className="click-hint" style={styles.clickHint}>
                   Click to view
                 </div>
@@ -525,21 +488,20 @@ const SpotList = ({ spotType, title }) => {
         )}
       </div>
 
-      {/* Pagination */}
       <div style={styles.clubPagination}>
         <button 
-          disabled={currentPage === 1} 
+          disabled={!hasPrevPage} 
           onClick={handlePrevPage}
-          style={currentPage === 1 ? styles.paginationButtonDisabled : styles.paginationButton}
+          style={!hasPrevPage ? styles.paginationButtonDisabled : styles.paginationButton}
           onMouseOver={(e) => {
-            if (currentPage !== 1) {
+            if (hasPrevPage) {
               e.target.style.backgroundColor = '#333'
               e.target.style.borderColor = '#5423D2'
               e.target.style.transform = 'translateY(-2px)'
             }
           }}
           onMouseOut={(e) => {
-            if (currentPage !== 1) {
+            if (hasPrevPage) {
               e.target.style.backgroundColor = '#1a1a1a'
               e.target.style.borderColor = '#333'
               e.target.style.transform = 'translateY(0)'
@@ -548,20 +510,20 @@ const SpotList = ({ spotType, title }) => {
         >
           Prev
         </button>
-        <span style={styles.paginationSpan}>Page {currentPage}</span>
+        <span style={styles.paginationSpan}>Page {currentPage} of {totalPages}</span>
         <button 
           onClick={handleNextPage}
-          disabled={!hasNextPage && spots.length === 0}
-          style={(!hasNextPage && spots.length === 0) ? styles.paginationButtonDisabled : styles.paginationButton}
+          disabled={!hasNextPage}
+          style={!hasNextPage ? styles.paginationButtonDisabled : styles.paginationButton}
           onMouseOver={(e) => {
-            if (hasNextPage || spots.length > 0) {
+            if (hasNextPage) {
               e.target.style.backgroundColor = '#333'
               e.target.style.borderColor = '#5423D2'
               e.target.style.transform = 'translateY(-2px)'
             }
           }}
           onMouseOut={(e) => {
-            if (hasNextPage || spots.length > 0) {
+            if (hasNextPage) {
               e.target.style.backgroundColor = '#1a1a1a'
               e.target.style.borderColor = '#333'
               e.target.style.transform = 'translateY(0)'

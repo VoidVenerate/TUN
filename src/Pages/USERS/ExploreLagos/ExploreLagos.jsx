@@ -1,35 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Visit from '../../../Components/Visit/Visit';
 import UserNavbar from '../../../Components/UserNavbar/UserNavbar';
 import Footer from '../../../Components/Footer/Footer';
 import AllEvents from '../../../Components/AllEvents/AllEvents';
+import { useEventsByState } from '../../../hooks/queries/useEvents';
 
 const ExploreLagos = () => {
   const cardsPerPage = 27
   const [currentPage, setCurrentPage] = useState(1)
+  const { data: allEvents = [] } = useEventsByState('Lagos')
 
-  const handleNext = (totalEvents) => {
-    const totalPages = Math.ceil(totalEvents / cardsPerPage)
-    if (currentPage < totalPages) setCurrentPage(p => p + 1)
+  const totalPages = Math.max(1, Math.ceil(allEvents.length / cardsPerPage))
+  const hasPrevPage = currentPage > 1
+  const hasNextPage = currentPage < totalPages
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(1)
+    }
+  }, [currentPage, totalPages])
+
+  const handleNext = () => {
+    if (hasNextPage) setCurrentPage(p => p + 1)
   }
 
   const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(p => p - 1)
+    if (hasPrevPage) setCurrentPage(p => p - 1)
   }
-  
 
   return (
     <div>
       <UserNavbar />
       <Visit />
-      <AllEvents stateFilter= "Lagos" page={currentPage} limit={cardsPerPage} showHeader={false} />
+      <AllEvents stateFilter="Lagos" page={currentPage} limit={cardsPerPage} showHeader={false} />
       <div className="pagination-controls">
-        <button onClick={handlePrev} disabled={currentPage === 1}>
+        <button onClick={handlePrev} disabled={!hasPrevPage}>
           Prev
         </button>
-        <span>Page {currentPage}</span>
-        {/* we’ll need total count if you want “disable on last page” */}
-        <button onClick={() => handleNext(9999)}>Next</button>
+        <span>Page {currentPage} of {totalPages}</span>
+        <button onClick={handleNext} disabled={!hasNextPage}>
+          Next
+        </button>
       </div>
       <Footer />
     </div>

@@ -1,10 +1,14 @@
 // EventContext.js
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import api from '../api';
+import { queryKeys } from '../../hooks/queries/queryKeys';
 
 const EventContext = createContext();
 
 export const EventProvider = ({ children }) => {
+  const queryClient = useQueryClient();
+
   // single current event state
   const [eventData, setEventData] = useState({
     eventName: '',
@@ -166,6 +170,8 @@ export const EventProvider = ({ children }) => {
       await api.delete(`/event/events/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      queryClient.invalidateQueries({ queryKey: queryKeys.events.all });
+      queryClient.invalidateQueries({ queryKey: ['events'] });
       clearEventData();
       setLoading(false);
       return true;

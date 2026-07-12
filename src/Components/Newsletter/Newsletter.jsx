@@ -1,24 +1,21 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from '../Modal/Modal';
 import { Upload, TrendingUp, TrendingDown, Mail, ChevronLeft, ChevronRight } from 'lucide-react';
-import axios from 'axios';
 import './Newsletter.css';
-import api from '../api';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import {
+  useNewsletterSubscriptions,
+  fetchAllNewsletterSubscribers,
+} from '../../hooks/queries/useNewsletter';
+import { useAnimateValue } from '../../hooks/useAnimateValue';
 
 const Newsletter = () => {
-  const [subscriptions, setSubscriptions] = useState(0);
   const [percentageChange, setPercentageChange] = useState(0);
   const [trend, setTrend] = useState(null);
-  const [displayedPercentage, setDisplayedPercentage] = useState(0);
-  const [subscriptionsList, setSubscriptionsList] = useState([]);
-
-  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12; // how many emails per page
+  const itemsPerPage = 12;
 
-  // Form + modal states
   const [modalInfo, setModalInfo] = useState({
     show: false,
     title: '',
@@ -26,155 +23,81 @@ const Newsletter = () => {
     subMessage: '',
     type: '',
   });
-  const [isPublishHover, setIsPublishHover] = useState(false);
   const hoverTimeoutRef = useRef(null);
 
-  // Button styles
-  const closeBtnStyle = {
-    backgroundColor: 'transparent',
-    border: '1px solid #2f2f2fff',
-    color: '#ccc',
-    padding: '8px 16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  };
-  const publishBtnStyle = (hover) => ({
-    backgroundColor: hover ? '#6c43e6' : '#5423D2',
-    color: 'white',
-    border: 'none',
-    marginTop: '10px',
-    padding: '8px 16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-  });
+  const { data, isLoading } = useNewsletterSubscriptions(currentPage, itemsPerPage);
+  const paginatedList = data?.subscriptions ?? [];
+  const subscriptions = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(subscriptions / itemsPerPage));
+  const displayedPercentage = useAnimateValue(percentageChange);
 
-  // Hover handlers
-  const handlePublishMouseEnter = () => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    setIsPublishHover(true);
-  };
-  const handlePublishMouseLeave = () => {
-    hoverTimeoutRef.current = setTimeout(() => setIsPublishHover(false), 250);
-  };
-
-  // Fetch subscription count + list
   useEffect(() => {
-    const fetchSubscription = async () => {
-      try {
-        const today = new Date().toDateString();
-        const lastUpdate = localStorage.getItem("newsletterLastUpdate");
-
-        const res = await api.get('/event/newsletter?limit=10000000&offset=0');
-        const data = res.data;
-        const subs = data?.subscriptions || [];
-        setSubscriptionsList(subs);
-
-        const newCount = data?.metadata?.total ?? subs.length;
-        const oldCount = Number(localStorage.getItem("prevSubscriptions")) || 0;
-
-        if (oldCount > 0) {
-          const diff = newCount - oldCount;
-          const percent = ((diff / oldCount) * 100).toFixed(1);
-          setPercentageChange(Number(percent));
-          setTrend(diff > 0 ? "up" : diff < 0 ? "down" : "flat");
-        } else if (oldCount === 0 && newCount > 0) {
-          setPercentageChange(100);
-          setTrend("up");
-        }
-
-        setSubscriptions(newCount);
-
-        if (lastUpdate !== today) {
-          localStorage.setItem("prevSubscriptions", newCount);
-          localStorage.setItem("newsletterLastUpdate", today);
-        }
-      } catch (error) {
-        console.error("Error fetching newsletter subscriptions:", error);
-        setModalInfo({
-          show: true,
-          title: "Error!",
-          message: "Failed to fetch newsletter subscriptions.",
-          subMessage: error.response?.data?.message || "",
-          type: "error",
-        });
-      }
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     };
-
-    fetchSubscription();
   }, []);
 
-  // Animate percentage
   useEffect(() => {
-    let startValue = displayedPercentage;
-    const endValue = percentageChange;
-    let startTime = null;
-    const duration = 800;
+    if (!data) return;
 
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const newValue = startValue + (endValue - startValue) * progress;
-      setDisplayedPercentage(Number(newValue.toFixed(1)));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
+    const today = new Date().toDateString();
+    const lastUpdate = localStorage.getItem('newsletterLastUpdate');
+    const oldCount = Number(localStorage.getItem('prevSubscriptions')) || 0;
 
-    requestAnimationFrame(animate);
-  }, [percentageChange]);
+    if (oldCount > 0) {
+      const diff = subscriptions - oldCount;
+      const percent = Number(((diff / oldCount) * 100).toFixed(1));
+      setPercentageChange(percent);
+      setTrend(diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat');
+    } else if (oldCount === 0 && subscriptions > 0) {
+      setPercentageChange(100);
+      setTrend('up');
+    }
 
-  // Pagination logic
-  const totalPages = Math.ceil(subscriptionsList.length / itemsPerPage);
-  const paginatedList = subscriptionsList.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+    if (lastUpdate !== today) {
+      localStorage.setItem('prevSubscriptions', subscriptions);
+      localStorage.setItem('newsletterLastUpdate', today);
+    }
+  }, [data, subscriptions]);
 
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-
-  // Export Excel
   const exportSubscribersToExcel = async () => {
     try {
-      const res = await api.get('/event/newsletter?limit=1000&offset=0');
-      const data = res.data?.subscriptions || [];
+      const exportData = await fetchAllNewsletterSubscribers();
 
-      if (data.length === 0) {
+      if (exportData.length === 0) {
         setModalInfo({
           show: true,
-          title: "No Data",
-          message: "There are no subscribers to export.",
-          subMessage: "",
-          type: "info",
+          title: 'No Data',
+          message: 'There are no subscribers to export.',
+          subMessage: '',
+          type: 'info',
         });
         return;
       }
 
-      const worksheet = XLSX.utils.json_to_sheet(data);
+      const worksheet = XLSX.utils.json_to_sheet(exportData);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Subscribers");
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Subscribers');
       const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const file = new Blob([excelBuffer], { type: 'application/octet-stream' });
       saveAs(file, 'newsletter_subscribers.xlsx');
     } catch (error) {
-      console.error("Error exporting subscribers", error);
+      console.error('Error exporting subscribers', error);
       setModalInfo({
         show: true,
-        title: "Error!",
-        message: "Failed to export subscribers.",
-        type: "error",
+        title: 'Error!',
+        message: 'Failed to export subscribers.',
+        type: 'error',
       });
     }
   };
 
+  if (isLoading) {
+    return <p style={{ color: '#ccc', padding: '2rem' }}>Loading subscriptions...</p>;
+  }
+
   return (
     <div className='subscription-container'>
-      {/* Stats */}
       <div className="subscription-cards">
         <div className="subscription-card">
           <h3>Newsletter Subscribers <Mail size={16} /></h3>
@@ -188,7 +111,7 @@ const Newsletter = () => {
             ) : (
               <div className="trend flat"><span>0%</span></div>
             )}
-            <p style={{ fontSize: "14px", color: "rgba(255, 255, 255, 0.7)", marginTop: "24px" }}>
+            <p style={{ fontSize: '14px', color: 'rgba(255, 255, 255, 0.7)', marginTop: '24px' }}>
               from yesterday
             </p>
           </div>
@@ -200,16 +123,15 @@ const Newsletter = () => {
         </div>
       </div>
 
-      {/* Subscriber List */}
       <div className="newsletter-list">
-        <h3 style={{ marginBottom: "12px", marginLeft: "4vw", color: "#fff", marginTop: "72px" }}>
+        <h3 style={{ marginBottom: '12px', marginLeft: '4vw', color: '#fff', marginTop: '72px' }}>
           List of Subscribers: {subscriptions}
         </h3>
 
         <div className="notification-list">
           {paginatedList.length > 0 ? (
             paginatedList.map((sub, index) => (
-              <div key={index}>
+              <div key={sub.id ?? sub.email ?? index}>
                 <div>
                   <p style={{ fontWeight: 500 }}>{sub.email}</p>
                   <hr className="notification-hr" />
@@ -221,8 +143,7 @@ const Newsletter = () => {
           )}
         </div>
 
-        {/* Pagination Controls */}
-        {subscriptionsList.length > itemsPerPage && (
+        {subscriptions > itemsPerPage && (
           <div className="pagination-controls" style={{
             display: 'flex',
             justifyContent: 'center',
@@ -231,7 +152,7 @@ const Newsletter = () => {
             marginTop: '24px'
           }}>
             <button
-              onClick={prevPage}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
               style={{
                 background: 'transparent',
@@ -248,7 +169,7 @@ const Newsletter = () => {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={nextPage}
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
               style={{
                 background: 'transparent',
@@ -264,6 +185,17 @@ const Newsletter = () => {
           </div>
         )}
       </div>
+
+      {modalInfo.show && (
+        <Modal
+          show={modalInfo.show}
+          title={modalInfo.title}
+          message={modalInfo.message}
+          subMessage={modalInfo.subMessage}
+          type={modalInfo.type}
+          onClose={() => setModalInfo({ ...modalInfo, show: false })}
+        />
+      )}
     </div>
   );
 };

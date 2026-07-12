@@ -1,23 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Logo.svg';
 import './AdminNavbar.css';
 import { Bell, LogOut } from 'lucide-react';
-import axios from 'axios';
 import Modal from '../Modal/Modal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import defaultAvatar from '../../assets/defaultAvatar.png'
+import defaultAvatar from '../../assets/defaultAvatar.png';
+import { useAuth } from '../RoleContext/RoleContext';
+import { useNotifications } from '../../hooks/queries/useNotifications';
 
 const AdminNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
-  const [userName, setUserName] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const logoutTimeoutRef = useRef(null);
 
   const navigate = useNavigate();
+  const { profile } = useAuth();
+  const { data: notifications = [] } = useNotifications();
+
+  const userName = profile?.firstName || '';
+  const profileImage = profile?.profileImage || null;
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      const latestNotification = notifications[0].created_at;
+      const lastSeen = localStorage.getItem('lastSeenNotification');
+      setHasUnread(!lastSeen || new Date(latestNotification) > new Date(lastSeen));
+    } else {
+      setHasUnread(false);
+    }
+  }, [notifications]);
+
+  useEffect(() => {
+    return () => {
+      if (logoutTimeoutRef.current) clearTimeout(logoutTimeoutRef.current);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => {
@@ -27,52 +48,6 @@ const AdminNavbar = () => {
     });
   };
 
-  // Fetch notifications
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await axios.get('https://lagos-turnup-ecy5.onrender.com/event/notifications');
-        if (res.data.length > 0) {
-          const latestNotification = res.data[0].created_at;
-
-          const lastSeen = localStorage.getItem('lastSeenNotification');
-          if (!lastSeen || new Date(latestNotification) > new Date(lastSeen)) {
-            setHasUnread(true); // show red dot
-          } else {
-            setHasUnread(false);
-          }
-        }
-      } catch (error) {
-        console.error("Error loading notification", error);
-      }
-    };
-    fetchNotifications();
-  }, []);
-
-
-  // Fetch profile image & name
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('https://lagos-turnup-ecy5.onrender.com/me', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const user = res.data;
-        setUserName(user.first_name || '');
-
-        const pic = user.profile_picture_url || user.profile_picture;
-        setProfileImage(pic || null);
-      } catch (error) {
-        console.error('Unable to fetch profile picture', error);
-        setProfileImage(prev => prev || null);
-      }
-    };
-    fetchImage();
-  }, []);
-
-  // Generate a colored letter avatar
   const renderLetterAvatar = () => {
     const letter = userName ? userName[0].toUpperCase() : '?';
     const colors = ['#6A5ACD', '#FF6347', '#2E8B57', '#FFB400', '#4682B4', '#D2691E'];
@@ -102,15 +77,11 @@ const AdminNavbar = () => {
   };
 
   const handleConfirmLogout = () => {
-    // Clear tokens
     localStorage.removeItem('token');
     localStorage.removeItem('access_token');
-
-    // Close modal first
     setShowLogoutModal(false);
 
-    // Delay navigation for smooth UI
-    setTimeout(() => {
+    logoutTimeoutRef.current = setTimeout(() => {
       navigate('/auth?key=VFVSTlVQX0xBR09T');
     }, 300);
   };
@@ -136,7 +107,6 @@ const AdminNavbar = () => {
           <li><NavLink to="/banner" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Banner</NavLink></li>
           <li><NavLink to="/discover" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Discover Lagos</NavLink></li>
           <li><NavLink to="/subscriptions" className={({ isActive }) => isActive ? 'navbar-link active' : 'navbar-link'} onClick={() => setMenuOpen(false)}>Subscriptions</NavLink></li>
-          
         </ul>
 
         <div className="admin-navbar-button">
@@ -160,9 +130,11 @@ const AdminNavbar = () => {
                 effect='blur'
                 className="profile-avatar"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                onError={(e) => { e.currentTarget.onerror = null; // prevent infinite loop
-                              e.currentTarget.src = defaultAvatar; }}
-                style={{marginRight:"12px", marginTop:"8px"}}              
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = defaultAvatar;
+                }}
+                style={{ marginRight: "12px", marginTop: "8px" }}
               />
             ) : (
               renderLetterAvatar()
@@ -180,7 +152,6 @@ const AdminNavbar = () => {
         </div>
       </nav>
 
-      {/* Logout Modal */}
       <Modal
         show={showLogoutModal}
         onClose={() => setShowLogoutModal(false)}

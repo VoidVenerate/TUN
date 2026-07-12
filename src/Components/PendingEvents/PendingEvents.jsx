@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
-import api from "../api";
 import "./PendingEvents.css";
 import SearchBar from "../SearchBar/SearchBar";
+import { usePendingEvents } from "../../hooks/queries/useEvents";
 
 const PendingEvents = () => {
-  const [events, setEvents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 5;
 
@@ -25,6 +23,14 @@ const PendingEvents = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { data: events = [], isLoading, refetch } = usePendingEvents();
+
+  useEffect(() => {
+    if (location.state?.refresh) {
+      refetch();
+    }
+  }, [location.state?.refresh, refetch]);
+
   const truncateWords = (text, maxWords = 20) => {
     if (!text) return "";
     const words = text.split(" ");
@@ -32,43 +38,26 @@ const PendingEvents = () => {
     return words.slice(0, maxWords).join(" ") + "...";
   };
 
-  // 🚀 Fetch only pending events
-  const fetchPendingEvents = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const res = await api.get("/event/events?pending=true", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setEvents(res.data);
-    } catch (err) {
-      console.error("Error fetching pending events:", err);
-    }
-  };
-  
-
-  useEffect(() => {
-    fetchPendingEvents();
-  }, [location.state?.refresh]);
-
-  // 🔎 Filter by search
-  const filteredEvents = events.filter((event) =>
-    event.event_name?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEvents = useMemo(
+    () =>
+      events.filter((event) =>
+        event.event_name?.toLowerCase().includes(searchTerm.toLowerCase())
+      ),
+    [events, searchTerm]
   );
 
-  // 📖 Pagination
   const indexOfLast = currentPage * eventsPerPage;
   const indexOfFirst = indexOfLast - eventsPerPage;
   const currentEvents = filteredEvents.slice(indexOfFirst, indexOfLast);
 
+  if (isLoading) {
+    return <p style={{ color: "#ccc", padding: "2rem" }}>Loading pending events...</p>;
+  }
+
   return (
     <div className="pending-events-manager">
-      {/* Header */}
       <div className="pendingEvents-header">
-        <p style={{fontFamily:"Rushon Ground"}}>Pending Events</p>
-        {/* Search */}
+        <p style={{ fontFamily: "Rushon Ground" }}>Pending Events</p>
         <div className="pending-events-controls">
           <SearchBar
             onSearch={(query) => {
@@ -80,7 +69,6 @@ const PendingEvents = () => {
         <h4 onClick={() => navigate("/pendingBanner")}>Pending Banner</h4>
       </div>
 
-      {/* Event list */}
       <div className="pending-Events">
         {currentEvents.length > 0 ? (
           currentEvents.map((event) => (
@@ -98,14 +86,11 @@ const PendingEvents = () => {
                 />
                 <div className="event-txt">
                   <h3>{event.event_name}</h3>
-                  <p>
-                    {event.state} 
-                  </p>
+                  <p>{event.state}</p>
                 </div>
-                <p>{truncateWords(event.event_description,15)}</p>
+                <p>{truncateWords(event.event_description, 15)}</p>
               </div>
 
-              {/* ✅ Single Edit Button */}
               <div className="event-actions">
                 <button onClick={() => navigate(`/takeaction/${event.id}`)}>
                   Take Action
@@ -118,7 +103,6 @@ const PendingEvents = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {filteredEvents.length > eventsPerPage && (
         <div className="pagination-controls">
           <button
@@ -141,7 +125,6 @@ const PendingEvents = () => {
         </div>
       )}
 
-      {/* Modal */}
       {modalInfo.show && (
         <Modal
           show={modalInfo.show}

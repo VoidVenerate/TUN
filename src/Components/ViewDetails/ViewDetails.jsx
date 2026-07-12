@@ -1,71 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../RoleContext/RoleContext';
 import './ViewDetails.css';
 import { ChevronLeft } from 'lucide-react';
 import calendar from '../../assets/calendar.svg'
 import clock from '../../assets/clock.svg'
 import location from '../../assets/location.svg'
+import { useEventById, useAllPublicEvents } from '../../hooks/queries/useEvents';
 
 const ViewDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { rules } = useAuth();
 
-  const [eventData, setEventData] = useState(null);
-  const [similarEvents, setSimilarEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [eventCount, setEventCount] = useState(3);
 
-  // Dynamic event count based on screen size
+  const { data: eventData, isLoading: eventLoading } = useEventById(id);
+  const { data: allEvents = [] } = useAllPublicEvents();
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1800) {
-        setEventCount(5); // Extra large monitors
+        setEventCount(5);
       } else if (window.innerWidth >= 1500) {
-        setEventCount(4); // Large desktops
+        setEventCount(4);
       } else {
-        setEventCount(3); // Tablets and below
+        setEventCount(3);
       }
     };
 
-    handleResize(); // Set initial value
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const res = await axios.get(
-          `https://lagos-turnup-ecy5.onrender.com/event/events`,
-          { params: { id } }
-        );
-        setEventData(res.data[0] || null);
-
-        // Fetch similar events
-        const similarRes = await axios.get(
-          `https://lagos-turnup-ecy5.onrender.com/event/events`
-        );
-        // Exclude the current event
-        const others = similarRes.data.filter(event => event.id !== id);
-
-        // Shuffle the events
-        const shuffled = others.sort(() => 0.5 - Math.random());
-
-        // Pick dynamic number of events based on screen size
-        const randomEvents = shuffled.slice(0, eventCount);
-
-        setSimilarEvents(randomEvents);
-      } catch (err) {
-        console.error('Failed to fetch event:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEvent();
-  }, [id, eventCount]);
+  const similarEvents = useMemo(() => {
+    const others = allEvents.filter((event) => String(event.id) !== String(id));
+    const shuffled = [...others].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, eventCount);
+  }, [allEvents, id, eventCount]);
 
   const truncateWords = (text, maxWords = 20) => {
     if (!text) return "";
@@ -76,17 +49,16 @@ const ViewDetails = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
   };
 
-  // Function to highlight hashtags in text
   const highlightHashtags = (text) => {
     if (!text) return null;
-    
+
     const parts = text.split(/(#\w+)/g);
     return parts.map((part, index) => {
       if (part.startsWith('#')) {
@@ -100,7 +72,7 @@ const ViewDetails = () => {
     });
   };
 
-  if (loading) {
+  if (eventLoading) {
     return (
       <div className="event-details-container">
         <div className="loading-spinner">Loading...</div>
@@ -118,10 +90,9 @@ const ViewDetails = () => {
 
   return (
     <div className="event-details-container">
-      {/* Header */}
       <header className="event-details-header">
         <div className="header-left">
-          <button 
+          <button
             className="back-btn"
             onClick={() =>
               navigate(
@@ -133,21 +104,19 @@ const ViewDetails = () => {
           >
             <ChevronLeft />
           </button>
-          <h1 className="page-title" style={{fontFamily:'Rushon Ground'}}>EVENT DETAILS</h1>
+          <h1 className="page-title" style={{ fontFamily: 'Rushon Ground' }}>EVENT DETAILS</h1>
         </div>
         {eventData.is_featured && (
           <div className="featured-star">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+              <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" />
             </svg>
           </div>
         )}
       </header>
 
-      {/* Main Content */}
       <div className="event-details-content">
         <div className="event-main-info">
-          {/* Event Flyer */}
           <div className="event-flyer-section">
             {eventData.flyer_url ? (
               <img
@@ -163,7 +132,6 @@ const ViewDetails = () => {
             )}
           </div>
 
-          {/* Event Info */}
           <div className="event-info-section">
             <h2 className="event-title">{eventData.event_name}</h2>
             <p className="event-description">
@@ -227,9 +195,9 @@ const ViewDetails = () => {
             <div className="no-additional-info">
               <span className="info-value">
                 {eventData.contact_link ? (
-                  <a 
-                    href={eventData.contact_link} 
-                    target="_blank" 
+                  <a
+                    href={eventData.contact_link}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className='modal-close-btn-primary-info'
                   >
@@ -247,7 +215,6 @@ const ViewDetails = () => {
 
         <hr />
 
-        {/* Similar Events */}
         {similarEvents.length > 0 && (
           <div className="similar-events-section">
             <div className="similar-events-grid">
@@ -255,15 +222,15 @@ const ViewDetails = () => {
                 <div key={event.id || index} className="similar-event-card">
                   <div className="similar-event-image">
                     {event.flyer_url ? (
-                      <img 
-                        src={event.flyer_url} 
+                      <img
+                        src={event.flyer_url}
                         alt={event.event_name}
                         onClick={() => {
                           window.scrollTo({ top: 0, behavior: "smooth" });
                           setTimeout(() => {
                             navigate(`/viewdetails/${event.id}`);
                           }, 100);
-                        }} 
+                        }}
                       />
                     ) : (
                       <div className="similar-event-placeholder">
@@ -272,7 +239,7 @@ const ViewDetails = () => {
                     )}
                   </div>
                   <div className="similar-event-info">
-                    <h4 
+                    <h4
                       className="similar-event-name"
                       onClick={() => {
                         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -283,7 +250,7 @@ const ViewDetails = () => {
                     >
                       {event.event_name}
                     </h4>
-                    <p 
+                    <p
                       className='similar-event-desc'
                       onClick={() => {
                         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -295,7 +262,7 @@ const ViewDetails = () => {
                       {truncateWords(event.event_description, 17)}
                     </p>
                     <div className="similar-event-actions">
-                      <button 
+                      <button
                         className="view-details-btn"
                         onClick={() => {
                           window.scrollTo({ top: 0, behavior: "smooth" });

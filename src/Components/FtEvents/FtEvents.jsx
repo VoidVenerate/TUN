@@ -1,13 +1,13 @@
-import React, { useRef, useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import "./FtEvents.css";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { useFeaturedEvents } from "../../hooks/queries/useEvents";
 
 const FtEvents = () => {
-  const [events, setEvents] = useState([]);
+  const { data: events = [] } = useFeaturedEvents();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [thumbPos, setThumbPos] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -15,54 +15,49 @@ const FtEvents = () => {
   const [isPaused, setIsPaused] = useState(false);
 
   const sliderRef = useRef(null);
+  const fadeTimeoutRef = useRef(null);
   const navigate = useNavigate();
 
-  // ✅ Fetch events
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await axios.get("https://lagos-turnup-ecy5.onrender.com/event/events", {
-          params: { is_featured: true, pending: false, limit: 10 },
-        });
-        setEvents(res.data || []);
-      } catch (err) {
-        console.error("Error fetching featured events:", err);
-      }
+    return () => {
+      if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
     };
-    fetchEvents();
   }, []);
 
-  // ✅ Handle responsiveness
+  const handleNextRef = useRef(null);
+
+  const handleNext = () => {
+    setIsFading(true);
+    if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+    fadeTimeoutRef.current = setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 3) % events.length);
+      setIsFading(false);
+    }, 500);
+  };
+
+  handleNextRef.current = handleNext;
+
+  const handlePrev = () => {
+    setIsFading(true);
+    if (fadeTimeoutRef.current) clearTimeout(fadeTimeoutRef.current);
+    fadeTimeoutRef.current = setTimeout(() => {
+      setCurrentIndex((prev) => (prev - 3 + events.length) % events.length);
+      setIsFading(false);
+    }, 500);
+  };
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ✅ Auto fade (desktop) with pause-on-hover
   useEffect(() => {
     if (isMobile || events.length === 0 || isPaused) return;
-    const interval = setInterval(() => handleNext(), 4000);
+    const interval = setInterval(() => handleNextRef.current?.(), 4000);
     return () => clearInterval(interval);
-  }, [isMobile, events, currentIndex, isPaused]);
+  }, [isMobile, events.length, isPaused]);
 
-  const handleNext = () => {
-    setIsFading(true);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 3) % events.length);
-      setIsFading(false);
-    }, 500);
-  };
-
-  const handlePrev = () => {
-    setIsFading(true);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 3 + events.length) % events.length);
-      setIsFading(false);
-    }, 500);
-  };
-
-  // ✅ Mobile scroll tracking
   useEffect(() => {
     if (!isMobile || !sliderRef.current) return;
     const slider = sliderRef.current;
@@ -90,12 +85,10 @@ const FtEvents = () => {
     return words.slice(0, maxWords).join(" ") + "...";
   };
 
-  // ✅ Return null if no events
   if (events.length === 0) {
     return null;
   }
 
-  // ✅ Desktop: show 3 events at a time
   const visibleEvents = isMobile
     ? events
     : events.slice(currentIndex, currentIndex + 3).concat(
@@ -123,10 +116,7 @@ const FtEvents = () => {
         <ul>
           {visibleEvents.map((event, index) => (
             <li key={`${event.id}-${index}`}>
-              {/* ✅ Whole card clickable */}
-              <div
-                className="slider-info clickable-card"
-              >
+              <div className="slider-info clickable-card">
                 <div className="event-info">
                   <LazyLoadImage
                     src={event.flyer_url || event.event_flyer}
@@ -147,7 +137,7 @@ const FtEvents = () => {
                     disabled
                     className="buy-tickets-btn"
                     type="button"
-                    onClick={(e) => e.stopPropagation()} // 🧠 stops click from bubbling up
+                    onClick={(e) => e.stopPropagation()}
                   >
                     Buy Tickets
                   </button>

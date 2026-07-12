@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Upload, Trash2, Edit3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import Modal from "../Modal/Modal";
-import api from "../api";
 import Loader from "../Loader/Loader";
+import { useDebounce } from "../../hooks/useDebounce";
+import { useAdminSpotsByType, useDeleteSpot } from "../../hooks/queries/useSpots";
 
 const ReusableSpots = ({ spotType, addPath, editPath }) => {
-  const [spots, setSpots] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm);
   const [sortAsc, setSortAsc] = useState(true);
 
   const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
@@ -32,7 +30,17 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
   const navigate = useNavigate();
 
-  // ✅ Centralized URL normalization
+  const { data, isLoading, isError } = useAdminSpotsByType({
+    spotType,
+    page: currentPage,
+    search: debouncedSearch,
+  });
+  const deleteSpotMutation = useDeleteSpot(spotType);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
+
   const normalizeUrl = (path) => {
     if (!path) return "/placeholder.png";
     let url = path.trim();
@@ -43,7 +51,22 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     return url;
   };
 
-  const token = localStorage.getItem("token");
+  const spots = useMemo(
+    () =>
+      (data?.data ?? []).map((s) => ({
+        ...s,
+        spot_id: s.spot_id || s.id,
+        name: s.location_name,
+        location: `${s.city}, ${s.state}`,
+        description: s.additional_info,
+        flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
+      })),
+    [data?.data]
+  );
+
+  const totalPages = data?.totalPages ?? 1;
+  const loading = isLoading;
+  const error = isError ? `Failed to fetch ${spotType}s.` : null;
 
   const handleClick = (index, type, spotId) => {
     if (activeBtn.index === index && activeBtn.type === type) {
@@ -64,40 +87,6 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
   }
 
   useEffect(() => {
-    const fetchSpots = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await api.get(
-          `https://lagos-turnup-ecy5.onrender.com/event/spots/type/${spotType}?page=${currentPage}&search=${searchTerm}`
-        );
-
-        const fetched = res.data.spots || res.data[spotType] || res.data;
-
-        const normalized = fetched.map((s) => ({
-          ...s,
-          spot_id: s.spot_id || s.id,
-          name: s.location_name,
-          location: `${s.city}, ${s.state}`,
-          description: s.additional_info,
-          flyerSrc: normalizeUrl(s.cover_image || s.image || ""),
-        }));
-
-        setSpots(normalized);
-        setTotalPages(res.data.totalPages || 1);
-      } catch (err) {
-        setError(`Failed to fetch ${spotType}s.`);
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSpots();
-  }, [spotType, currentPage, searchTerm]);
-
-  // Listen for window resize
-  useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -106,11 +95,12 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Sort spots by name
-  const sortedSpots = [...spots].sort((a, b) => {
-    if (!a.name || !b.name) return 0;
-    return sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-  });
+  const sortedSpots = useMemo(() => {
+    return [...spots].sort((a, b) => {
+      if (!a.name || !b.name) return 0;
+      return sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    });
+  }, [spots, sortAsc]);
 
   // 🔑 Delete handler with confirmation + inline removal
   const handleDelete = (spot_id) => {
@@ -142,10 +132,7 @@ const ReusableSpots = ({ spotType, addPath, editPath }) => {
             onClick={async () => {
               setDeleting(true);
               try {
-                await api.delete(`/event/spots/${spot_id}`, {
-                  headers: { Authorization: `Bearer ${token}` },
-                });
-                setSpots((prev) => prev.filter((s) => s.spot_id !== spot_id));
+                await deleteSpotMutation.mutateAsync(spot_id);
                 setModalFeedback({
                   show: true,
                   title: "Deleted",

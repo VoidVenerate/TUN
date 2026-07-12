@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../RoleContext/RoleContext';
 import './SpotDetails.css';
 import { ChevronLeft, MapPin, Phone, Clock, Star, ExternalLink } from 'lucide-react';
+import { useSpotById, useSpotsByTypeSimilar } from '../../hooks/queries/useSpots';
 
 const SpotDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { rules } = useAuth();
 
-  const [spotData, setSpotData] = useState(null);
-  const [similarSpots, setSimilarSpots] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [spotCount, setSpotCount] = useState(3);
 
-  // Dynamic spot count based on screen size
+  const { data: spotData, isLoading: spotLoading } = useSpotById(id);
+  const { data: typeSpots = [] } = useSpotsByTypeSimilar(spotData?.spot_type);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1800) {
@@ -32,47 +31,13 @@ const SpotDetails = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const fetchSpot = async () => {
-      try {
-        // Fetch specific spot details using query parameter
-        const res = await axios.get(
-          `https://lagos-turnup-ecy5.onrender.com/event/spots`,
-          { params: { spot_id: id } }
-        );
-        
-        // Handle both array and single object responses
-        const spot = Array.isArray(res.data) ? res.data[0] : res.data;
-        setSpotData(spot || null);
+  const similarSpots = useMemo(() => {
+    const others = typeSpots.filter((s) => String(s.id) !== String(id));
+    const shuffled = [...others].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, spotCount);
+  }, [typeSpots, id, spotCount]);
 
-        // Fetch similar spots based on type if spot exists
-        if (spot?.spot_type) {
-          const similarRes = await axios.get(
-            `https://lagos-turnup-ecy5.onrender.com/event/spots`,
-            { params: { spot_type: spot.spot_type } }
-          );
-          
-          // Handle array response
-          const allSpots = Array.isArray(similarRes.data) ? similarRes.data : [];
-          
-          // Exclude current spot and shuffle
-          const others = allSpots.filter(s => s.id !== id);
-          const shuffled = others.sort(() => 0.5 - Math.random());
-          const randomSpots = shuffled.slice(0, spotCount);
-          
-          setSimilarSpots(randomSpots);
-        }
-      } catch (err) {
-        console.error('Failed to fetch spot:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchSpot();
-    }
-  }, [id, spotCount]);
+  const loading = spotLoading;
 
   const truncateWords = (text, maxWords = 20) => {
     if (!text) return "";

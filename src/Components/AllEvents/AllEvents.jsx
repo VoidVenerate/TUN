@@ -1,35 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import './AllEvents.css'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { CalendarDays } from 'lucide-react'
+import { useEventsByState } from '../../hooks/queries/useEvents'
 
 const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
-  const [allEvents, setAllEvents] = useState([])
-  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true)
-        // just grab *all* events for that state
-        const url = `https://lagos-turnup-ecy5.onrender.com/event/events?state=${stateFilter}&pending=false`
-        const res = await axios.get(url)
-        setAllEvents(res.data || [])
-      } catch (err) {
-        console.error("Error fetching events:", err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (stateFilter) fetchEvents()
-  }, [stateFilter])
+  const { data: allEvents = [], isLoading: loading } = useEventsByState(stateFilter)
 
   const truncateText = (text, maxChars = 90) => {
     if (!text) return "";
@@ -56,15 +37,20 @@ const AllEvents = ({ stateFilter, limit, page = 1, showHeader = true }) => {
   }
 
   // Sort events by date (newest first by default)
-  const sortedEvents = [...allEvents].sort((a, b) => {
-    const dateA = new Date(a.created_at || a.date || 0);
-    const dateB = new Date(b.created_at || b.date || 0);
-    return dateB - dateA; // Descending order (newest first)
-  });
+  const sortedEvents = useMemo(() => {
+    return [...allEvents].sort((a, b) => {
+      const dateA = new Date(a.created_at || a.date || 0);
+      const dateB = new Date(b.created_at || b.date || 0);
+      return dateB - dateA;
+    });
+  }, [allEvents]);
 
   // Client-side pagination using sorted events
   const start = (page - 1) * limit
-  const currentEvents = sortedEvents.slice(start, start + limit)
+  const currentEvents = useMemo(
+    () => sortedEvents.slice(start, start + limit),
+    [sortedEvents, start, limit]
+  )
 
   return (
     <nav className='LagEvents-container'>

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Upload, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Modal/Modal";
-import api from "../api";
 import "./AdminEvents.css";
 import { useEvent } from "../EventContext/EventContext";
 import placeholder from '../../assets/placeholder.png'
@@ -11,13 +10,22 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import Loader from "../Loader/Loader";
 import SearchBar from "../SearchBar/SearchBar";
 import { CalendarDays } from "lucide-react";
+import { useAdminEvents } from "../../hooks/queries/useEvents";
+
+const EVENTS_PER_PAGE = 6;
+
+const normalizeUrl = (path) => {
+  if (!path) return "/placeholder.png";
+  let url = path.trim();
+  url = url.replace(/\.comuploads/, ".com/uploads");
+  if (!url.startsWith("http")) {
+    url = `https://lagos-turnup-ecy5.onrender.com.com/${url.replace(/^\/?/, "")}`;
+  }
+  return url;
+};
 
 const AdminEvents = () => {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
   const [activeBtn, setActiveBtn] = useState({ index: null, type: null });
@@ -34,23 +42,38 @@ const AdminEvents = () => {
 
   const { deleteEvent } = useEvent();
   const navigate = useNavigate();
+  const { data: rawEvents = [], isLoading, isError } = useAdminEvents();
 
-  // ✅ Centralized URL normalization
-  const normalizeUrl = (path) => {
-    if (!path) return "/placeholder.png";
+  const events = useMemo(
+    () =>
+      rawEvents.map((e) => ({
+        ...e,
+        event_id: e.event_id || e.id,
+        flyerSrc: normalizeUrl(e.event_flyer || e.flyer_url || e.flyer || ""),
+      })),
+    [rawEvents]
+  );
 
-    let url = path.trim();
+  const filteredEvents = useMemo(() => {
+    if (!searchTerm) return events;
+    const q = searchTerm.toLowerCase();
+    return events.filter((e) => e.event_name?.toLowerCase().includes(q));
+  }, [events, searchTerm]);
 
-    // Fix broken domain+uploads (missing slash)
-    url = url.replace(/\.comuploads/, ".com/uploads");
+  const sortedEvents = useMemo(() => {
+    return [...filteredEvents].sort((a, b) => {
+      const dateA = new Date(a.created_at || a.date || 0);
+      const dateB = new Date(b.created_at || b.date || 0);
+      return sortAsc ? dateB - dateA : dateA - dateB;
+    });
+  }, [filteredEvents, sortAsc]);
 
-    // Handle relative paths (uploads/... or /uploads/...)
-    if (!url.startsWith("http")) {
-      url = `https://lagos-turnup-ecy5.onrender.com.com/${url.replace(/^\/?/, "")}`;
-    }
+  const totalPages = Math.max(1, Math.ceil(sortedEvents.length / EVENTS_PER_PAGE));
 
-    return url;
-  };
+  const paginatedEvents = useMemo(() => {
+    const start = (currentPage - 1) * EVENTS_PER_PAGE;
+    return sortedEvents.slice(start, start + EVENTS_PER_PAGE);
+  }, [sortedEvents, currentPage]);
 
   const truncateWords = (text, maxWords = 20) => {
     if (!text) return "";
@@ -62,20 +85,20 @@ const AdminEvents = () => {
   const formatDate = (dateString) => {
     if (!dateString) return "Date TBA";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
-  }
-  const formatTime = (time) => {
-    const [hour, minute] =  time.split(":")
-    const h = Number(hour)
-    const ampm = h < 12 ? "AM" : "PM"
-    const hour12 = h%12 || 12
-    return `${hour12}:${minute} ${ampm}`
-  }
+  };
 
+  const formatTime = (time) => {
+    const [hour, minute] = time.split(":");
+    const h = Number(hour);
+    const ampm = h < 12 ? "AM" : "PM";
+    const hour12 = h % 12 || 12;
+    return `${hour12}:${minute} ${ampm}`;
+  };
 
   const handleClick = (index, type, eventId) => {
     if (activeBtn.index === index && activeBtn.type === type) {
@@ -92,45 +115,6 @@ const AdminEvents = () => {
   const handleAddNew = () => {
     navigate("/adminpromoteevent");
   };
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await api.get(`https://lagos-turnup-ecy5.onrender.com/event/events?pending=false`);
-
-        const fetched = res.data.events || res.data;
-
-        // ✅ cleaner mapping using normalizeUrl
-        const normalized = fetched.map((e) => ({
-          ...e,
-          event_id: e.event_id || e.id,
-          flyerSrc: normalizeUrl(
-            e.event_flyer || e.flyer_url || e.flyer || "" // unify fields
-          ),
-        }));
-
-
-        setEvents(normalized);
-        setTotalPages(res.data.totalPages || 1);
-      } catch (err) {
-        setError("Failed to fetch events.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, [currentPage, searchTerm]);
-
-  // Sort events client-side by date (most recent first)
-  const sortedEvents = [...events].sort((a, b) => {
-    const dateA = new Date(a.created_at || a.date || 0);
-    const dateB = new Date(b.created_at || b.date || 0);
-    return sortAsc ? dateB - dateA : dateA - dateB; // Descending by default (newest first)
-  });
 
   const handleConfirmDelete = async () => {
     if (!deleteTarget) return;
@@ -154,7 +138,6 @@ const AdminEvents = () => {
           </button>
         ),
       });
-      setEvents(events.filter((e) => e.event_id !== deleteTarget.event_id));
     } catch (err) {
       setModalFeedback({
         show: true,
@@ -171,7 +154,7 @@ const AdminEvents = () => {
             Close
           </button>
         ),
-      }); 
+      });
       console.error(err);
     }
   };
@@ -179,20 +162,20 @@ const AdminEvents = () => {
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) pageNumbers.push(i);
 
-  if (error) return <p>{error}</p>;
-  if (loading) return <Loader/>;
+  if (isError) return <p>Failed to fetch events.</p>;
+  if (isLoading) return <Loader />;
 
   return (
     <div>
       <div className="adminEvents-header">
         <p style={{ fontFamily: "Rushon Ground" }}>Events</p>
         <div className="pending-events-controls">
-            <SearchBar
-              onSearch={(query) => {
-                setSearchTerm(query);
-                setCurrentPage(1);
-              }}
-            />
+          <SearchBar
+            onSearch={(query) => {
+              setSearchTerm(query);
+              setCurrentPage(1);
+            }}
+          />
         </div>
         <button onClick={handleAddNew} className="button">
           <Upload size={16} /> Upload Events
@@ -200,8 +183,8 @@ const AdminEvents = () => {
       </div>
 
       <div className="admin-Events">
-        {sortedEvents.length === 0 && <p>No events found.</p>}
-        {sortedEvents.map((event, index) => (
+        {paginatedEvents.length === 0 && <p>No events found.</p>}
+        {paginatedEvents.map((event, index) => (
           <div key={event.event_id || index} className="event-card">
             <div className="events">
               {event.flyerSrc ? (
@@ -212,7 +195,6 @@ const AdminEvents = () => {
                   effect="blur"
                   onError={(e) => { e.currentTarget.src = placeholder }}
                 />
-
               ) : (
                 <div
                   style={{
@@ -231,7 +213,7 @@ const AdminEvents = () => {
                   <span>{formatDate(event.date)}</span>|<span>{formatTime(event.time)}</span>
                 </div>
               </div>
-              <p>{truncateWords(event.event_description,17)}</p>
+              <p>{truncateWords(event.event_description, 17)}</p>
               <div className="slider-btn">
                 <button
                   className={
@@ -260,7 +242,6 @@ const AdminEvents = () => {
         ))}
       </div>
 
-      {/* Pagination */}
       <div className="pagination-controls">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -279,17 +260,14 @@ const AdminEvents = () => {
         ))}
         <button
           onClick={() =>
-            setCurrentPage((prev) =>
-              totalPages ? Math.min(prev + 1, totalPages) : prev + 1
-            )
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
-          disabled={totalPages ? currentPage === totalPages : false}
+          disabled={currentPage === totalPages}
         >
           Next
         </button>
       </div>
 
-      {/* Modals */}
       <Modal
         show={!!detailsEvent}
         title={detailsEvent?.event_name}
